@@ -12,7 +12,7 @@ extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
-//extern void timeToString()
+extern void timeToString();
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
@@ -101,6 +101,12 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
+
+	clearScreen();
+
+	while(1) {
+		timeToString();
+	}
 
 	return 0;
 }
