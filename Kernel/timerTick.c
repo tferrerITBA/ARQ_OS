@@ -8,8 +8,6 @@ extern uint8_t get_sec();
 extern uint8_t get_min();
 extern uint8_t get_hr();
 
-const char * screenStart = 0xB8000;
-
 char getFirstDigit(uint8_t num) {
 	return (char)(num / 10 + '0');
 }
@@ -32,14 +30,4 @@ void timeToString() {
 		str[i * 3 + 2] = separator;
 	}
 	writeToScreen(str, 0xF2);
-}
-
-/*Color format: 0xF2 == White background (F), Green characters (2)*/
-void writeToScreen(char * str, unsigned color) {
-	char * pointer = screenStart;
-	while(*str != '\0' && pointer - screenStart < 80 * 25) {
-		*(pointer++) = *str;
-		*(pointer++) = color;
-		str++;
-	}
 }

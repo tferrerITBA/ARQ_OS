@@ -1,4 +1,4 @@
-const char * screenStart = 0xB8000;
+#define screenStart 0xB8000
 
 /*Color format: 0xF2 == White background (F), Green characters (2)*/
 void writeToScreen(char * str, unsigned color) {
