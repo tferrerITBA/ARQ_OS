@@ -13,6 +13,7 @@ extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
 extern void timeToString();
+extern void load_idt();
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
@@ -83,6 +84,8 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	load_idt();
+
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
