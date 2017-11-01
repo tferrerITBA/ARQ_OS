@@ -24,6 +24,10 @@ void deleteChar(char * start) {
 	*start = 0;
 }
 
+void newLine() {
+	
+}
+
 void clearScreen() {
 	char * pointer = SCR_START;
 	while(pointer - SCR_START < 80 * 50) {

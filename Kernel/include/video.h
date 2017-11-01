@@ -10,4 +10,6 @@ void printOneChar(char * start, char ch, uint8_t color);
 
 void deleteChar(char * start);
 
+void newLine();
+
 void clearScreen();
