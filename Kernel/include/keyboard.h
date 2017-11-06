@@ -1,4 +1,4 @@
-#include "video.h"
+#include "videoTextMode.h"
 
 extern char read_key();
 

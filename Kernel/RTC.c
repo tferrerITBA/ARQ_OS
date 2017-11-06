@@ -1,10 +1,10 @@
 #include "RTC.h"
 
-char getFirstDigit(uint8_t num) {
+static char getFirstDigit(uint8_t num) {
 	return (char)(num / 10 + '0');
 }
 
-char getSecondDigit(uint8_t num) {
+static char getSecondDigit(uint8_t num) {
 	return (char)(num % 10 + '0');
 }
 
@@ -21,6 +21,6 @@ void timeToString() {
 		char separator = (i != 2) ? ':' : '\0';
 		str[i * 3 + 2] = separator;
 	}
-	writeToScreenFromStart(str, 0xF2);
+	writeToScreen(str, 0xF2);
 }
 

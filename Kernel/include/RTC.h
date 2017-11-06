@@ -2,11 +2,11 @@
 
 void timeToString();
 
-char getFirstDigit(uint8_t num);
+void writeToScreen(char * str, uint8_t color);
 
-char getSecondDigit(uint8_t num);
+static char getFirstDigit(uint8_t num);
 
-void writeToScreen(char * str, unsigned color);
+static char getSecondDigit(uint8_t num);
 
 extern uint8_t get_sec();
 

@@ -12,8 +12,11 @@ extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
+extern void writeToScreen(char * str, uint8_t color);
 extern void timeToString();
 extern void load_idt();
+
+extern void paintPixel();
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
@@ -104,12 +107,17 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
+	
+	//clearScreen();
+	timeToString();
 
-	clearScreen();
 
 	while(1) {
-		timeToString();
+		
 	}
+
 
 	return 0;
 }
+
+
