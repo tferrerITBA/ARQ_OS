@@ -13,12 +13,28 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
+GLOBAL _int80Handler
+
 GLOBAL _exception0Handler
+
+GLOBAL reset_rip
+GLOBAL get_rsp_address
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN int80Dispatcher
+EXTERN main
 
 SECTION .text
+
+_int80Handler:
+	mov rdi, rax
+	mov rsi, rbx
+	mov rax, rdx
+	mov rdx, rcx
+	mov rcx, rax
+	call int80Dispatcher
+	iret
 
 %macro pushState 0
 	push rax
@@ -76,12 +92,13 @@ SECTION .text
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro
+	mov rsi, rsp
 	call exceptionDispatcher
 
 	popState
+	mov qword [rsp], main
 	iretq
 %endmacro
-
 
 _hlt:
 	sti

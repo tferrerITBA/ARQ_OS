@@ -2,7 +2,7 @@
 
 void timeToString();
 
-void writeToScreen(char * str, uint8_t color);
+void putString(char * str);
 
 static char getFirstDigit(uint8_t num);
 

@@ -1,5 +1,7 @@
 #include "RTC.h"
 
+char str[9];
+
 static char getFirstDigit(uint8_t num) {
 	return (char)(num / 10 + '0');
 }
@@ -10,9 +12,12 @@ static char getSecondDigit(uint8_t num) {
 
 void timeToString() {
 	int i;
-	char str[9];
 	uint8_t time[3];
 	time[0] = get_hr();
+	if(time[0] <= 2)
+		time[0] = 21 + time[0];
+	else
+		time[0] -= 3;
 	time[1] = get_min();
 	time[2] = get_sec();
 	for(i = 0; i < 3; i++) {
@@ -21,6 +26,6 @@ void timeToString() {
 		char separator = (i != 2) ? ':' : '\0';
 		str[i * 3 + 2] = separator;
 	}
-	writeToScreen(str, 0xF2);
+	putString(str);
 }
 

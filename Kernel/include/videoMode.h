@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "font.h"
+#include "keyboard.h"
 
 #define VBEModeInfo 0x0000000000005C00
 #define BLUE 0
@@ -8,14 +9,15 @@
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
 
-
-void paintPixel(/*unsigned short, unsigned short*/);
-
 void putPixel(unsigned short, unsigned short);
 
-uint8_t pow(uint8_t num, uint8_t exp);
+void put_char(int c);
 
-void paintPix(uint8_t * pos, int charColor);
+void putString(char * str);
+
+static uint8_t pow(uint8_t num, uint8_t exp);
+
+void paintPix(uint8_t *, int);
 
 void setCharColors(uint8_t cb, uint8_t cg, uint8_t cr);
 

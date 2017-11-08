@@ -1,0 +1,12 @@
+Comandos posibles:
+
+help: muestra todos los comandos y su uso (comando a ejecutar 1 vez en kernel.c)
+clear: pinta cada pixel con el color del fondo elegido.
+chcolor (B G R): cambia el color de los caracteres a partir del proximo char (hexa)
+bgcolor (B G R): idem pero con el fondo
+zerodiv: prueba la excepcion de div. por 0
+overflow: prueba la excepcion de overflow
+invopc: prueba la excepcion de invalid opcode
+echo (str): printea el string str
+math (a b c): grafica la func ax^2 + bx + c
+time: muestra la hora del sistema

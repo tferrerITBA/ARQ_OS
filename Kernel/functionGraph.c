@@ -64,3 +64,4 @@ void paintAxis() {
 	}
 	setCharColors(0x00, 0xFF, 0x00);
 }
+

@@ -3,8 +3,9 @@
 #include "functionGraph.h"
 
 static short index = 0;
-static unsigned char buffer[80 * 25] = {0};
+static unsigned char buffer[3000] = {0};
 static unsigned char upperCase = 0;
+static unsigned char useless = 0;
 //Todas las teclas
 /*static char * characters[] = {0,"Esc","1","2","3","4","5","6","7","8","9","0","?","¿",
 0,"Tab","q","w","e","r","t","y","u","i","o","p","´","+","\n","Ctrl","a","s","d",
@@ -15,13 +16,13 @@ static unsigned char upperCase = 0;
 "Win","w4","RClick"};*/
 
 static unsigned char characters[] = {0,0,'1','2','3','4','5','6','7','8','9','0',
-'?',0xA8,0,'\t','q','w','e','r','t','y','u','i','o','p',0,'+','\n',0,'a','s','d',
+'?',159,0,'\t','q','w','e','r','t','y','u','i','o','p',148,'+','\n',0,'a','s','d',
 'f','g','h','j','k','l',209,'{','|',0,'}','z','x','c','v',
 'b','n','m',',','.','-',0,0,0,' '};
 
 static unsigned char altCharacters[] = {0,0,'!','"','#','$','%','&','/','(',')','=',
-'?',0xAD,0,'\t','Q','W','E','R','T','Y','U','I','O','P',210,'*','\n',0,'A','S','D',
-'F','G','H','J','K','L',177,'[',0xA9,0,']','Z','X','C','V',
+'\\',129,0,'\t','Q','W','E','R','T','Y','U','I','O','P',136,'*','\n',0,'A','S','D',
+'F','G','H','J','K','L',177,'[',144,0,']','Z','X','C','V',
 'B','N','M',';',':','_',0,0,0,' '};
 
 void readInput() {
@@ -34,17 +35,51 @@ void readInput() {
 	writeToScreen(0xB8020, buffer[index-1], 0xF2);*/
 }
 
+int divideZero();
+
+int divideZero() {
+	int a = 1;
+	int b = 0;
+	return a / b;
+}
+
 void printInput() {
 	unsigned char input = read_key();
+	// key break signal: key+0x80
 	if(input == 0 || (input > 0x80 && input != 0xAA && input != 0xB6))
+		return;
+	//special keys (like calculator)
+	if(input == 0xE0) {
+		useless = 1;
+		return;
+	}
+	if(useless) {
+		useless = 0;
+		return;
+	}
+	//Insert, Supr, arrows, F1-F12, etc.
+	if(input > 0x3A && input != 0x56 && input < 0x80)
 		return;
 	// backspace
 	if(input == 0x0E) {
+		if(getLastInsertion() == '\n')
+			return;
 		deleteChar();
+		int aux;
+		if(index != 0)
+			aux = index - 1;
+		else
+			aux = 2999;
+		index = aux;
+		buffer[index] = 0;
 		return;
 	}
-	if(input == 0x1c) {
+	//intro
+	if(input == 0x1C) {
 		newLine();
+		divideZero();
+		buffer[index] = '\n';
+		index = (index < 3000) ? index + 1 : 0;
 		return;
 	}
 	//0x3A CapsLock, 0x2A LShift, 0x36 RShift, 0xAA LShift release, 0xB6 RShift release
@@ -56,20 +91,30 @@ void printInput() {
 	//Tab
 	if(input == 0x0F) {
 		buffer[index] = buffer[index+1] = buffer[index+2] = buffer[index+3] = ' ';
-		//writeToScreen(&buffer[index], 0xFF);
+		putString("    ");
+		index = (index < 2996) ? index + 4 : 0;
 		return;
 	}
-	// key break signal
-	/*if(input - 0x80 == buffer[index-1])
-		return;*/
+	//LCtrl
+	if(input == 0x1D || input == 0x37 || input == 0x38)
+		return;
 	if(!upperCase)
 		buffer[index] = characters[input];
 	else if(upperCase)
 		buffer[index] = altCharacters[input];
-	//printOneChar(buffer[index], 0x0F);
+	//'<' '>'
+	if(input == 0x56) {
+		if(!upperCase)
+			buffer[index] = '<';
+		else
+			buffer[index] = '>';
+	}
 	
-	//putChar(buffer[index]);
-	mathFunc(1,3,-1);
-	index = (index < 80 * 25) ? index + 1 : 0;
+	put_char(buffer[index]);
+	mathFunc(0.05,5,-40);
+	index = (index < 3000) ? index + 1 : 0;
 }
 
+unsigned char getLastInsertion() {
+	return buffer[index-1];
+}

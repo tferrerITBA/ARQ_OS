@@ -3,6 +3,11 @@
 #include <defs.h>
 #include <interrupts.h>
 
+extern char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+extern char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+extern char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+extern void _int80Handler();
+
 #pragma pack(push)		/* Push de la alineación actual */
 #pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */
 
@@ -16,6 +21,9 @@ typedef struct {
 
 #pragma pack(pop)		/* Reestablece la alinceación actual */
 
+typedef char * (*sysCalls)(int, int, int);
+sysCalls sc[] = {0, 0, 0, &read, &write, 0, 0, 0, 0, 0, 0, 0, 0, &time};
+
 DESCR_INT * idt = (DESCR_INT *) 0;	// IDT de 255 entradas
 
 static void setup_IDT_entry (int index, uint64_t offset);
@@ -25,6 +33,7 @@ void load_idt() {
   setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
   setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
   setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);
+  setup_IDT_entry (0x80, (uint64_t)&_int80Handler);
 
 	//Solo interrupcion timer tick habilitadas
 	picMasterMask(0xFC); // 1111 1100
@@ -42,3 +51,21 @@ static void setup_IDT_entry (int index, uint64_t offset) {
   idt[index].cero = 0;
   idt[index].other_cero = (uint64_t) 0;
 }
+
+void int80Dispatcher(uint64_t rax, uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+  sc[rax](rbx, rcx, rdx);
+}
+
+char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+  return timeToString();
+}
+
+char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+  return 0x0;
+}
+
+char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+  return 0x0;
+}
+
+
