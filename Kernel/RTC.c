@@ -1,6 +1,6 @@
 #include "RTC.h"
 
-char str[9];
+static char str[9];
 
 static char getFirstDigit(uint8_t num) {
 	return (char)(num / 10 + '0');

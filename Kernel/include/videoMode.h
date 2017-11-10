@@ -15,6 +15,8 @@ void put_char(int c);
 
 void putString(char * str);
 
+void putnString(char * str, uint64_t length);
+
 static uint8_t pow(uint8_t num, uint8_t exp);
 
 void paintPix(uint8_t *, int);
@@ -22,3 +24,5 @@ void paintPix(uint8_t *, int);
 void setCharColors(uint8_t cb, uint8_t cg, uint8_t cr);
 
 void setBackgroundColors(uint8_t bb, uint8_t bg, uint8_t br);
+
+void clearScreen();

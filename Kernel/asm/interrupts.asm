@@ -28,12 +28,16 @@ EXTERN main
 SECTION .text
 
 _int80Handler:
-	mov rdi, rax
-	mov rsi, rbx
+	pushState
+
+	mov rdi, rax ;primer param (rax)
+	mov rsi, rbx ;segundo param (rbx)
 	mov rax, rdx
-	mov rdx, rcx
-	mov rcx, rax
+	mov rdx, rcx ;tercer param (rcx)
+	mov rcx, rax ;cuarto param (rdx)
 	call int80Dispatcher
+
+	popState
 	iret
 
 %macro pushState 0

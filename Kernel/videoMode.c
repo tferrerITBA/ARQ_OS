@@ -78,7 +78,19 @@ void deleteChar() {
 }
 
 void putString(char * str) {
-	for( ; *str != 0; str++)
+	for( ; *str != 0; str++) {
+		char c = *str;
+		if(c != '\n' && c != 0x08)
+			put_char(c);
+		else if(c == '\n')
+			newLine();
+		else if(c == 0x08)
+			deleteChar();
+	}
+}
+
+void putnString(char * str, uint64_t length) {
+	for( ; length > 0; length--)
 		put_char(*str);
 }
 

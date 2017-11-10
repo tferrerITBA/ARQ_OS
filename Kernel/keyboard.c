@@ -2,9 +2,11 @@
 #include "videoMode.h"
 #include "functionGraph.h"
 
-static short index = 0;
-static unsigned char buffer[3000] = {0};
+static unsigned index = 0;
+//buffer circular
+static unsigned char buffer[BUFFER_SIZE] = {0};
 static unsigned char upperCase = 0;
+//chequea que no se haya pulsado una tecla especial como Calculator
 static unsigned char useless = 0;
 //Todas las teclas
 /*static char * characters[] = {0,"Esc","1","2","3","4","5","6","7","8","9","0","?","¿",
@@ -62,24 +64,14 @@ void printInput() {
 		return;
 	// backspace
 	if(input == 0x0E) {
-		if(getLastInsertion() == '\n')
-			return;
-		deleteChar();
-		int aux;
-		if(index != 0)
-			aux = index - 1;
-		else
-			aux = 2999;
-		index = aux;
-		buffer[index] = 0;
+		buffer[index] = 0x08;
+		index = (index < LAST_INDEX) ? index + 1 : 0;
 		return;
 	}
 	//intro
 	if(input == 0x1C) {
-		newLine();
-		divideZero();
 		buffer[index] = '\n';
-		index = (index < 3000) ? index + 1 : 0;
+		index = (index < LAST_INDEX) ? index + 1 : 0;
 		return;
 	}
 	//0x3A CapsLock, 0x2A LShift, 0x36 RShift, 0xAA LShift release, 0xB6 RShift release
@@ -91,8 +83,7 @@ void printInput() {
 	//Tab
 	if(input == 0x0F) {
 		buffer[index] = buffer[index+1] = buffer[index+2] = buffer[index+3] = ' ';
-		putString("    ");
-		index = (index < 2996) ? index + 4 : 0;
+		index = (index < LAST_INDEX - 4) ? index + 4 : 0;
 		return;
 	}
 	//LCtrl
@@ -110,11 +101,40 @@ void printInput() {
 			buffer[index] = '>';
 	}
 	
-	put_char(buffer[index]);
 	mathFunc(0.05,5,-40);
-	index = (index < 3000) ? index + 1 : 0;
+	index = (index < LAST_INDEX) ? index + 1 : 0;
 }
 
 unsigned char getLastInsertion() {
-	return buffer[index-1];
+	int i = (index > 0) ? index - 1 : LAST_INDEX;
+	return buffer[i];
+}
+
+char * readBuffer(uint64_t rbx, char * str, uint64_t bufSize) {
+	if(getLastInsertion() == 0)
+		return 0x0;
+	while(bufSize > 0) {
+		index = (index > 0) ? index - 1 : LAST_INDEX;
+		str[bufSize - 1] = buffer[index];
+		buffer[index] = 0;
+		bufSize--;
+	}
+	return str;
+	/*if(!(getLastInsertion() == 0 || getLastInsertion() == '\n'))
+		return 0x0;
+	unsigned i = (index > 1) ? index - 2 : LAST_INDEX - 1 + index;
+	while(buffer[i] != '\n' && buffer[i] != 0) {
+		i = (i > 0) ? i - 1 : LAST_INDEX;
+	}
+	i = (i < LAST_INDEX) ? i + 1 : 0;
+	unsigned j;
+	for(j = 0; buffer[i] != '\n' && buffer[i] != 0 && j > bufSize; j++) {
+		str[j] = buffer[i];
+		i = (i < LAST_INDEX) ? i + 1 : 0;
+	}
+	return str;*/
+}
+
+void incrementIndex() {
+	index = (index < LAST_INDEX) ? index + 1 : 0;
 }
