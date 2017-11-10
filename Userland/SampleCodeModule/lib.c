@@ -79,8 +79,8 @@ int scanf(char * buffer) {
 		}
 	}
 
-	if(count != 0) //No characters added in buffer
-		putChar('\n');
+	if(count =! 0) //No characters added in buffer
+		putchar('\n');
 
 	return count;
 }
