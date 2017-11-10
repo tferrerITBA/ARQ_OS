@@ -16,7 +16,7 @@ static uint8_t backgroundColor[] = {0x00, 0x00, 0x00};
 static int currPos = 0;
 static int currRow = 0;
 
-void putPixel(unsigned short x, unsigned short y) {
+void putPixel(unsigned x, unsigned y) {
 	if(x < 0 || x > *XResolution || y < 0 || y > *YResolution)
 		return;
 	uint8_t * screenPosition = (uint8_t *)(y * *bytesPerScanLine + 
@@ -57,8 +57,7 @@ void put_char(int c) {
 	if(currPos == 0)
 		currPos++;
 	else if((currPos+1) % (*bytesPerScanLine / (bytesPerPixel * CHAR_WIDTH)) == 0) {
-		currPos = 0;
-		currRow++;
+		newLine();
 	}
 	else
 		currPos++;
@@ -98,8 +97,16 @@ void putString(char * str) {
 }
 
 void putnString(char * str, uint64_t length) {
-	for( ; length > 0 && *str != 0; length--)
-		put_char(*(str++));
+	for( ; length > 0 && *str != 0; length--) {
+		char c = *str;
+		if(c != '\n' && c != 0x08)
+			put_char(c);
+		else if(c == '\n')
+			newLine();
+		else if(c == 0x08)
+			deleteChar();
+		str++;
+	}
 }
 
 void setCharColors(uint8_t cb, uint8_t cg, uint8_t cr) {
@@ -126,7 +133,7 @@ void paintPix(uint8_t * pos, int charC) {
 	*(pos + 2) = charColor[RED];
 }
 
-static uint8_t pow(uint8_t num, uint8_t exp) {
+uint8_t pow(uint8_t num, uint8_t exp) {
 	uint8_t ret = 1;
 	while(exp > 0) {
 		ret *= num;
@@ -147,6 +154,32 @@ void clearScreen() {
 }
 
 void newLine() {
+	if(currRow == ((int)*YResolution / CHAR_HEIGHT) - 1) {
+		moveScreenOneUp();
+		return;
+	}
 	currRow++;
 	currPos = 0;
+}
+
+void moveScreenOneUp() {
+	uint8_t * ptr = *physBasePtr + *bytesPerScanLine * CHAR_HEIGHT;
+	uint8_t * endPtr = *physBasePtr +
+		*bytesPerScanLine * CHAR_HEIGHT * (currRow + 1);
+	while(ptr != endPtr) {
+		copyPixel(ptr, ptr - *bytesPerScanLine * CHAR_HEIGHT);
+		ptr += 3;
+	}
+	ptr = *physBasePtr + *bytesPerScanLine * CHAR_HEIGHT * (currRow);
+	while(ptr != endPtr) {
+		paintPix(ptr, 0);
+		ptr += 3;
+	}
+	currPos = 0;
+}
+
+void copyPixel(uint8_t * source, uint8_t * dest) {
+	*dest = *source;
+	*(dest + 1) = *(source + 1);
+	*(dest + 2) = *(source + 2);
 }

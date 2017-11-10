@@ -7,7 +7,8 @@ section .text
 printNChars: ;ssize_t write(int fd, const void *buf, size_t count)
 	
 					
-	enter	
+	push rbp
+	mov rbp, rsp	
 
 	mov rax, 4		;syscall write
 	mov rcx, rdi 	;puntero al string
@@ -16,13 +17,15 @@ printNChars: ;ssize_t write(int fd, const void *buf, size_t count)
 	
 	int 80h
 
-	leave
+	mov rsp, rbp
+	pop rbp
 
 	ret
 
 scanChar:	;ssize_t read(int fd, void *buf, size_t count)
 	
-	enter
+	push rbp
+	mov rbp, rsp
 
 	mov rax, 3		;syscall read
 	mov rcx, rdi	;puntero al buffer donde se guardaran los chars
@@ -31,6 +34,7 @@ scanChar:	;ssize_t read(int fd, void *buf, size_t count)
 
 	int 80h
 
-	leave 
+	mov rsp, rbp
+	pop rbp 
 
 	ret

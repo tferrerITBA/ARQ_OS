@@ -1,6 +1,8 @@
 extern int printNChars(char * s, int len);
 extern int scanChar(char * s, int len);
 
+#include "lib.h"
+
 
 void putChar(char c) { ////calls assembly function printNChars which uses syscall write
 	printNChars(&c, 1);
@@ -55,20 +57,30 @@ void printInt(int n) {
 
 
 
-int scanf(char * buff) { 
+int scanf(char * buffer) { 
 
 	char c;
 	int count = 0;
 
 	while((c = getChar()) != '\n') {
+		
+		if(c == '\b') { //c is backspace
+			if(count != 0) { //not in start of buffer
+				--count;
+				*(buffer + count) = 0;
+				putChar(c);
+			}
+		}
+		else {
 
-		*(buff + count) = c;
+		*(buffer + count) = c;
 		count++;
 		putChar(c);
+		}
 	}
 
-	if(count != 0) 
-		putchar('\n');
+	if(count != 0) //No characters added in buffer
+		putChar('\n');
 
 	return count;
 }
@@ -77,10 +89,10 @@ int scanf(char * buff) {
 int stringlength(char * s){ //returns length of string
 
 	int len = 0;
-	while(*str != '\0'){
+	while(*s != '\0'){
 
 		len++;
-		str++;
+		s++;
 	}
 	return len;
 }

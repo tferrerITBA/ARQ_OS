@@ -4,9 +4,11 @@
 #include <interrupts.h>
 #include "videoMode.h"
 
-extern char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-extern char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-extern char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 extern void _int80Handler();
 
 #pragma pack(push)		/* Push de la alineación actual */
@@ -23,7 +25,7 @@ typedef struct {
 #pragma pack(pop)		/* Reestablece la alinceación actual */
 
 typedef char * (*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, 0, &read, &write, 0, 0, 0, 0, 0, 0, 0, 0, &time};
+sysCalls sc[] = {0, 0, 0, &read, &write, &pixel, &colors, 0, 0, 0, 0, 0, 0, &time};
 
 DESCR_INT * idt = (DESCR_INT *) 0;	// IDT de 255 entradas
 
@@ -57,7 +59,7 @@ void int80Dispatcher(uint64_t rax, uint64_t rbx, uint64_t rcx, uint64_t rdx) {
   sc[rax](rbx, rcx, rdx);
 }
 
-//No necesito ningún argumento
+//En rcx se pone un char[] con al menos 9 espacios
 char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
   timeToString(rcx);
   return rcx;
@@ -79,8 +81,23 @@ char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 //rbx es 1 para stdin, rcx es el char * destino y rdx la longitud a leer
 char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
   if(rbx == 1) {
-    char * status = readBuffer(rbx, (char *)rcx, rdx);
-    return status;
+    return readBuffer(rbx, rcx, rdx);
   }
+  return 0x0;
+}
+
+//rcx es xCoord, rdx es yCoord
+char * pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+  putPixel(rcx, rdx);
+  return 0x0;
+}
+
+//rbx == 1 --> char; rbx == 0 --> fondo; rcx array con colores B G R
+char * colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+  uint8_t * cols = rcx;
+  if(rbx == 0)
+    setBackgroundColors(cols[0], cols[1], cols[2]);
+  else if(rbx == 1)
+    setCharColors(cols[0], cols[1], cols[2]);
   return 0x0;
 }

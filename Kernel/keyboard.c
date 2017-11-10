@@ -1,6 +1,4 @@
 #include "keyboard.h"
-#include "videoMode.h"
-#include "functionGraph.h"
 
 static unsigned index = 0;
 //buffer circular
@@ -26,24 +24,6 @@ static unsigned char altCharacters[] = {0,0,'!','"','#','$','%','&','/','(',')',
 '\\',129,0,'\t','Q','W','E','R','T','Y','U','I','O','P',136,'*','\n',0,'A','S','D',
 'F','G','H','J','K','L',177,'[',144,0,']','Z','X','C','V',
 'B','N','M',';',':','_',0,0,0,' '};
-
-void readInput() {
-	/*char input = read_key();
-	if(input == 0)
-		return;
-	input -= 30; //si apreto A, se imprime A
-	input += 'A';
-	buffer[index++] = input;
-	writeToScreen(0xB8020, buffer[index-1], 0xF2);*/
-}
-
-int divideZero();
-
-int divideZero() {
-	int a = 1;
-	int b = 0;
-	return a / b;
-}
 
 void printInput() {
 	unsigned char input = read_key();
@@ -100,8 +80,6 @@ void printInput() {
 		else
 			buffer[index] = '>';
 	}
-	
-	mathFunc(0.05,5,-40);
 	index = (index < LAST_INDEX) ? index + 1 : 0;
 }
 
@@ -120,19 +98,6 @@ char * readBuffer(uint64_t rbx, char * str, uint64_t bufSize) {
 		bufSize--;
 	}
 	return str;
-	/*if(!(getLastInsertion() == 0 || getLastInsertion() == '\n'))
-		return 0x0;
-	unsigned i = (index > 1) ? index - 2 : LAST_INDEX - 1 + index;
-	while(buffer[i] != '\n' && buffer[i] != 0) {
-		i = (i > 0) ? i - 1 : LAST_INDEX;
-	}
-	i = (i < LAST_INDEX) ? i + 1 : 0;
-	unsigned j;
-	for(j = 0; buffer[i] != '\n' && buffer[i] != 0 && j > bufSize; j++) {
-		str[j] = buffer[i];
-		i = (i < LAST_INDEX) ? i + 1 : 0;
-	}
-	return str;*/
 }
 
 void incrementIndex() {
