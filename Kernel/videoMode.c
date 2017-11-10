@@ -27,6 +27,14 @@ void putPixel(unsigned short x, unsigned short y) {
 }
 
 void put_char(int c) {
+	if(c == '\n') {
+		newLine();
+		return;
+	}
+	if(c == 0x08) {
+		deleteChar();
+		return;
+	}
 	unsigned char * character = pixel_map(c);
 	int bytesPerPixel = *bitsPerPixel / 8;
 	int i,j;
@@ -90,8 +98,8 @@ void putString(char * str) {
 }
 
 void putnString(char * str, uint64_t length) {
-	for( ; length > 0; length--)
-		put_char(*str);
+	for( ; length > 0 && *str != 0; length--)
+		put_char(*(str++));
 }
 
 void setCharColors(uint8_t cb, uint8_t cg, uint8_t cr) {

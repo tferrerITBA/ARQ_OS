@@ -59,7 +59,8 @@ void int80Dispatcher(uint64_t rax, uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 //No necesito ningún argumento
 char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-  return timeToString();
+  timeToString(rcx);
+  return rcx;
 }
 
 //rbx es 1 para putnstring, 0 para clear; rcx es un char * y rdx es la longitud
@@ -68,7 +69,7 @@ char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     putnString(rcx, rdx);
     return 0x1;
   }
-  else if(rbx == 0) {
+  if(rbx == 0) {
     clearScreen();
     return 0x2;
   }

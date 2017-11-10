@@ -12,7 +12,6 @@ extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
-extern void timeToString();
 extern void load_idt();
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
@@ -104,8 +103,6 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
-	
-	timeToString();
 
 	whileGenerator();
 

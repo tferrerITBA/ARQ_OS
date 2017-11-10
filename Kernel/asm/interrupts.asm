@@ -38,7 +38,7 @@ _int80Handler:
 	call int80Dispatcher
 
 	popState
-	iret
+	iretq
 
 %macro pushState 0
 	push rax

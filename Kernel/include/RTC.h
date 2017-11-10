@@ -1,8 +1,6 @@
 #include <stdint.h>
 
-void timeToString();
-
-void putString(char * str);
+void timeToString(char *);
 
 static char getFirstDigit(uint8_t num);
 
