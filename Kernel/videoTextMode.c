@@ -1,8 +1,8 @@
-#include "videoTextMode.h"
+/*#include "videoTextMode.h"
 
 static char * screenPosition = (char *) 0xB8000;
 /*Color format: 0xF2 == White background (F), Green characters (2)*/
-void writeTextToScreenFromStart(char * str, uint8_t color) {
+/*void writeTextToScreenFromStart(char * str, uint8_t color) {
 	writeTextToScreen(str, color);
 }
 
@@ -35,4 +35,4 @@ void clearTextScreen() {
 		*(screenPosition++) = 0;
 	}
 	screenPosition = SCR_START;
-}
+}*/

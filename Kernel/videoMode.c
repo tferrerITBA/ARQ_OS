@@ -86,7 +86,7 @@ void deleteChar() {
 
 void putString(char * str) {
 	for( ; *str != 0; str++) {
-		char c = *str;
+		unsigned char c = *str;
 		if(c != '\n' && c != 0x08)
 			put_char(c);
 		else if(c == '\n')
@@ -98,7 +98,7 @@ void putString(char * str) {
 
 void putnString(char * str, uint64_t length) {
 	for( ; length > 0 && *str != 0; length--) {
-		char c = *str;
+		unsigned char c = *str;
 		if(c != '\n' && c != 0x08)
 			put_char(c);
 		else if(c == '\n')

@@ -1,4 +1,4 @@
-#include <stdint.h>
+/*#include <stdint.h>
 
 #define SCR_START 0xB8000
 
@@ -12,4 +12,4 @@ void deleteTextCharacter();
 
 void newTextLine();
 
-void clearTextScreen();
+void clearTextScreen();*/

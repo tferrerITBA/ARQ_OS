@@ -1,5 +1,8 @@
 #include "RTC.h"
 
+static char getFirstDigit(uint8_t num);
+static char getSecondDigit(uint8_t num);
+
 static char getFirstDigit(uint8_t num) {
 	return (char)(num / 10 + '0');
 }

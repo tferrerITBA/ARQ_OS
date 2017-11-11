@@ -104,13 +104,7 @@ int main()
 
 	ncPrint("[Finished]");
 
-	whileGenerator();
+	while(1);
 
 	return 0;
 }
-
-void whileGenerator() {
-	while(1);
-}
-
-

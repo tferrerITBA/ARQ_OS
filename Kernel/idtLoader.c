@@ -3,6 +3,7 @@
 #include <defs.h>
 #include <interrupts.h>
 #include "videoMode.h"
+#include "RTC.h"
 
 char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx);

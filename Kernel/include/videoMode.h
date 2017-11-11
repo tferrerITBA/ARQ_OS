@@ -30,3 +30,7 @@ void clearScreen();
 void moveScreenOneUp();
 
 void copyPixel(uint8_t * source, uint8_t * dest);
+
+void newLine();
+
+void deleteChar();
