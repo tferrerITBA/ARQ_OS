@@ -51,13 +51,16 @@ void runTime() {
 }
 
 void runChcolor(uint8_t blue, uint8_t green, uint8_t red) {
-
+	uint8_t colors [3] = {blue, green, red};
+	changeCColors(colors);
 }
 
 void runBgcolor(uint8_t blue, uint8_t green, uint8_t red) {
-
+	uint8_t colors [3] = {blue, green, red};
+	changeBColors(colors);
 }
 
 void runMath(double a, double b, double c) {
+	//clearScr();
 	mathFunc(a,b,c);
 }
