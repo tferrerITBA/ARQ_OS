@@ -52,9 +52,14 @@ int readCommand(char command[], int mode) {
 	double mathCons[3];
 	int i;
 	int retValue = 0;
-	if(mode == 2 && strequals(command,"exit")) {
-		runClear();
-		return 1;
+	if(mode == 2) {
+		//runClear();
+		if(strequals(command,"exit")) {
+			return 1;
+		} else {
+			printf("Invalid command. Type 'exit' for leaving funcion graph mode\n");
+			return 2;
+		}
 	} else if(mode != 2) {
 		/* One-word commands */
 		if(strequals(command,"help")) {
@@ -77,6 +82,7 @@ int readCommand(char command[], int mode) {
 			readWordFromCommand(params, command, i, END);
 			if(strequals(action,"echo")) {
 				printf(params);
+				printf("\n");
 			} else if(strequals(action,"chcolor")) {
 				retValue = validateColors(colors, params);
 				if(retValue != 0) {
@@ -98,7 +104,7 @@ int readCommand(char command[], int mode) {
 			}
 		}
 		return 0;
-	}
+	} 
 	
 }
 
@@ -110,7 +116,10 @@ void readWordFromCommand(char word[], char command[], int from, char to) {
 	int i = from;
 	int j = 0;
 	while(command[i] != to) {
-		word[j++] = command[i++];
+		word[j] = command[i];
+		word[j+1] = 0;
+		i++;
+		word++;
 	}
 }
 
@@ -207,6 +216,7 @@ int validateMath(double ret[], char params[]) {
 	int len;
 	char number[SIZE] = {0};
 	for (i = 0; i<3 ; i++) {
+		number[0] = 0;
 		current = 0.0;
 		if(i == 0 || i == 1) {
 			readWordFromCommand(number, params, j,' ');
