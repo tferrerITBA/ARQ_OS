@@ -1,5 +1,6 @@
 GLOBAL scanChar
 GLOBAL printNChars
+GLOBAL raiseInvOp
 
 
 section .text
@@ -37,4 +38,8 @@ scanChar:	;ssize_t read(int fd, void *buf, size_t count)
 	mov rsp, rbp
 	pop rbp 
 
+	ret
+
+raiseInvOp:
+	ud2
 	ret

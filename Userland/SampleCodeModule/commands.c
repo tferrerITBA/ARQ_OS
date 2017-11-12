@@ -43,7 +43,7 @@ void runOverflow() {
 }
 
 void runInvOpc() {
-
+	raiseInvOp();
 }
 
 void runTime() {

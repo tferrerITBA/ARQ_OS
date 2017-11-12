@@ -8,6 +8,3 @@ typedef struct {
 	uint64_t ss;
 } trapframe;
 #pragma pack(pop)
-
-extern trapframe * get_rsp_address();
-extern void reset_rip();

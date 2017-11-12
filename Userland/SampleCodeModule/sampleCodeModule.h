@@ -12,3 +12,4 @@ int integerPartLength(char * number);
 int isDigit(char c);
 int toInt(char c);
 int length(char word[]);
+extern void raiseInvOp();

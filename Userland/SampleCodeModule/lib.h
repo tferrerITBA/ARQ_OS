@@ -1,4 +1,4 @@
-void putChar(char c);
+void putChar(unsigned char c);
 char getChar();
 void printf(char * s);
 void printInt(int n);

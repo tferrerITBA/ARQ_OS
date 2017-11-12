@@ -4,13 +4,13 @@ extern int scanChar(char * s, int len);
 #include "lib.h"
 
 
-void putChar(char c) { ////calls assembly function printNChars which uses syscall write
+void putChar(unsigned char c) { ////calls assembly function printNChars which uses syscall write
 	printNChars(&c, 1);
 }
 
 char getChar() { //calls assembly function scanChar which uses syscall read
 
-	char c = 0; //null character
+	unsigned char c = 0; //null character
 
 	do {
 

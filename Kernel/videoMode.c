@@ -15,6 +15,9 @@ static uint8_t charColor[] = {0xFF, 0xFF, 0xFF}; //B,G,R; 0xFF == White, 0x00 ==
 static uint8_t backgroundColor[] = {0x00, 0x00, 0x00};
 static int currPos = 0;
 static int currRow = 0;
+static char numBuffer[64] = {'0'};
+
+static uint32_t unsignedintToBase(uint64_t value, char * buffer, uint32_t base);
 
 void putPixel(unsigned x, unsigned y) {
 	if(x < 0 || x > *XResolution || y < 0 || y > *YResolution)
@@ -182,4 +185,50 @@ void copyPixel(uint8_t * source, uint8_t * dest) {
 	*dest = *source;
 	*(dest + 1) = *(source + 1);
 	*(dest + 2) = *(source + 2);
+}
+
+void printDecimal(uint64_t value) {
+	printBase(value, 10);
+}
+
+void printHex(uint64_t value) {
+	printBase(value, 16);
+}
+
+void printBase(uint64_t value, uint32_t base) {
+	unsignedintToBase(value, numBuffer, base);
+	putString(numBuffer);
+}
+
+//from naiveConsole.c
+static uint32_t unsignedintToBase(uint64_t value, char * buffer, uint32_t base)
+{
+	char *p = buffer;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in buffer.
+	*p = 0;
+
+	//Reverse string in buffer.
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+	return digits;
 }

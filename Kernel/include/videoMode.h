@@ -34,3 +34,9 @@ void copyPixel(uint8_t * source, uint8_t * dest);
 void newLine();
 
 void deleteChar();
+
+void printDecimal(uint64_t value);
+
+void printHex(uint64_t value);
+
+void printBase(uint64_t value, uint32_t base);

@@ -16,9 +16,7 @@ GLOBAL _irq05Handler
 GLOBAL _int80Handler
 
 GLOBAL _exception0Handler
-
-GLOBAL reset_rip
-GLOBAL get_rsp_address
+GLOBAL _exception6Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -93,13 +91,11 @@ _int80Handler:
 
 
 %macro exceptionHandler 1
-	pushState
 
 	mov rdi, %1 ; pasaje de parametro
 	mov rsi, rsp
 	call exceptionDispatcher
 
-	popState
 	mov qword [rsp], main
 	iretq
 %endmacro
@@ -163,6 +159,10 @@ _irq05Handler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+;Invalid Opcode Exception
+_exception6Handler:
+	exceptionHandler 6
 
 haltcpu:
 	cli

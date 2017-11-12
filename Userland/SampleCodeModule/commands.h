@@ -9,3 +9,4 @@ void runTime();
 void runChcolor(uint8_t blue, uint8_t green, uint8_t red);
 void runBgcolor(uint8_t blue, uint8_t green, uint8_t red);
 void runMath(double a, double b, double c);
+extern void raiseInvOp();
