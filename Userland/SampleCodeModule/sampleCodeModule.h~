@@ -10,5 +10,6 @@ int validateMath(double * ret, char * params);
 void calculateFactor(double arr[], int digits);
 int integerPartLength(char * number);
 int isDigit(char c);
-uint8_t toInt(char c);
+int toInt(char c);
 int length(char word[]);
+extern void raiseInvOp();

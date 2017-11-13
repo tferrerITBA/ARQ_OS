@@ -56,7 +56,8 @@ int main() {
 int readCommand(char command[], int mode) {
 	char action[SIZE] = {0};
 	char params[SIZE] = {0};
-	uint8_t colors[3]; 
+	uint8_t colors[3] = {0};
+	uint8_t colorAux[3] = {0};
 	double mathCons[3];
 	int i;
 	int retValue = 0;
@@ -106,6 +107,11 @@ int readCommand(char command[], int mode) {
 				validateColors(colors, params);
 				if(retValue != 0) {
 					runBgcolor(colors[0], colors[1], colors[2]);
+				}
+			} else if(strequals(action,"colorfade")) {
+				retValue = validateFade(colors, colorAux, params);
+				if(retValue != 0) {
+					colorFade(colors, colorAux);
 				}
 			} else if(strequals(action,"math")) {
 				retValue = validateMath(mathCons, params);
@@ -221,6 +227,44 @@ int integerValue(char num[], int len, uint8_t colVals[] , int index) {
 		printf("Color values should be integers between 0 and 256\n");
 		return -1;
 	}
+}
+int validateFade(uint8_t * colors, uint8_t * colorsAux, char * params) {
+	if(strequals(params,"green red") || strequals(params,"red green")) {
+		colors[0] = 0;
+		colors[1] = 255;
+		colors[2] = 0;
+		colorsAux[0] = 0;
+		colorsAux[1] = 0;
+		colorsAux[2] = 255;	
+		return 1;
+	} else if(strequals(params,"blue red") || strequals(params,"red blue")) {
+		colors[0] = 255;
+		colors[1] = 0;
+		colors[2] = 0;
+		colorsAux[0] = 0;
+		colorsAux[1] = 0;
+		colorsAux[2] = 255;	
+		return 1;
+	} else if (strequals(params,"blue green") || strequals(params,"green blue")) {
+		colors[0] = 0;
+		colors[1] = 255;
+		colors[2] = 0;
+		colorsAux[0] = 255;
+		colorsAux[1] = 0;
+		colorsAux[2] = 0;
+		return 1;
+	} else if (strequals(params,"black white") || strequals(params,"white black")) {
+		colors[0] = 0;
+		colors[1] = 0;
+		colors[2] = 0;
+		colorsAux[0] = 255;
+		colorsAux[1] = 255;
+		colorsAux[2] = 255;
+		return 1;
+	}
+	printf("Colors not supported\n");
+	return 0;
+
 }
 
 int validateMath(double ret[], char params[]) {
