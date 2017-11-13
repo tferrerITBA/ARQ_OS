@@ -109,6 +109,7 @@ int readCommand(char command[], int mode) {
 			}
 		}
 	}
+	return 1;
 }
 
 /**
