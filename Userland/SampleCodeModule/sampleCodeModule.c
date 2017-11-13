@@ -7,7 +7,7 @@
 int main() {
 	char command[SIZE] = {0};
 	int index = 0;
-	int ret;
+	int ret = 1;
 
 	putChar('>');
 	char c;
@@ -53,14 +53,14 @@ int readCommand(char command[], int mode) {
 	int i;
 	int retValue = 0;
 	if(mode == 2) {
-		//runClear();
 		if(strequals(command,"exit")) {
+			runClear();
 			return 1;
 		} else {
 			printf("Invalid command. Type 'exit' for leaving funcion graph mode\n");
 			return 2;
 		}
-	} else if(mode != 2) {
+	} else {
 		/* One-word commands */
 		if(strequals(command,"help")) {
 			runHelp();
@@ -83,29 +83,32 @@ int readCommand(char command[], int mode) {
 			if(strequals(action,"echo")) {
 				printf(params);
 				printf("\n");
+				return 1;
 			} else if(strequals(action,"chcolor")) {
 				retValue = validateColors(colors, params);
 				if(retValue != 0) {
 					runChcolor(colors[0], colors[1], colors[2]);
 				}
+				return 1;
 			} else if(strequals(action,"bgcolor")) {
 				validateColors(colors, params);
 				if(retValue != 0) {
 					runBgcolor(colors[0], colors[1], colors[2]);
 				}
+				return 1;
 			} else if(strequals(action,"math")) {
 				retValue = validateMath(mathCons, params);
 				if(retValue != 0) {
 					runMath(mathCons[0], mathCons[1], mathCons[2]);
+					return 2;
 				}
-				return 2;
+				return 1;
 			} else {
 				printf("Invalid command. Try 'help' for information about avaliable options\n");
+				return 1;
 			}
 		}
-		return 0;
-	} 
-	
+	}
 }
 
 /**
@@ -115,7 +118,7 @@ int readCommand(char command[], int mode) {
 void readWordFromCommand(char word[], char command[], int from, char to) {
 	int i = from;
 	int j = 0;
-	while(command[i] != to) {
+	while(command[i] != 0 && command[i] != to) {
 		word[j] = command[i];
 		word[j+1] = 0;
 		i++;
@@ -148,7 +151,7 @@ int validateColors(uint8_t ret[], char params[]) {
 		}
 		len = length(number);
 		if(len > 3) {
-			printf("Invalid color parameters");
+			printf("Invalid color parameters\n");
 			return 0; 
 		}
 		j += len + 1;
@@ -223,8 +226,6 @@ int validateMath(double ret[], char params[]) {
 		} else {
 			readWordFromCommand(number, params, j, END);
 		}
-		printf(number);
-		printf("\n");
 		len = length(number);
 		j += len + 1;
 
