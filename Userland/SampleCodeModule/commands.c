@@ -9,11 +9,9 @@ extern char * changeCColors(uint8_t colors[]);
 void runHelp() {
 	printf("clear: erases all visible text \n");
 	printf("\n");
-	printf("chcolor b g r: changes characters color (previously written characters keep the original color) \n");
-	printf("               b, g and r are hexadecimal values for red, green and blue components\n");
+	printf("chcolor b g r: changes characters color (previously written characters keep the original color). b, g and r are hexadecimal values for red, green and blue components\n");
 	printf("\n");
-	printf("bgcolor b g r: changes background color.\n");
-	printf("               b, g and r are hexadecimal values for blue, green and red components \n");
+	printf("bgcolor b g r: changes background color. b, g and r are hexadecimal values for blue, green and red components \n");
 	printf("\n");
 	printf("zerodiv: shows zero division exception handling\n");
 	printf("\n");
@@ -23,9 +21,13 @@ void runHelp() {
 	printf("\n");
 	printf("zerodiv: shows zero division exception handling\n");
 	printf("\n");
-	printf("echo str: prints str\n");
-	printf("          str must be a string\n");
+	printf("echo str: prints string str\n");
 	printf("math a b c: plots mathemathical function ax^2 + bx + c\n");
+	printf("\n");
+	printf("securityon: hides input characters until securityoff is invoked\n");
+	printf("\n");
+	printf("securityoff: recovers from securityon mode\n");
+	printf("\n");
 }
 
 void runClear() {

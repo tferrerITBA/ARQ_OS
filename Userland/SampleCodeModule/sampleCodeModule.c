@@ -3,12 +3,16 @@
 #define SIZE 128
 #define BACKSPACE 8
 #define END 0
+#define STANDARD 1
+#define MATH 2
+#define SECURITY 3
 
 int main() {
 	char command[SIZE] = {0};
 	int index = 0;
 	int ret = 1;
 
+	printf("Welcome! Type 'help' for the full command list\n");
 	putChar('>');
 	char c;
 	while(1) {
@@ -37,8 +41,12 @@ int main() {
 					putChar('\n');
 					index = 1;
 					command[1] = 0;
+				}
+				if(ret != SECURITY) {
+					putChar(c);
+				} else {
+					putChar('*');
 				}	
-				putChar(c);
 			}
 		}
 	}
@@ -74,6 +82,12 @@ int readCommand(char command[], int mode) {
 			runInvOpc();
 		} else if(strequals(command,"time")) {
 			runTime();
+		} else if(strequals(command,"securityon")) {
+			printf("Security mode is on\n");
+			return SECURITY;
+		} else if(strequals(command,"securityoff")) {
+			printf("Security mode is off\n");
+			return STANDARD;
 		}
 		/* Commands with arguments */
 		else{
@@ -83,33 +97,31 @@ int readCommand(char command[], int mode) {
 			if(strequals(action,"echo")) {
 				printf(params);
 				printf("\n");
-				return 1;
 			} else if(strequals(action,"chcolor")) {
 				retValue = validateColors(colors, params);
 				if(retValue != 0) {
 					runChcolor(colors[0], colors[1], colors[2]);
 				}
-				return 1;
 			} else if(strequals(action,"bgcolor")) {
 				validateColors(colors, params);
 				if(retValue != 0) {
 					runBgcolor(colors[0], colors[1], colors[2]);
 				}
-				return 1;
 			} else if(strequals(action,"math")) {
 				retValue = validateMath(mathCons, params);
 				if(retValue != 0) {
 					runMath(mathCons[0], mathCons[1], mathCons[2]);
-					return 2;
+					return MATH;
 				}
-				return 1;
 			} else {
 				printf("Invalid command. Try 'help' for information about avaliable options\n");
-				return 1;
 			}
 		}
 	}
-	return 1;
+	if(mode == 3) {
+		return SECURITY;
+	}
+	return STANDARD;
 }
 
 /**
