@@ -104,7 +104,7 @@ int readCommand(char command[], int mode) {
 					runChcolor(colors[0], colors[1], colors[2]);
 				}
 			} else if(strequals(action,"bgcolor")) {
-				validateColors(colors, params);
+				retValue = validateColors(colors, params);
 				if(retValue != 0) {
 					runBgcolor(colors[0], colors[1], colors[2]);
 				}

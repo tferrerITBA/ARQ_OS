@@ -53,7 +53,8 @@ void runInvOpc() {
 }
 
 void runTime() {
-	timeInt();
+	printf(timeInt());
+	putChar('\n');
 }
 
 void runChcolor(uint8_t blue, uint8_t green, uint8_t red) {
