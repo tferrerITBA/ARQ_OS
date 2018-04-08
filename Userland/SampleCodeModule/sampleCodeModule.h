@@ -5,6 +5,7 @@ int toInt(char c);
 int readCommand(char command[], int mode);
 void readWordFromCommand(char word[], char command[], int from, char to);
 int validateColors(uint8_t ret[], char params[]);
+int validateFade(uint8_t ret[], uint8_t aux[], char params[]);
 int integerValue(char num[], int len, uint8_t colVals[] , int index);
 int validateMath(double * ret, char * params);
 void calculateFactor(double arr[], int digits);

@@ -1,5 +1,5 @@
-extern int printNChars(char * s, int len);
-extern int scanChar(char * s, int len);
+extern int printNChars(unsigned char * s, int len);
+extern int scanChar(unsigned char * s, int len);
 
 #include "lib.h"
 

@@ -31,7 +31,7 @@ void runHelp() {
 	printf("securityoff: recovers from securityon mode\n");
 	printf("\n");
 	printf("colorfade from to: prints a color fade effect between any of the primary colors or between black and white\n");
-	printf('\n');
+	printf("\n");
 }
 
 void runClear() {
