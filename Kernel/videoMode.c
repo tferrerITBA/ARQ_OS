@@ -1,15 +1,15 @@
 #include "videoMode.h"
 
 //VBEModeInfoBlock.PhysBasePtr
-uint8_t ** physBasePtr = VBEModeInfo + 40;
+uint8_t ** physBasePtr = (uint8_t **)(VBEModeInfo + 40);
 //VBEModeInfoBlock.BytesPerScanLine
-uint16_t * bytesPerScanLine = VBEModeInfo + 16;
+uint16_t * bytesPerScanLine = (uint16_t *)(VBEModeInfo + 16);
 //VBEModeInfoBlock.BitsPerPixel
-uint8_t * bitsPerPixel = VBEModeInfo + 25;
+uint8_t * bitsPerPixel = (uint8_t *)(VBEModeInfo + 25);
 //VBEModeInfoBlock.XResolution
-uint16_t * XResolution = VBEModeInfo + 18;
+uint16_t * XResolution = (uint16_t *)(VBEModeInfo + 18);
 //VBEModeInfoBlock.YResolution
-uint16_t * YResolution = VBEModeInfo + 20;
+uint16_t * YResolution = (uint16_t *)(VBEModeInfo + 20);
 
 static uint8_t charColor[] = {0xFF, 0xFF, 0xFF}; //B,G,R; 0xFF == White, 0x00 == Black
 static uint8_t backgroundColor[] = {0x00, 0x00, 0x00};

@@ -64,27 +64,27 @@ void int80Dispatcher(uint64_t rax, uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 //En rcx se pone un char[] con al menos 9 espacios
 char * time(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-  timeToString(rcx);
-  return rcx;
+  timeToString((char *)rcx);
+  return (char *)rcx;
 }
 
 //rbx es 1 para putnstring, 0 para clear; rcx es un char * y rdx es la longitud
 char * write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
   if(rbx == 1) {
-    putnString(rcx, rdx);
-    return 0x1;
+    putnString((char *)rcx, rdx);
+    return (char *)0x1;
   }
   if(rbx == 0) {
     clearScreen();
-    return 0x2;
+    return (char *)0x2;
   }
-  return 0x0;
+  return (char *)0x0;
 }
 
 //rbx es 1 para stdin, rcx es el char * destino y rdx la longitud a leer
 char * read(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
   if(rbx == 1) {
-    return readBuffer(rbx, rcx, rdx);
+    return readBuffer(rbx, (char *)rcx, rdx);
   }
   return 0x0;
 }
@@ -97,7 +97,7 @@ char * pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 //rbx == 1 --> char; rbx == 0 --> fondo; rcx array con colores B G R
 char * colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-  uint8_t * cols = rcx;
+  uint8_t * cols = (uint8_t *)rcx;
   if(rbx == 0)
     setBackgroundColors(cols[0], cols[1], cols[2]);
   else if(rbx == 1)
