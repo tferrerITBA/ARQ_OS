@@ -1,4 +1,4 @@
-/*#include "videoTextMode.h"
+/*#include "include/videoTextMode.h"
 
 static char * screenPosition = (char *) 0xB8000;
 //Color format: 0xF2 == White background (F), Green characters (2)

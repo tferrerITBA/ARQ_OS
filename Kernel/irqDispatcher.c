@@ -1,6 +1,7 @@
 #include <stdint.h>
-#include <time.h>
-#include "keyboard.h"
+#include "include/keyboard.h"
+#include "include/time.h"
+
 typedef void (*hardwareI)(void);
 
 void irqDispatcher(uint64_t irq);

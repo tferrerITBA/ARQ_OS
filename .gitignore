@@ -22,3 +22,23 @@ Kernel/kernel\.bin
 Userland/0000-sampleCodeModule\.bin
 
 Userland/0001-sampleDataModule\.bin
+
+Kernel/\.idea/
+
+*.bin
+
+Kernel/cmake-build-debug/CMakeFiles/3\.9\.6/CompilerIdC/
+
+*.cmake
+
+Kernel/cmake-build-debug/CMakeFiles/
+
+Kernel/cmake-build-debug/
+
+*.xml
+
+*.iml
+
+cmake-build-debug/
+
+CMakeLists\.txt

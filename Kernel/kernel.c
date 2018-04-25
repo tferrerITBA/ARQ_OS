@@ -1,8 +1,8 @@
 #include <stdint.h>
 #include <string.h>
-#include <lib.h>
-#include <moduleLoader.h>
-#include <naiveConsole.h>
+#include "include/lib.h"
+#include "include/moduleLoader.h"
+#include "include/naiveConsole.h"
 
 extern uint8_t text;
 extern uint8_t rodata;

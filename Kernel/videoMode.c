@@ -1,4 +1,4 @@
-#include "videoMode.h"
+#include "include/videoMode.h"
 
 //VBEModeInfoBlock.PhysBasePtr
 uint8_t ** physBasePtr = (uint8_t **)(VBEModeInfo + 40);
