@@ -18,8 +18,8 @@ int isEmpty(Queue queue) {
     return queue->length == 0;
 }
 
-void enqueue(Queue queue, void * elem, size_t elemQty) {
-    size_t assignedMemory = (queue->size)*elemQty;
+void enqueue(Queue queue, void * elem) {
+    size_t assignedMemory = (queue->size);
     Element newElement = malloc(sizeof(queueElement));
     Element currentLast = queue->last;
     newElement->info = malloc(assignedMemory);

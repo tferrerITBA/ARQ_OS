@@ -1,8 +1,5 @@
 #include <printf.h>
 
-#ifndef TP1_QUEUE_H
-#define TP1_QUEUE_H
-
 #endif
 #pragma pack(push)
 #pragma pack(1)
@@ -27,6 +24,6 @@ typedef struct queueElement * Element;
 Queue newQueue(size_t size);
 int isEmpty(Queue queue);
 int getSize(Queue queue);
-void enqueue(Queue queue, void * elem, size_t length);
+void enqueue(Queue queue, void * elem);
 void * dequeue(Queue queue);
 
