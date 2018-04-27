@@ -9,7 +9,6 @@ typedef struct queueStruct {
     int length;
     size_t size;
 } queueStruct;
-#pragma pack(pop)
 
 typedef queueStruct * Queue;
 

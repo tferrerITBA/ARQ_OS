@@ -1,6 +1,10 @@
 //Process control block. Guarda informacion de los procesos
 
 #define CREATED 1
+#define WAITING 2
+#define BLOCKED 3
+#define TERMINATED 4
+#define RUNNING 5
 
 typedef struct pcbCDT{
     int pid;
@@ -9,3 +13,7 @@ typedef struct pcbCDT{
 } pcb;
 
 typedef pcb * Pcb;
+
+Pcb newPcb(int pid);
+
+

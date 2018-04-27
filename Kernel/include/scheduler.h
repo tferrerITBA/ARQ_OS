@@ -1,5 +1,13 @@
+#include <sys/types.h>
+#include "queue.h"
+#include "pcb.h"
+#include "process.h"
+
 #define QUEUE_SIZE 10
-#define WAITING 2
-#define BLOCKED 3
-#define TERMINATED 4
-#define RUNNING 5
+extern Queue readyQueue;
+extern Pcb runningPcb;
+extern pid_t pidCount;
+
+void schedule();
+int terminateProcess(Process p);
+void enqueueProcess(Queue q, Pcb pcb);

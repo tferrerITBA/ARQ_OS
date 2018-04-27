@@ -1,22 +1,34 @@
-
+#include "include/process.h"
 #include "include/queue.h"
 #include "include/scheduler.h"
 #include "include/pcb.h"
 
-static Pcb runningPcb;
+void schedule() {
 
-void schedule(Queue readyQueue) {
+    /** Esta funcion tiene que ser llamada desde la interrupcion del tiemr tick **/
+
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
-    } else if(runningPcb) {
-
+    } else if(runningPcb->state == RUNNING) {
+        runningPcb->state = WAITING;
+        enqueueProcess(readyQueue,runningPcb);
     }
     runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
-    return;
+
+    /** Investigar que hacer si el proceso se bloquea **/
 }
 
-void addProcess(Queue q, Pcb pcb) {
+void enqueueProcess(Queue q, Pcb pcb) {
     pcb->state = WAITING;
     enqueue(q,pcb);
+}
+
+void startScheduler() {
+
+    /** Obtener el instruction pointer del scheduler y crearle un stack **/
+    newProcess(++pidCount,);
+    readyQueue = newQueue(QUEUE_SIZE);
+
+
 }
