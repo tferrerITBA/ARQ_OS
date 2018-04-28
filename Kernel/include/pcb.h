@@ -9,6 +9,9 @@
 typedef struct pcbCDT{
     int pid;
     int state;
+    void * stackPointer;
+    void * stackOrigin;
+    void * instructionPointer;
     //Agregar campos a medida que se vayan necesitando
 } pcb;
 

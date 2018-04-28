@@ -2,10 +2,17 @@
 #include "include/queue.h"
 #include "include/scheduler.h"
 #include "include/pcb.h"
+#include "include/stack.h"
 
-void schedule() {
+void * schedule() {
 
     /** Esta funcion tiene que ser llamada desde la interrupcion del tiemr tick **/
+    if(isEmpty(readyQueue)) {
+        return NULL;
+    }
+
+    runningPcb->stackPointer = getRSP();
+    runningPcb->instructionPointer = getRIP();
 
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
@@ -15,6 +22,9 @@ void schedule() {
     }
     runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
+    setRIP(runningPcb->instructionPointer);
+
+    return runningPcb->stackPointer;
 
     /** Investigar que hacer si el proceso se bloquea **/
 }

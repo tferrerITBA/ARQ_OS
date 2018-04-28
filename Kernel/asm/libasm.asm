@@ -5,7 +5,15 @@ section .text
 global getRIP
 
 getRIP:
-	mov rax, $
+	mov rax, [rsp+12*8]
+	ret
+
+getRSP:
+	mov rax, [rsp+11*8]
+    ret
+
+setRIP:
+	mov [rsp+12*8], rdi
 	ret
 	
 cpuVendor:

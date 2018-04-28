@@ -1,0 +1,29 @@
+tick_handler:
+		PUSHAQ
+		CALL schedule
+		MOV RSP, RAX
+		POPAQ
+		call EOI
+		IRETQ
+
+PUSHAQ:
+		PUSH RSP
+		PUSH RBP
+		PUSH RAX
+		PUSH RBX
+		PUSH RCX
+		PUSH RDX
+		PUSH RSI
+		PUSH RDI
+		PUSHFQ
+
+POPAQ:
+		POPFQ
+		POP RDI
+		POP RSI
+		POP RDX
+		POP RCX
+		POP RBX
+		POP RAX
+		POP RBP
+		POP RSP

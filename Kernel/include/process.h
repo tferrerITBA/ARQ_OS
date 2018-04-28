@@ -4,12 +4,11 @@
 
 typedef struct processCDT {
     Pcb pcb;
-    void * stack;
-    void * nextInstruction;
 } process;
 
 typedef process * Process;
 
 Process newProcess(pid_t pid, void * rip, void * rsp);
+void * duplicateStack();
 int terminateProcess(Process p);
 pid_t fork();

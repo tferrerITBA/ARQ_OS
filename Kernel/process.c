@@ -21,7 +21,8 @@ pid_t fork() {
 
     pid_t newPid = ++pidCount;
     void * instructionPointer;
-    void * stackPointer;
+    void * stackLimit = malloc(STACK_SIZE);
+    void * stackPointer = duplicateStack();
     /** Aca es necesario hacer un programa de assembler para obtener el RIP,
      *  la direccion del stack,y toda la informacion necesaria del proceso que llama.
      *  El fork copia toda la informacion del proceso padre. Tambien hay que crear un
@@ -39,5 +40,14 @@ pid_t fork() {
     }
 
     return runningPcb->pid;
+}
+
+void * duplicateStack(void * stackOrigin) {
+    void * parentRsp = runningPcb->stackPointer;
+    void * childRsp = malloc(STACK_SIZE);
+    int stackLen = runningPcb->stackPointer - runningPcb->stackOrigin;
+    memcpy(childRsp,parentRsp,)
+
+
 }
 
