@@ -1,6 +1,12 @@
 GLOBAL cpuVendor
 
 section .text
+
+global getRIP
+
+getRIP:
+	mov rax, $
+	ret
 	
 cpuVendor:
 	push rbp
