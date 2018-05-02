@@ -1,8 +1,4 @@
-#include "include/process.h"
-#include "include/queue.h"
 #include "include/scheduler.h"
-#include "include/pcb.h"
-#include "include/stack.h"
 
 void * schedule() {
 
@@ -17,8 +13,9 @@ void * schedule() {
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
     } else if(runningPcb->state == RUNNING) {
-        runningPcb->state = WAITING;
         enqueueProcess(readyQueue,runningPcb);
+    } else if(runningPcb->state == BLOCKED) {
+        //TODO:
     }
     runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
@@ -36,8 +33,7 @@ void enqueueProcess(Queue q, Pcb pcb) {
 
 void startScheduler() {
 
-    /** Obtener el instruction pointer del scheduler y crearle un stack **/
-    newProcess(++pidCount,);
+    /** Obtener el instruction pointer del scheduler y crearle un stack y un heap **/
     readyQueue = newQueue(QUEUE_SIZE);
 
 

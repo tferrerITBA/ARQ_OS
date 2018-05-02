@@ -1,53 +1,49 @@
-#include <sys/types.h>
 #include "include/process.h"
-#include "include/pcb.h"
-#include "include/scheduler.h"
 
-Process newProcess(pid_t pid, void * rip, void * rsp) {
+Process newProcess(void * rsp, void * stackOrigin, void * heap) {
     Process newP = malloc(sizeof(process));
-    newP->nextInstruction = 0; /** Se deberia hacer un programa en asm para pasar como
-                                *  paramentro el RIP del padre
-                                */
-    newP->pcb = newPcb(pid); /** Que pid le pasamos */
-    newP->stack = malloc(STACK_SIZE);
+    newP->pcb = newPcb();
+    newP->pcb->stackPointer = rsp;
+    newP->pcb->stackOrigin = stackOrigin;
+    newP->pcb->heapOrigin = heap;
+    addPcbToTable(newP->pcb);
     return newP;
 }
 
 int terminateProcess(Process p) {
+    removeProcessFromTable(p->pcb->pid);
     p->pcb->state = TERMINATED;
 }
 
 pid_t fork() {
 
-    pid_t newPid = ++pidCount;
     void * instructionPointer;
-    void * stackLimit = malloc(STACK_SIZE);
-    void * stackPointer = duplicateStack();
-    /** Aca es necesario hacer un programa de assembler para obtener el RIP,
-     *  la direccion del stack,y toda la informacion necesaria del proceso que llama.
-     *  El fork copia toda la informacion del proceso padre. Tambien hay que crear un
-     *  nuevo pid para el hijo
-     *  Lo que se hace es copiar el proceso que forkeo, sol cambiarle el pid y encolarlo
-     *  No estoy seguro pero creo que habria que hacer una copia del stack asi no se pisan
-     *  el padre y el hijo
-     */
+    void * childStackPointer;
+    void * childStackLimit = duplicateStack(childStackPointer);
+    void * childHeap = duplicateHeap();
 
-    Process newP = newProcess(newPid, instructionPointer, stackPointer);
+
+    Process newP = newProcess(childStackPointer, childStackLimit + STACK_SIZE,);
     enqueueProcess(readyQueue,newP->pcb);
 
-    if(runningPcb->pid == newPid) {
+    if(runningPcb->pid == newP->pcb->pid) {
         return 0;
     }
 
     return runningPcb->pid;
 }
 
-void * duplicateStack(void * stackOrigin) {
-    void * parentRsp = runningPcb->stackPointer;
-    void * childRsp = malloc(STACK_SIZE);
-    int stackLen = runningPcb->stackPointer - runningPcb->stackOrigin;
-    memcpy(childRsp,parentRsp,)
+void * duplicateStack(void * stackPointer) {
+    void * stackLimit = malloc(STACK_SIZE)
+    size_t stackLen = runningPcb->stackOrigin - runningPcb->stackPointer;
+    stackPointer = stackLimit + STACK_SIZE - stackLen;
+    memcpy(stackPointer,runningPcb->stackPointer,stackLen);
+    return stackPointer;
+}
 
-
+void * duplicateHeap() {
+    void * heap = malloc(HEAP_SIZE);
+    memcpy(heap,runningPcb->heapOrigin,HEAP_SIZE);
+    return heap;
 }
 
