@@ -13,20 +13,28 @@ Pcb newPcb() {
 
 void addPcbToTable(Pcb pcb) {
     if(allProcesses == NULL) {
-        malloc(allProcesses, sizeof(Pcb)*BLOCK_SIZE);
+        allProcesses = malloc(sizeof(pcbTable));
+        allProcesses->first = malloc(sizeof(tableNode));
     }
-    else if(allProcesses->size % BLOCK_SIZE == 0) {
-        realloc(allProcesses, allProcesses->size + BLOCK_SIZE);
+    else {
+        TableNode new = malloc(sizeof(tableNode));
+        new->block = pcb;
+        new->next = allProcesses->first;
+        allProcesses->first = new;
+        allProcesses->size++;
     }
-    memcpy(allProcesses->first+sizeof(Pcb)*allProcesses->size,pcb, sizeof(Pcb));
 }
  void removeProcessFromTable(pid_t pid) {
-     Pcb current = allProcesses->first;
-     int index = 0;
+     TableNode current = allProcesses->first;
 
-     while(current->pid != pid) {
-         current += sizeof(Pcb);
+     while(current->next->block->pid != pid) {
+         current = current->next;
      }
+
+     TableNode selected = current->next;
+     current->next = current->next->next;
+     free(selected->block);
+     free(selected);
 
  }
 

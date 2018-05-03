@@ -12,18 +12,19 @@ Process newProcess(void * rsp, void * stackOrigin, void * heap) {
 
 int terminateProcess(Process p) {
     removeProcessFromTable(p->pcb->pid);
+    free(p->pcb->heapOrigin);
+    free(p->pcb->stackOrigin-STACK_SIZE);
+    free(p->pcb);
     p->pcb->state = TERMINATED;
 }
 
 pid_t fork() {
 
-    void * instructionPointer;
     void * childStackPointer;
     void * childStackLimit = duplicateStack(childStackPointer);
     void * childHeap = duplicateHeap();
 
-
-    Process newP = newProcess(childStackPointer, childStackLimit + STACK_SIZE,);
+    Process newP = newProcess(childStackPointer, childStackLimit + STACK_SIZE, childHeap, instructionPointer);
     enqueueProcess(readyQueue,newP->pcb);
 
     if(runningPcb->pid == newP->pcb->pid) {
@@ -34,7 +35,7 @@ pid_t fork() {
 }
 
 void * duplicateStack(void * stackPointer) {
-    void * stackLimit = malloc(STACK_SIZE)
+    void * stackLimit = malloc(STACK_SIZE);
     size_t stackLen = runningPcb->stackOrigin - runningPcb->stackPointer;
     stackPointer = stackLimit + STACK_SIZE - stackLen;
     memcpy(stackPointer,runningPcb->stackPointer,stackLen);

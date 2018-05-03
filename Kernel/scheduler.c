@@ -2,13 +2,11 @@
 
 void * schedule() {
 
-    /** Esta funcion tiene que ser llamada desde la interrupcion del tiemr tick **/
     if(isEmpty(readyQueue)) {
         return NULL;
     }
 
     runningPcb->stackPointer = getRSP();
-    runningPcb->instructionPointer = getRIP();
 
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
@@ -19,7 +17,6 @@ void * schedule() {
     }
     runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
-    setRIP(runningPcb->instructionPointer);
 
     return runningPcb->stackPointer;
 
@@ -33,8 +30,8 @@ void enqueueProcess(Queue q, Pcb pcb) {
 
 void startScheduler() {
 
-    /** Obtener el instruction pointer del scheduler y crearle un stack y un heap **/
+    void * stack = malloc(STACK_SIZE);
+    void * heap = malloc(HEAP_SIZE);
+    Process scheduler = newProcess(stack,stack,heap);
     readyQueue = newQueue(QUEUE_SIZE);
-
-
 }

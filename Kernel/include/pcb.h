@@ -14,15 +14,22 @@ typedef struct pcbCDT{
     int state;
     void * stackPointer;
     void * stackOrigin;
-    void * instructionPointer;
     void * heapOrigin;
     //Agregar campos a medida que se vayan necesitando
 } pcb;
 
 typedef pcb * Pcb;
 
+
+typedef struct tableNodeCDT{
+    Pcb block;
+    struct tableNodeCDT * next;
+} tableNode;
+
+typedef tableNode * TableNode;
+
 typedef struct pcbTable{
-    Pcb first;
+    TableNode first;
     int size;
 } pcbTable;
 
