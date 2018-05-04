@@ -4,14 +4,14 @@
 #include "process.h"
 
 #define QUEUE_SIZE 10
+#define TRUE 1
+#define FALSE 0
 extern Queue readyQueue;
 extern Pcb runningPcb;
 extern pid_t pidCount;
 
-extern void * getRIP();
 extern void * getRSP();
-extern void setRIP(void * newRIP);
-
 void * schedule();
 int terminateProcess(Process p);
 void enqueueProcess(Queue q, Pcb pcb);
+void startScheduler();
