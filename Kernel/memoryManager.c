@@ -1,5 +1,5 @@
 #include "memoryManager.h"
-
+#define BLOCK_SIZE sizeof(struct memBlock)
 //Stack containing page addresses
 stackADT stack = NULL;
 //Main reference to process block Linked List
@@ -23,7 +23,7 @@ pid_t getpid() { //returns pid of current process
 
 void * malloc(size_t size) {
 
-    if(size >= (PAGESIZE - sizeof(struct memBlock))) return NULL;
+    if(size >= (PAGESIZE - BLOCK_SIZE)) return NULL;
     pid_t pid = getpid(); //Get pid corresponding to process asking for memory
 
     p_block pb = getProcessBlock(pid);
@@ -41,19 +41,47 @@ void * malloc(size_t size) {
 
         if(PAGE_SIZE < (pb->allocated + size) ) return NULL;
 
-        m_block mb = (m_block) pb->address;
+        m_block mb = (m_block) pb->address; //start of page
         m_block dataBlock = getDataBlock(size,mb);
         if(dataBlock != NULL) pb->allocated += size;
-        return (void *)(dataBlock + sizeof(struct memBlock));
+        return (((char *)dataBlock) + BLOCK_SIZE);
 
     }
-
 }
 
 m_block getDataBlock(size_t size, m_block mb) {
 
-    //get a Data Block that has size available space
+    m_block aux = mb;
+    m_block last = mb;
+    while(aux != NULL && (aux->free = FALSE || aux->size < size)) {
+        last = aux;
+        aux = aux->next;
+    }
+    m_block newBlock;
+    if(aux == NULL) {
+        newBlock = ((char *)((char *)last + BLOCK_SIZE + last->size));
+        newBlock->free = FALSE;
+        newBlock->next = NULL;
+        newBlock->size = size;
+    }
+    else {
+        int prevSize = aux->size;
 
+        newBlock = aux;
+        newBlock->free=FALSE;
+
+        if(prevSize >= size + BLOCK_SIZE) { //Split Block
+            mem_block splitBlock =((char *)((char *)newBlock + BLOCK_SIZE + size));
+            splitBlock->free = TRUE;
+            splitBlock->size = prevSize - size - BLOCK_SIZE;
+            splitBlock->next = (mem_block)newBlock->next;
+            newBlock->next = (mem_block)splitBlock;
+            newBlock->size = size;
+        }
+        //Else stay with previous size of block (some space will be unused until freed)
+    }
+
+    return (char *)((char *)newBlock + BLOCK_SIZE);
 }
 
 p_block getProcessBlock(pid_t pid) {
@@ -86,7 +114,7 @@ p_block addProcessBlock(pid_t pid) {
             temp = auxPb;
             auxPb = auxPb->next;
         }
-        p_block newblock = temp + sizeof(struct memBlock);
+        p_block newblock = temp + BLOCK_SIZE;
         temp->next = newblock;
         newblock->pid = pid;
         newblock->allocated = 0;
@@ -96,6 +124,16 @@ p_block addProcessBlock(pid_t pid) {
         return newblock;
 
     }
+}
+
+void free(void * ptr) {
+
+    pid_t pid = getpid();
+    p_block pb = getProcessBlock(pid);
+    if(ptr == NULL || pb == NULL) return;
+
+    m_block temp = (m_block)ptr - 1;
+    temp->free = TRUE;
 
 }
 
@@ -113,14 +151,12 @@ void * calloc(size_t size) {
 void * realloc(void * ptr, size_t size) {
 
     //TODO
-
     return NULL;
 }
 
 void joinDataBlocks() { //Join two contiguous memory blocks to form a bigger one
 
     //TODO
-
     return;
 }
 

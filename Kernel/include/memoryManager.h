@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define BLOCK_SIZE sizeof(struct memBlock)
+
 #define PAGE_SIZE 0x1000
 #define HEAP_BASE 0x400000
 #define HEAP_LIMIT 0x799999
