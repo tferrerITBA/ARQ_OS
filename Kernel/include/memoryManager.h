@@ -6,14 +6,25 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-
 #define PAGE_SIZE 0x1000
 #define HEAP_BASE 0x400000
 #define HEAP_LIMIT 0x799999
-#define PAGE_QUANTITY ((HEAP_END - HEAP_START)/PAGE_SIZE)
+#define PAGE_QUANTITY ((HEAP_LIMIT - HEAP_BASE)/PAGE_SIZE)
 #define TRUE 1
 #define FALSE 0
 
+void initializePages();
+void * malloc(size_t size);
+pid_t getpid();
+void * malloc(size_t size);
+m_block getDataBlock(size_t size, m_block mb);
+p_block getProcessBlock(pid_t pid);
+p_block addProcessBlock(pid_t pid);
+void free(void * ptr);
+void * calloc(size_t size);
+void * realloc(void * ptr, size_t size);
+void joinDataBlocks(m_block m1, m_block m2);
+void popPage();
 
 
 typedef struct processBlock * p_block;
