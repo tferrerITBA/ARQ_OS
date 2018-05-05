@@ -4,8 +4,11 @@ static int terminalIsBlocked = FALSE;
 
 void * schedule() {
 
-    if(isEmpty(readyQueue)) {
+    if(runningPcb == NULL) {
         return NULL;
+    }
+    if(isEmpty(readyQueue)) {
+        return runningPcb->stackPointer;
     }
 
     runningPcb->stackPointer = getRSP();
@@ -28,9 +31,6 @@ void enqueueProcess(Queue q, Pcb pcb) {
     enqueue(q,pcb);
 }
 
-void startScheduler() {
-    void * stack = malloc(STACK_SIZE);
-    void * heap = malloc(HEAP_SIZE);
-    Process scheduler = newProcess(stack,stack,heap);
+void createReadyQueue() {
     readyQueue = newQueue(QUEUE_SIZE);
 }

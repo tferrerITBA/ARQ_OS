@@ -14,4 +14,4 @@ extern void * getRSP();
 void * schedule();
 int terminateProcess(Process p);
 void enqueueProcess(Queue q, Pcb pcb);
-void startScheduler();
+void createReadyQueue();

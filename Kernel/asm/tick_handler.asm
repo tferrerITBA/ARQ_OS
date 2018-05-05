@@ -1,12 +1,16 @@
 tick_handler:
 		PUSHAQ
 		CALL schedule
+		CMP RAX, 0
+		JE cont_switch_end
 		MOV RSP, RAX
+cont_switch_end:
 		POPAQ
-		call EOI
+		MOV AL, 20h
+        OUT 20h, AL
 		IRETQ
 
-PUSHAQ:
+%macro PUSHAQ 0
 		PUSH RSP
 		PUSH RBP
 		PUSH RAX
@@ -16,8 +20,9 @@ PUSHAQ:
 		PUSH RSI
 		PUSH RDI
 		PUSHFQ
+%endmacro
 
-POPAQ:
+%macro POPAQ 0
 		POPFQ
 		POP RDI
 		POP RSI
@@ -27,3 +32,4 @@ POPAQ:
 		POP RAX
 		POP RBP
 		POP RSP
+%endmacro

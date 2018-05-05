@@ -13,8 +13,8 @@ typedef struct pcbCDT{
     int pid;
     int state;
     void * stackPointer;
-    void * stackOrigin;
-    void * heapOrigin;
+    void * stackBase;
+    void * heapBase;
     //Agregar campos a medida que se vayan necesitando
 } pcb;
 

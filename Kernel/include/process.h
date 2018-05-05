@@ -14,8 +14,9 @@ typedef struct processCDT {
 
 typedef process * Process;
 
-Process newProcess(void * rsp, void * stackOrigin, void * heap);
+Process newProcess(void * stackPointer, void * stackBase, void * heap);
 void * duplicateStack(void * stackPointer);
 void * duplicateHeap();
+void initializeFirstProcess(terminalCaller ti);
 int terminateProcess(Process p);
-pid_t fork();
+pid_t processFork();

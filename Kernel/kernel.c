@@ -3,6 +3,7 @@
 #include "include/lib.h"
 #include "include/moduleLoader.h"
 #include "include/naiveConsole.h"
+#include "include/scheduler.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -81,8 +82,13 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
+void callTerminal() {
+    ((EntryPoint)sampleCodeModuleAddress)();
+}
+
+
 int main()
-{	
+{
 	load_idt();
 
 	ncPrint("[Kernel Main]");
@@ -90,21 +96,26 @@ int main()
 	ncPrint("  Sample code module at 0x");
 	ncPrintHex((uint64_t)sampleCodeModuleAddress);
 	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
+    createReadyQueue();
+    initializeFirstProcess(callTerminal);
 
-	ncPrint("[Finished]");
+//	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+//	ncNewline();
+//	ncNewline();
+//
+//	ncPrint("  Sample data module at 0x");
+//	ncPrintHex((uint64_t)sampleDataModuleAddress);
+//	ncNewline();
+//	ncPrint("  Sample data module contents: ");
+//	ncPrint((char*)sampleDataModuleAddress);
+//	ncNewline();
+//
+//	ncPrint("[Finished]");
 
 	while(1);
 
 	return 0;
 }
+
+
