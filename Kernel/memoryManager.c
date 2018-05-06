@@ -152,10 +152,10 @@ void * calloc(size_t size) {
     void * ptr = malloc(size);
     if(ptr != NULL) {
         for (int i = 0; i < size; i++) {
-            *(ptr + i) = 0;
+            *((char *)ptr + i) = 0;
         }
     }
-    return mem_ptr;
+    return ptr;
 }
 
 void * realloc(void * ptr, size_t size) {

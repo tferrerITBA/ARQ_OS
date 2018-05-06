@@ -22,7 +22,7 @@ void free(void * ptr);
 void * calloc(size_t size);
 void * realloc(void * ptr, size_t size);
 void joinDataBlocks(m_block m1, m_block m2);
-void popPage();
+void * popPage();
 
 typedef struct processBlock * p_block;
 struct processBlock {   //Bloque que inidica owner de dicha pagina
