@@ -1,17 +1,15 @@
-#ifndef ARQ_OS_MEMORYMANAGER_H
-#define ARQ_OS_MEMORYMANAGER_H
-
 #include <assert.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-
 #define PAGE_SIZE 0x1000
-#define HEAP_BASE 0x400000
-#define HEAP_LIMIT 0x799999
 #define PAGE_QUANTITY ((HEAP_LIMIT - HEAP_BASE)/PAGE_SIZE)
 #define TRUE 1
 #define FALSE 0
+
+void * HEAP_BASE = (void *)0x400000;
+void * HEAP_LIMIT = (void *)0x799999;
+
 
 void initializePages();
 void * malloc(size_t size);
@@ -26,10 +24,9 @@ void * realloc(void * ptr, size_t size);
 void joinDataBlocks(m_block m1, m_block m2);
 void popPage();
 
-
 typedef struct processBlock * p_block;
 struct processBlock {   //Bloque que inidica owner de dicha pagina
-    pid_t owner_pid;
+    pid_t pid;
     p_block * next;
     size_t allocated;
     void * mem_address;
@@ -42,4 +39,3 @@ struct memBlock {   //Bloque de memoria pedido por un proceso
     size_t size;
 };
 
-#endif //ARQ_OS_MEMORYMANAGER_H

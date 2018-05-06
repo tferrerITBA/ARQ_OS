@@ -10,12 +10,12 @@ p_block BASE = HEAP_BASE;
 u_int64_t pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
-//CUANDO SE TERMINA UN PROCESO HAY QUE ENCARGARSE DE PUSHEAR AL STACK LA PAGINA QUE SE ESTABA USANDO
 
 void initializePages() {
-    for(int i = 0 ; i < PAGE_QUANTITY ; i++) {
+    int i;
+    for(i = 0 ; i < PAGE_QUANTITY ; i++) {
         pageFlag[i]=0;
-        pageDirArray[i] = (u_int64_t)(HEAP_BASE + i * PAGE_SIZE);
+        pageAddresses[i] = (u_int64_t)(HEAP_BASE + i * PAGE_SIZE);
     }
 }
 
@@ -23,19 +23,19 @@ pid_t getpid() { //returns pid of current process
     return 0;
 }
 
-void * malloc(size_t size) { //CHECKED, LOOKS GOOD
+void * malloc(size_t size) {
 
     if(size >= (PAGESIZE - BLOCK_SIZE)) return NULL;
     pid_t pid = getpid(); //Get pid corresponding to process asking for memory
 
-    p_block pb = getProcessBlock(pid);
-    mem_block mb;
+    p_block pb = (p_block)getProcessBlock(pid);
+    m_block mb;
     if(pb == NULL) { //No process block associated with process asking for memory
-        pb = addProcessBlock(pid);
+        pb = (p_block)addProcessBlock(pid);
         if(pb == NULL) return NULL;
         pb->allocated = size + BLOCK_SIZE;
 
-        m_block mb = (mem_block)pb->address;
+        mb = (mem_block)pb->address;
         mb->free = FALSE;
         mb->size = size;
         mb->next = NULL;
@@ -45,12 +45,11 @@ void * malloc(size_t size) { //CHECKED, LOOKS GOOD
     else { //Process already mapped to a 4K page
         if(((pb->allocated + size)  > (PAGESIZE - BLOCK_SIZE))) return NULL;
 
-        m_block mb = (m_block) pb->address; //start of page
-        m_block dataBlock = getDataBlock(size,mb);
+        mb = (m_block)pb->mem_address;
+        m_block dataBlock =(m_block)getDataBlock(size,mb);
         if(dataBlock == NULL) return NULL;
         pb->allocated += size + BLOCK_SIZE;
         return (((char *)dataBlock) + BLOCK_SIZE);
-
     }
 }
 
@@ -71,7 +70,7 @@ m_block getDataBlock(size_t size, m_block mb) {
     m_block newBlock;
 
     if(aux == NULL) {
-        newBlock = ((char *)((char *)last + BLOCK_SIZE + last->size));
+        newBlock = ((char *)last + BLOCK_SIZE + last->size);
         newBlock->free = FALSE;
         newBlock->next = NULL;
         newBlock->size = size;
@@ -83,7 +82,7 @@ m_block getDataBlock(size_t size, m_block mb) {
         newBlock->free=FALSE;
 
         if(prevSize >= size + BLOCK_SIZE) { //Split Block
-            mem_block splitBlock =((char *)((char *)newBlock + BLOCK_SIZE + size));
+            m_block splitBlock = ((char *)newBlock + BLOCK_SIZE + size);
             splitBlock->free = TRUE;
             splitBlock->size = prevSize - size - BLOCK_SIZE;
             splitBlock->next = (mem_block)newBlock->next;
@@ -92,10 +91,10 @@ m_block getDataBlock(size_t size, m_block mb) {
         }
     }
 
-    return (char *)((char *)newBlock + BLOCK_SIZE);
+    return ((char *)newBlock + BLOCK_SIZE);
 }
 
-p_block getProcessBlock(pid_t pid) { //CHECKED
+p_block getProcessBlock(pid_t pid) {
 
     if(PB_HEAD == NULL) return NULL;
 
@@ -106,7 +105,7 @@ p_block getProcessBlock(pid_t pid) { //CHECKED
     return aux;
 }
 
-p_block addProcessBlock(pid_t pid) { //CHECKED, LOOKING GOOOD
+p_block addProcessBlock(pid_t pid) {
 
     if(PB_HEAD == NULL) {
         PB_HEAD = (p_block) BASE;
@@ -150,8 +149,8 @@ void free(void * ptr) {
 
 void * calloc(size_t size) {
 
-    void * mem_ptr = malloc(size);
-    if(mem_ptr != NULL) {
+    void * ptr = malloc(size);
+    if(ptr != NULL) {
         for (int i = 0; i < size; i++) {
             *(ptr + i) = 0;
         }
@@ -179,9 +178,9 @@ void joinDataBlocks(m_block m1, m_block m2) { //Join two contiguous memory block
     return;
 }
 
-void popPage() {
-
-    for(int i = 0; pageFlag[i]  ; i++) {
+void * popPage() {
+    int i;
+    for(i = 0; pageFlag[i]  ; i++) {
         if (i == PAGE_QUANTITY) return NULL;
     }
     pageFlag[i] = TRUE;
