@@ -6,6 +6,8 @@
 #include "include/RTC.h"
 #include "include/process.h"
 
+char *fork(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
 char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *write(uint64_t rbx, uint64_t rcx, uint64_t rdx);
