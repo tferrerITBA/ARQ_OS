@@ -2,7 +2,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define PAGE_SIZE 0x1000
+#define PAGE_SIZE 8192
 #define PAGE_QUANTITY ((HEAP_LIMIT - HEAP_BASE)/PAGE_SIZE)
 #define TRUE 1
 #define FALSE 0

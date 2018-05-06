@@ -2,7 +2,6 @@
 #define BLOCK_SIZE sizeof(struct memBlock)
 #define PB_SIZE sizeof(struct processBlock)
 
-
 //Main reference to process block Linked List
 p_block PB_HEAD = NULL;
 p_block BASE = HEAP_BASE;
@@ -10,6 +9,17 @@ p_block BASE = HEAP_BASE;
 u_int64_t pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
+void initializeMemoryManager() {
+
+    initializePages();
+    p_block firstBlock = (p_block) HEAP_BASE;
+    firstBlock->pid = 0;
+    firstBlock->mem_address = popPage();
+    firstBlock->next = NULL;
+    firstBlock->allocated = PB_SIZE;
+
+    PB_HEAD = firstBlock;
+}
 
 void initializePages() {
     int i;
@@ -186,6 +196,27 @@ void * popPage() {
     pageFlag[i] = TRUE;
     return (void*) pageAddresses[i];
 }
+/*
+void removeProcessBlock(pid_t pid) {
+
+    if(pid < 0) return;
+    p_block pb = PB_HEAD;
+    p_block last = null;
+
+    while(pb != NULL && pb->pid != pid) {
+        last = pb;
+        pb = pb->next;
+    }
+    if(pb == NULL) return;
+
+
+
+
+
+    p_block
+
+}
+ */
 
 
 
