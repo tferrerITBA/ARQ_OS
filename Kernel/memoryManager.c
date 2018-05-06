@@ -1,12 +1,11 @@
-#include "memoryManager.h"
-#define BLOCK_SIZE sizeof(struct memBlock)
-#define PB_SIZE sizeof(struct processBlock)
+#include "include/memoryManager.h"
+
 
 //Main reference to process block Linked List
 p_block PB_HEAD = NULL;
 p_block BASE = HEAP_BASE;
 
-u_int64_t pageAddresses[PAGE_QUANTITY];
+uint64_t pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
 void initializeMemoryManager() {
@@ -25,7 +24,7 @@ void initializePages() {
     int i;
     for(i = 0 ; i < PAGE_QUANTITY ; i++) {
         pageFlag[i]=0;
-        pageAddresses[i] = (u_int64_t)(HEAP_BASE + i * PAGE_SIZE);
+        pageAddresses[i] = (uint64_t)(HEAP_BASE + i * PAGE_SIZE);
     }
 }
 
@@ -35,7 +34,7 @@ pid_t getpid() { //returns pid of current process
 
 void * malloc(size_t size) {
 
-    if(size >= (PAGESIZE - BLOCK_SIZE)) return NULL;
+    if(size >= (PAGE_SIZE - BLOCK_SIZE)) return NULL;
     pid_t pid = getpid(); //Get pid corresponding to process asking for memory
 
     p_block pb = (p_block)getProcessBlock(pid);
@@ -45,15 +44,15 @@ void * malloc(size_t size) {
         if(pb == NULL) return NULL;
         pb->allocated = size + BLOCK_SIZE;
 
-        mb = (mem_block)pb->address;
+        mb = (m_block)pb->mem_address;
         mb->free = FALSE;
         mb->size = size;
         mb->next = NULL;
         return ((char *)mb) + BLOCK_SIZE;
     }
 
-    else { //Process already mapped to a 4K page
-        if(((pb->allocated + size)  > (PAGESIZE - BLOCK_SIZE))) return NULL;
+    else { //Process already mapped to a 82K page
+        if(((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE))) return NULL;
 
         mb = (m_block)pb->mem_address;
         m_block dataBlock =(m_block)getDataBlock(size,mb);
@@ -80,7 +79,7 @@ m_block getDataBlock(size_t size, m_block mb) {
     m_block newBlock;
 
     if(aux == NULL) {
-        newBlock = ((char *)last + BLOCK_SIZE + last->size);
+        newBlock = (m_block)((char *)last + BLOCK_SIZE + last->size);
         newBlock->free = FALSE;
         newBlock->next = NULL;
         newBlock->size = size;
@@ -92,16 +91,16 @@ m_block getDataBlock(size_t size, m_block mb) {
         newBlock->free=FALSE;
 
         if(prevSize >= size + BLOCK_SIZE) { //Split Block
-            m_block splitBlock = ((char *)newBlock + BLOCK_SIZE + size);
+            m_block splitBlock = (m_block)((char *)newBlock + BLOCK_SIZE + size);
             splitBlock->free = TRUE;
             splitBlock->size = prevSize - size - BLOCK_SIZE;
-            splitBlock->next = (mem_block)newBlock->next;
-            newBlock->next = (mem_block)splitBlock;
+            splitBlock->next = (m_block)newBlock->next;
+            newBlock->next = (m_block)splitBlock;
             newBlock->size = size;
         }
     }
 
-    return ((char *)newBlock + BLOCK_SIZE);
+    return (m_block)((char *)newBlock + BLOCK_SIZE);
 }
 
 p_block getProcessBlock(pid_t pid) {
