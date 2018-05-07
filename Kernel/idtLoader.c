@@ -1,9 +1,11 @@
 #include <stdint.h>
+#include <sys/types.h>
 #include "include/idtLoader.h"
 #include "include/defs.h"
 #include "include/interrupts.h"
 #include "include/videoMode.h"
 #include "include/RTC.h"
+
 
 char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -14,6 +16,8 @@ char *time(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char *pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
+char *sbrk(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 extern void _int80Handler();
 
@@ -33,7 +37,7 @@ typedef struct {
 #pragma pack(pop)        /* Reestablece la alinceación actual */
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, 0, &read, &write, &pixel, &colors, 0, 0, 0, 0, 0, 0, &time};
+sysCalls sc[] = {0, 0, 0, &read, &write, &pixel, &colors, &sbrk, 0, 0, 0, 0, 0, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -109,4 +113,10 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     else if (rbx == 1)
         setCharColors(cols[0], cols[1], cols[2]);
     return 0x0;
+}
+
+char *sbrk(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+
+    pid_t pid = 0; //getpid()
+    return (char *)malloc(rbx,pid);
 }
