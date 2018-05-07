@@ -1,5 +1,7 @@
 #include "include/memoryManager.h"
 
+extern pid_t getActiveProcessPid();
+
 //Main reference to process block Linked List
 p_block PB_HEAD = NULL;
 p_block LAST = NULL;
@@ -17,16 +19,16 @@ void initializePages() {
     }
 }
 
-void * malloc(size_t size, pid_t pid) {
+void * malloc(size_t size) {
 
     if(size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)) return NULL;
-
+    pid_t pid = getRunningProcessPid();
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
     if(pb == NULL) { //No process block associated with process asking for memory
         pb = (p_block)addProcessBlock(pid,FALSE);
         if(pb == NULL) return NULL;
-        pb->allocated += size + BLOCK_SIZE;
+        pb->allocated = size + BLOCK_SIZE;
         mb = (m_block)pb->address;
         mb->free = FALSE;
         mb->size = size;
@@ -82,7 +84,6 @@ m_block getDataBlock(size_t size, m_block mb) {
 }
 
 p_block getProcessBlock(pid_t pid) {
-
     if(PB_HEAD == NULL)
         return NULL;
 
@@ -101,7 +102,7 @@ p_block addProcessBlock(pid_t pid, int isStack) {
         PB_HEAD->allocated = PB_SIZE;
         PB_HEAD->next = NULL;
         PB_HEAD->isStack = isStack;
-        PB_HEAD->address = popPage() + PB_SIZE;
+        PB_HEAD->address = (char*)popPage() + PB_SIZE;
         LAST = PB_HEAD;
         return PB_HEAD;
     }
@@ -132,7 +133,7 @@ void free(void * ptr) {
 
 void * calloc(size_t size, pid_t pid) {
 
-    void * ptr = malloc(size,pid);
+    void * ptr = malloc(size);
     if(ptr != NULL) {
         for (int i = 0; i < size; i++) {
             *((char *)ptr + i) = 0;
@@ -141,11 +142,11 @@ void * calloc(size_t size, pid_t pid) {
     return ptr;
 }
 
-void * realloc(void * ptr, size_t size, pid_t pid) {
+void * realloc(void * ptr, size_t size) {
 
     if(ptr == NULL || size > (PAGE_SIZE - BLOCK_SIZE)) return NULL;
 
-    void * ret = malloc(size,pid);
+    void * ret = malloc(size);
     if(ret == NULL) return NULL;
     m_block memBlock = (m_block) ptr - 1;
 
@@ -171,23 +172,48 @@ void * popPage() {
 }
 
 void * initializeProcessStack() { //Reserva pagina de 8k para el STACK
-    return addProcessBlock(pid,TRUE);
+    return (char *)addProcessBlock(pid,TRUE) + PB_SIZE;
 }
 
 void reserveHeapSpace(pid_t pid) { //Reserva pagina de 8k para el HEAP
     addProcessBlock(pid,FALSE);
 }
 
-void removeProcessBlock(pid_t pid) {
+void removeProcessMemory() {
+    pid_t pid = getRunningProcessPid();
     removeProcessStack(pid);
     removeProcessHeap(pid);
 }
 
 void removeProcessStack(pid_t pid) {
-    //TODO
+    p_block pb = PB_HEAD;
+    while(pb != NULL && (pb->pid != pid || !(pb->isStack))) {
+        pb = pb->next;
+    }
+    if(pb != NULL) {
+        for(int i=0 ; i < PAGE_QUANTITY ; i++) {
+            if(pageAddresses[i] == (uint64_t)pb->address) {
+                pageFlag[i] = 0;
+            }
+        }
+        pb->pid = -1;
+    }
 }
+
 void removeProcessHeap(pid_t pid) {
-    //TODO
+    p_block pb = PB_HEAD;
+    while(pb != NULL && (pb->pid != pid || pb->isStack)) {
+        pb = pb->next;
+    }
+    if(pb != NULL) {
+        for(int i=0 ; i < PAGE_QUANTITY ; i++) {
+            if (pageAddresses[i] == (uint64_t) pb->address) {
+                pageFlag[i] = 0;
+            }
+        }
+        pb->pid = -1;
+        pb->allocated = 0;
+    }
 }
  
 
