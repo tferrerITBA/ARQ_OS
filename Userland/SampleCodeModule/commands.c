@@ -2,11 +2,15 @@
 #include "lib.h"
 #include "functionGraph.h"
 #include <stdint.h>
+#include <time.h>
+
 #define STEP 6
 extern char * clearScr();
 extern char * timeInt();
 extern char * changeBColors(uint8_t colors[]);
 extern char * changeCColors(uint8_t colors[]);
+extern char * fork();
+
 
 void runHelp() {
 	printf("clear: erases all visible text \n");
@@ -114,4 +118,25 @@ uint8_t getDistance(uint8_t a, uint8_t b) {
 	} else {
 		return b - a;
 	}
+}
+
+void sh(function functionName, int foreground) {
+	pid_t forkRet;
+
+	if(foreground) {
+		functionName();
+	} else {
+		forkRet = (pid_t )fork();
+		if(forkRet == 0) {
+			functionName();
+		}
+	}
+}
+
+void ps() {
+	//TODO
+}
+
+void prodcons() {
+	//TODO
 }

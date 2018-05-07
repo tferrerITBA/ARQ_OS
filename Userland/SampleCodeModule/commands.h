@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include "lib.h"
+typedef void (*function)(void);
+
 void runHelp();
 void runClear();
 void runZeroDiv();
@@ -11,6 +13,10 @@ void runBgcolor(uint8_t blue, uint8_t green, uint8_t red);
 void runMath(double a, double b, double c);
 extern void raiseInvOp();
 void colorFade(uint8_t from[], uint8_t to[]);
+void runFunction(char * functionName);
+void sh(function functionName, int foreground);
+void ps();
+void prodcons();
 uint8_t getDistance(uint8_t a, uint8_t b);
 
 

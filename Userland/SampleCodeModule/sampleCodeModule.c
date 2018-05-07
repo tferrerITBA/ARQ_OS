@@ -6,6 +6,9 @@
 #define STANDARD 1
 #define MATH 2
 #define SECURITY 3
+#define FOREGROUND 1
+#define BACKGROUND 0
+
 
 int terminal() {
 	char command[SIZE] = {0};
@@ -54,80 +57,97 @@ int terminal() {
 }
 
 int readCommand(char command[], int mode) {
-	char action[SIZE] = {0};
-	char params[SIZE] = {0};
-	uint8_t colors[3] = {0};
-	uint8_t colorAux[3] = {0};
-	double mathCons[3];
-	int i;
-	int retValue = 0;
-	if(mode == 2) {
-		if(strequals(command,"exit")) {
-			runClear();
-			return 1;
-		} else {
-			printf("Invalid command. Type 'exit' for leaving funcion graph mode\n");
-			return 2;
-		}
-	} else {
-		/* One-word commands */
-		if(strequals(command,"help")) {
-			runHelp();
-		} else if(strequals(command,"clear")) {
-			runClear();
-		} else if(strequals(command,"zerodiv")) {
-			runZeroDiv();
-		} else if(strequals(command,"overflow")) {
-			runOverflow();
-		} else if(strequals(command,"invopc")) {
-			runInvOpc();
-		} else if(strequals(command,"time")) {
-			runTime();
-		} else if(strequals(command,"securityon")) {
-			printf("Security mode is on\n");
-			return SECURITY;
-		} else if(strequals(command,"securityoff")) {
-			printf("Security mode is off\n");
-			return STANDARD;
-		}
-		/* Commands with arguments */
-		else{
-			readWordFromCommand(action, command,0,' ');
-			i = length(action) + 1;
-			readWordFromCommand(params, command, i, END);
-			if(strequals(action,"echo")) {
-				printf(params);
-				printf("\n");
-			} else if(strequals(action,"chcolor")) {
-				retValue = validateColors(colors, params);
-				if(retValue != 0) {
-					runChcolor(colors[0], colors[1], colors[2]);
-				}
-			} else if(strequals(action,"bgcolor")) {
-				retValue = validateColors(colors, params);
-				if(retValue != 0) {
-					runBgcolor(colors[0], colors[1], colors[2]);
-				}
-			} else if(strequals(action,"colorfade")) {
-				retValue = validateFade(colors, colorAux, params);
-				if(retValue != 0) {
-					colorFade(colors, colorAux);
-				}
-			} else if(strequals(action,"math")) {
-				retValue = validateMath(mathCons, params);
-				if(retValue != 0) {
-					runMath(mathCons[0], mathCons[1], mathCons[2]);
-					return MATH;
-				}
-			} else {
-				printf("Invalid command. Try 'help' for information about avaliable options\n");
-			}
-		}
-	}
-	if(mode == 3) {
-		return SECURITY;
-	}
-	return STANDARD;
+    char name[SIZE] = {0};
+
+	readWordFromCommand(name,command,0,' ');
+    if(strequals(name,"sh&")) {
+        shSelectAction(command + 4,mode, FOREGROUND);
+    } else if(strequals(name,"sh")) {
+        shSelectAction(command,mode,BACKGROUND);
+    } else if(strequals(command,"ps")) {
+        ps();
+    } else if(strequals(command,"prodcons")) {
+        prodcons();
+    } else if(strequals(command,"help")) {
+        runHelp();
+    } else {
+        printf("Invalid command. Try 'help' for information about avaliable options\n");
+    }
+}
+
+int shSelectAction(char command[], int mode, int foreground) {
+    char action[SIZE] = {0};
+    char params[SIZE] = {0};
+    uint8_t colors[3] = {0};
+    uint8_t colorAux[3] = {0};
+    double mathCons[3];
+    int i;
+    int retValue = 0;
+    if(mode == 2) {
+        if(strequals(command,"exit")) {
+            runClear();
+            return 1;
+        } else {
+            printf("Invalid command. Type 'exit' for leaving funcion graph mode\n");
+            return 2;
+        }
+    } else {
+        /* One-word commands */
+        if(strequals(command,"clear")) {
+            runClear();
+        } else if(strequals(command,"zerodiv")) {
+            runZeroDiv();
+        } else if(strequals(command,"overflow")) {
+            runOverflow();
+        } else if(strequals(command,"invopc")) {
+            runInvOpc();
+        } else if(strequals(command,"time")) {
+            runTime();
+        } else if(strequals(command,"securityon")) {
+            printf("Security mode is on\n");
+            return SECURITY;
+        } else if(strequals(command,"securityoff")) {
+            printf("Security mode is off\n");
+            return STANDARD;
+        }
+            /* Commands with arguments */
+        else{
+            readWordFromCommand(action, command,0,' ');
+            i = length(action) + 1;
+            readWordFromCommand(params, command, i, END);
+            if(strequals(action,"echo")) {
+                printf(params);
+                printf("\n");
+            } else if(strequals(action,"chcolor")) {
+                retValue = validateColors(colors, params);
+                if(retValue != 0) {
+                    runChcolor(colors[0], colors[1], colors[2]);
+                }
+            } else if(strequals(action,"bgcolor")) {
+                retValue = validateColors(colors, params);
+                if(retValue != 0) {
+                    runBgcolor(colors[0], colors[1], colors[2]);
+                }
+            } else if(strequals(action,"colorfade")) {
+                retValue = validateFade(colors, colorAux, params);
+                if(retValue != 0) {
+                    colorFade(colors, colorAux);
+                }
+            } else if(strequals(action,"math")) {
+                retValue = validateMath(mathCons, params);
+                if(retValue != 0) {
+                    runMath(mathCons[0], mathCons[1], mathCons[2]);
+                    return MATH;
+                }
+            } else {
+                printf("Invalid command. Try 'help' for information about avaliable options\n");
+            }
+        }
+    }
+    if(mode == 3) {
+        return SECURITY;
+    }
+    return STANDARD;
 }
 
 /**
