@@ -59,8 +59,3 @@ readStr:
 	mov rdx, 1
 	int 0x80
 	ret
-
-forkInt:
-	mov rax, 2
-	int 0x80
-	ret
