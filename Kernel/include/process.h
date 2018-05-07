@@ -9,6 +9,7 @@
 
 extern Queue readyQueue;
 extern Pcb runningPcb;
+typedef void (*terminalCaller)(void);
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap);
 void * duplicateStack(void * stackPointer);

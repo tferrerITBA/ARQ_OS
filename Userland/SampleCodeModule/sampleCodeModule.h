@@ -1,6 +1,7 @@
 #include "lib.h"
 #include "commands.h"
 #include <stdint.h>
+int terminal();
 int toInt(char c);
 int readCommand(char command[], int mode);
 void readWordFromCommand(char word[], char command[], int from, char to);

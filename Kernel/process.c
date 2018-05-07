@@ -1,4 +1,6 @@
 #include "include/process.h"
+#include "include/memoryManager.h"
+#include "include/scheduler.h"
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap) {
     Process newP = malloc(sizeof(process));

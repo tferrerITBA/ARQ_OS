@@ -1,4 +1,5 @@
 #include "include/scheduler.h"
+#include "include/memoryManager.h"
 
 static int terminalIsBlocked = FALSE;
 

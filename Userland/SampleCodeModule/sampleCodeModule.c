@@ -7,7 +7,7 @@
 #define MATH 2
 #define SECURITY 3
 
-int main() {
+int terminal() {
 	char command[SIZE] = {0};
 	int index = 0;
 	int ret = 1;

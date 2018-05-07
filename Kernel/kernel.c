@@ -3,6 +3,9 @@
 #include "include/lib.h"
 #include "include/moduleLoader.h"
 #include "include/naiveConsole.h"
+#include "../Userland/SampleCodeModule/sampleCodeModule.h"
+#include "include/scheduler.h"
+#include "include/process.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -13,6 +16,7 @@ extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
 extern void load_idt();
+void callTerminal();
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
@@ -85,26 +89,30 @@ int main()
 {	
 	load_idt();
 
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
+//	ncPrint("[Kernel Main]");
+//	ncNewline();
+//	ncPrint("  Sample code module at 0x");
+//	ncPrintHex((uint64_t)sampleCodeModuleAddress);
+//	ncNewline();
+//	ncPrint("  Calling the sample code module returned: ");
+//	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+//	ncNewline();
+//	ncNewline();
+//	ncPrint("  Sample data module at 0x");
+//	ncPrintHex((uint64_t)sampleDataModuleAddress);
+//	ncNewline();
+//	ncPrint("  Sample data module contents: ");
+//	ncPrint((char*)sampleDataModuleAddress);
+//	ncNewline();
+//	ncPrint("[Finished]");
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
-
-	ncPrint("[Finished]");
+    createReadyQueue();
+    initializeFirstProcess(callTerminal);
 
 	while(1);
+    return 1;
+}
 
-	return 0;
+void callTerminal() {
+    terminal();
 }
