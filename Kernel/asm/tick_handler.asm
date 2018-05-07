@@ -1,3 +1,7 @@
+EXTERN schedule
+
+section .text
+
 tick_handler:
 		PUSHAQ
 		CALL schedule

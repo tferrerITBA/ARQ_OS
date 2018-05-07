@@ -1,5 +1,5 @@
 #include <glob.h>
-#define NULL 0
+#include <stddef.h>
 
 typedef struct stackStruct {
     struct stackElement * first;

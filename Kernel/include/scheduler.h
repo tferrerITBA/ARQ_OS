@@ -1,14 +1,16 @@
 #include <sys/types.h>
+#include <stddef.h>
 #include "queue.h"
-#include "pcb.h"
-#include "process.h"
+#include "processStates.h"
+#include "PCBTADs.h"
+#include "processTADs.h"
 
 #define QUEUE_SIZE 10
 #define TRUE 1
 #define FALSE 0
-extern Queue readyQueue;
-extern Pcb runningPcb;
-extern pid_t pidCount;
+
+Queue readyQueue;
+Pcb runningPcb;
 
 extern void * getRSP();
 void * schedule();

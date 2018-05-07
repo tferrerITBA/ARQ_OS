@@ -1,7 +1,7 @@
 #include "include/pcb.h"
-#include "include/scheduler.h"
-#include "include/lib.h"
+
 static PcbTable allProcesses;
+static pid_t pidCount;
 
 Pcb newPcb() {
     Pcb ret = malloc(sizeof(pcb));

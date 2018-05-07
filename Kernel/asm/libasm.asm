@@ -1,8 +1,8 @@
 GLOBAL cpuVendor
+GLOBAL getRIP
+GLOBAL getRSP
 
 section .text
-
-global getRIP
 
 getRIP:
 	mov rax, [rsp+12*8]

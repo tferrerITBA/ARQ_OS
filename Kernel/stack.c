@@ -1,4 +1,3 @@
-#include <glob.h>
 #include "include/stack.h"
 
 Stack newStack(size_t size) {

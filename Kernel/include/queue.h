@@ -1,6 +1,5 @@
 #include <printf.h>
 
-#endif
 #pragma pack(push)
 #pragma pack(1)
 typedef struct queueStruct {

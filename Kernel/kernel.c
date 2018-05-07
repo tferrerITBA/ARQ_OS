@@ -3,7 +3,6 @@
 #include "include/lib.h"
 #include "include/moduleLoader.h"
 #include "include/naiveConsole.h"
-#include "include/scheduler.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -14,6 +13,7 @@ extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
 extern void load_idt();
+extern void initializeFirstProcess(terminalCaller ti);
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
@@ -85,7 +85,6 @@ void * initializeKernelBinary()
 void callTerminal() {
     ((EntryPoint)sampleCodeModuleAddress)();
 }
-
 
 int main()
 {
