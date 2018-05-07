@@ -16,3 +16,4 @@ void * duplicateHeap();
 void initializeFirstProcess(terminalCaller ti);
 int terminateProcess(Process p);
 pid_t processFork();
+pid_t getRunningProcessPid();

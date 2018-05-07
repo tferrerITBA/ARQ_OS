@@ -56,3 +56,7 @@ void initializeFirstProcess(terminalCaller ti) {
 
 }
 
+pid_t getRunningProcessPid() {
+    return runningPcb->pid;
+}
+

@@ -1,11 +1,12 @@
 #include <stdint.h>
-#include <sys/types.h>
 #include "include/idtLoader.h"
 #include "include/defs.h"
 #include "include/interrupts.h"
 #include "include/videoMode.h"
 #include "include/RTC.h"
+#include "include/process.h"
 
+char *fork(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -17,7 +18,7 @@ char *pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char *sbrk(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 extern void _int80Handler();
 
@@ -37,7 +38,7 @@ typedef struct {
 #pragma pack(pop)        /* Reestablece la alinceación actual */
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, 0, &read, &write, &pixel, &colors, &sbrk, 0, 0, 0, 0, 0, &time};
+sysCalls sc[] = {0, 0, &fork, &read, &write, &pixel, &colors, &getpid, 0, 0, 0, 0, 0, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -93,6 +94,7 @@ char *write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 //rbx es 1 para stdin, rcx es el char * destino y rdx la longitud a leer
 char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+
     if (rbx == 1) {
         return readBuffer(rbx, (char *) rcx, rdx);
     }
@@ -115,8 +117,10 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return 0x0;
 }
 
-char *sbrk(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+char * fork(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    return (char*)processFork();
+}
 
-    pid_t pid = 0; //getpid()
-    return (char *)malloc(rbx,pid);
+char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    return (char*)getRunningProcessPid();
 }
