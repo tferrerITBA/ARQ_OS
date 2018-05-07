@@ -1,24 +1,12 @@
 #include "include/memoryManager.h"
 
-
 //Main reference to process block Linked List
 p_block PB_HEAD = NULL;
-p_block BASE = HEAP_BASE;
+p_block LAST = NULL;
+p_block BASE = (p_block)HEAP_BASE;
 
 uint64_t pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
-
-void initializeMemoryManager() {
-
-    initializePages();
-    p_block firstBlock = (p_block) HEAP_BASE;
-    firstBlock->pid = 0;
-    firstBlock->mem_address = popPage();
-    firstBlock->next = NULL;
-    firstBlock->allocated = PB_SIZE;
-
-    PB_HEAD = firstBlock;
-}
 
 void initializePages() {
     int i;
@@ -28,36 +16,30 @@ void initializePages() {
     }
 }
 
-pid_t getpid() { //returns pid of current process
-    return 0;
-}
+void * malloc(size_t size, pid_t pid) {
 
-void * malloc(size_t size) {
-
-    if(size >= (PAGE_SIZE - BLOCK_SIZE)) return NULL;
-    pid_t pid = getpid(); //Get pid corresponding to process asking for memory
+    if(size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)) return NULL;
 
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
     if(pb == NULL) { //No process block associated with process asking for memory
         pb = (p_block)addProcessBlock(pid);
         if(pb == NULL) return NULL;
-        pb->allocated = size + BLOCK_SIZE;
-
-        mb = (m_block)pb->mem_address;
+        pb->allocated += size + BLOCK_SIZE;
+        mb = (m_block)pb->address;
         mb->free = FALSE;
         mb->size = size;
         mb->next = NULL;
         return ((char *)mb) + BLOCK_SIZE;
     }
 
-    else { //Process already mapped to a 82K page
-        if(((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE))) return NULL;
+    else { //Process already mapped to a 8K page
+        if(((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE - PB_SIZE))) return NULL;
 
-        mb = (m_block)pb->mem_address;
+        mb = (m_block)pb->address;
         m_block dataBlock =(m_block)getDataBlock(size,mb);
         if(dataBlock == NULL) return NULL;
-        pb->allocated += size + BLOCK_SIZE;
+        pb->allocated += size; // + BLOCK SIZE??? VER CON GET DATA BLOCK
         return (((char *)dataBlock) + BLOCK_SIZE);
     }
 }
@@ -117,31 +99,25 @@ p_block getProcessBlock(pid_t pid) {
 p_block addProcessBlock(pid_t pid) {
 
     if(PB_HEAD == NULL) {
-        PB_HEAD = (p_block) BASE;
+        PB_HEAD = (p_block)BASE;
         PB_HEAD->pid = pid;
-        PB_HEAD->allocated = 0;
+        PB_HEAD->allocated = PB_SIZE;
         PB_HEAD->next = NULL;
-        PB_HEAD->mem_address = popPage();
-
+        PB_HEAD->address = popPage() + PB_SIZE;
+        LAST = PB_HEAD;
         return PB_HEAD;
     }
+    p_block newBlock = (p_block)popPage();
+    p_block pb = LAST;
+    if(newBlock == NULL) return NULL;
+    pb->next = newBlock;
+    newBlock->pid = pid;
+    newBlock->allocated = PB_SIZE;
+    newBlock->address = (char*)newBlock + PB_SIZE;
+    newBlock->isStack = FALSE;
+    newBlock->next = NULL;
 
-    else  {
-        p_block auxPb = PB_HEAD;
-        p_block temp = NULL;
-        while(auxPb != NULL) {
-            temp = auxPb;
-            auxPb = auxPb->next;
-        }
-        p_block newblock = (p_block)(((char*)temp + PB_SIZE));
-        temp->next = newblock;
-        newblock->pid = pid;
-        newblock->allocated = 0;
-        newblock->next = NULL;
-        newblock->mem_address = popPage();
-
-        return newblock;
-    }
+    return newBlock;
 }
 
 void free(void * ptr) {
@@ -156,9 +132,9 @@ void free(void * ptr) {
 
 }
 
-void * calloc(size_t size) {
+void * calloc(size_t size, pid_t pid) {
 
-    void * ptr = malloc(size);
+    void * ptr = malloc(size,pid);
     if(ptr != NULL) {
         for (int i = 0; i < size; i++) {
             *((char *)ptr + i) = 0;
@@ -167,11 +143,11 @@ void * calloc(size_t size) {
     return ptr;
 }
 
-void * realloc(void * ptr, size_t size) {
+void * realloc(void * ptr, size_t size, pid_t pid) {
 
     if(ptr == NULL || size > (PAGE_SIZE - BLOCK_SIZE)) return NULL;
 
-    void * ret = malloc(size);
+    void * ret = malloc(size,pid);
     if(ret == NULL) return NULL;
     m_block memBlock = (m_block) ptr - 1;
 
@@ -180,7 +156,7 @@ void * realloc(void * ptr, size_t size) {
     return ret;
 }
 
-void joinDataBlocks(m_block m1, m_block m2) { //Join two contiguous memory blocks to form a bigger one
+void joinDataBlocks(m_block m1, m_block m2) { 
 
     m1->size += m2->size + BLOCK_SIZE;
     m1->next = m2->next;
@@ -195,27 +171,24 @@ void * popPage() {
     pageFlag[i] = TRUE;
     return (void*) pageAddresses[i];
 }
-/*
+
+void * initializeProcessStack() {
+    //TODO
+    //Reservar pagina para el stack de un proceso
+}
+
+void reserveHeapSpace(pid_t pid) {
+    addProcessBlock(pid);
+}
+
+
+
 void removeProcessBlock(pid_t pid) {
 
-    if(pid < 0) return;
-    p_block pb = PB_HEAD;
-    p_block last = null;
 
-    while(pb != NULL && pb->pid != pid) {
-        last = pb;
-        pb = pb->next;
-    }
-    if(pb == NULL) return;
-
-
-
-
-
-    p_block
-
+    return;
 }
- */
+ 
 
 
 
