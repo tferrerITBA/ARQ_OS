@@ -1,6 +1,6 @@
 #include "include/memoryManager.h"
 
-extern pid_t getActiveProcessPid();
+extern pid_t getRunningProcessPid();
 
 //Main reference to process block Linked List
 p_block PB_HEAD = NULL;
@@ -131,7 +131,7 @@ void free(void * ptr) {
 
 }
 
-void * calloc(size_t size, pid_t pid) {
+void * calloc(size_t size) {
 
     void * ptr = malloc(size);
     if(ptr != NULL) {
@@ -171,7 +171,8 @@ void * popPage() {
     return (void*) pageAddresses[i];
 }
 
-void * initializeProcessStack() { //Reserva pagina de 8k para el STACK
+void * initializeProcessStack() {//Reserva pagina de 8k para el STACK
+    pid_t pid = getRunningProcessPid();
     p_block stack = addProcessBlock(pid,TRUE);
     if(stack == NULL) return NULL;
     return (char *)stack + PB_SIZE;
