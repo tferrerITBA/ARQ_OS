@@ -42,7 +42,7 @@ void * malloc(size_t size) {
         mb = (m_block)pb->address;
         m_block dataBlock =(m_block)getDataBlock(size,mb);
         if(dataBlock == NULL) return NULL;
-        pb->allocated += size; // + BLOCK SIZE??? VER CON GET DATA BLOCK
+        pb->allocated += size + BLOCK_SIZE;
         return (((char *)dataBlock) + BLOCK_SIZE);
     }
 }
@@ -172,11 +172,13 @@ void * popPage() {
 }
 
 void * initializeProcessStack() { //Reserva pagina de 8k para el STACK
-    return (char *)addProcessBlock(pid,TRUE) + PB_SIZE;
+    p_block stack = addProcessBlock(pid,TRUE);
+    if(stack == NULL) return NULL;
+    return (char *)stack + PB_SIZE;
 }
 
-void reserveHeapSpace(pid_t pid) { //Reserva pagina de 8k para el HEAP
-    addProcessBlock(pid,FALSE);
+void * reserveHeapSpace(pid_t pid) { //Reserva pagina de 8k para el HEAP, can return NULL value if no page available
+    return addProcessBlock(pid,FALSE);
 }
 
 void removeProcessMemory() {

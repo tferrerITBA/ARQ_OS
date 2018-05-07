@@ -42,6 +42,6 @@ void * popPage();
 void * initializeProcessStack();
 void removeProcessBlock(pid_t pid);
 void reserveHeapSpace(pid_t pid);
-void removeProcessHeap(pid_t pid);
+void removeProcessMemory();
 void removeProcessStack(pid_t pid);
-
+void removeProcessHeap(pid_t pid);
