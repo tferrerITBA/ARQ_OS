@@ -1,0 +1,18 @@
+Docker instrucciones
+
+1) Instalar docker
+
+2) Ir al directorio donde esté el Dockerfile
+
+3) Correr el comando:
+	
+	sudo docker build . --tag so_builder:1.0
+
+4) Una vez completado el paso anterior correr:
+
+	sudo docker run -ti -v ~/MI_CARPETA:/mnt/volume so_builder:1.0
+
+   Donde MI_CARPETA es una carpeta creada por uno en su home;
+   Aquí es donde uno se comunica con su contenedor de docker.
+   Si uno hace por ejemplo echo "Hollo docker" > /mnt/volume/file
+   uno puede ver como en MI_CARPETA aparece este archivo.

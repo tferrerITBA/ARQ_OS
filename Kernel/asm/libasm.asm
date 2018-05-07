@@ -1,6 +1,20 @@
 GLOBAL cpuVendor
+GLOBAL getRIP
+GLOBAL getRSP
 
 section .text
+
+getRIP:
+	mov rax, [rsp+12*8]
+	ret
+
+getRSP:
+	mov rax, [rsp+11*8]
+    ret
+
+setRIP:
+	mov [rsp+12*8], rdi
+	ret
 	
 cpuVendor:
 	push rbp
