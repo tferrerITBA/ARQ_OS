@@ -8,6 +8,7 @@ p_block BASE = (p_block)HEAP_BASE;
 uint64_t pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
+//LLAMAR ESTA FUNCION CUANDO SE INICIALIZA EL PROGRAMA
 void initializePages() {
     int i;
     for(i = 0 ; i < PAGE_QUANTITY ; i++) {
@@ -23,7 +24,7 @@ void * malloc(size_t size, pid_t pid) {
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
     if(pb == NULL) { //No process block associated with process asking for memory
-        pb = (p_block)addProcessBlock(pid);
+        pb = (p_block)addProcessBlock(pid,FALSE);
         if(pb == NULL) return NULL;
         pb->allocated += size + BLOCK_SIZE;
         mb = (m_block)pb->address;
@@ -49,7 +50,6 @@ m_block getDataBlock(size_t size, m_block mb) {
     m_block aux = mb;
     m_block last = mb;
     while(aux != NULL && (aux->free = FALSE || aux->size < size)) {
-
         last = aux;
         aux = aux->next;
         if(aux != NULL && aux->free && last->free && ((aux->size + last->size + BLOCK_SIZE ) >= size)) {
@@ -59,7 +59,6 @@ m_block getDataBlock(size_t size, m_block mb) {
         }
     }
     m_block newBlock;
-
     if(aux == NULL) {
         newBlock = (m_block)((char *)last + BLOCK_SIZE + last->size);
         newBlock->free = FALSE;
@@ -68,10 +67,8 @@ m_block getDataBlock(size_t size, m_block mb) {
     }
     else {
         int prevSize = aux->size;
-
         newBlock = aux;
         newBlock->free=FALSE;
-
         if(prevSize >= size + BLOCK_SIZE) { //Split Block
             m_block splitBlock = (m_block)((char *)newBlock + BLOCK_SIZE + size);
             splitBlock->free = TRUE;
@@ -81,28 +78,29 @@ m_block getDataBlock(size_t size, m_block mb) {
             newBlock->size = size;
         }
     }
-
     return (m_block)((char *)newBlock + BLOCK_SIZE);
 }
 
 p_block getProcessBlock(pid_t pid) {
 
-    if(PB_HEAD == NULL) return NULL;
+    if(PB_HEAD == NULL)
+        return NULL;
 
     p_block aux = PB_HEAD;
-    while(aux != NULL && aux->pid != pid) {
+    while(aux != NULL && aux->pid != pid && aux->isStack == FALSE) {
         aux = aux->next;
     }
     return aux;
 }
 
-p_block addProcessBlock(pid_t pid) {
+p_block addProcessBlock(pid_t pid, int isStack) {
 
     if(PB_HEAD == NULL) {
         PB_HEAD = (p_block)BASE;
         PB_HEAD->pid = pid;
         PB_HEAD->allocated = PB_SIZE;
         PB_HEAD->next = NULL;
+        PB_HEAD->isStack = isStack;
         PB_HEAD->address = popPage() + PB_SIZE;
         LAST = PB_HEAD;
         return PB_HEAD;
@@ -113,10 +111,10 @@ p_block addProcessBlock(pid_t pid) {
     pb->next = newBlock;
     newBlock->pid = pid;
     newBlock->allocated = PB_SIZE;
+    newBlock->isStack = isStack;
     newBlock->address = (char*)newBlock + PB_SIZE;
     newBlock->isStack = FALSE;
     newBlock->next = NULL;
-
     return newBlock;
 }
 
@@ -172,21 +170,24 @@ void * popPage() {
     return (void*) pageAddresses[i];
 }
 
-void * initializeProcessStack() {
-    //TODO
-    //Reservar pagina para el stack de un proceso
+void * initializeProcessStack() { //Reserva pagina de 8k para el STACK
+    return addProcessBlock(pid,TRUE);
 }
 
-void reserveHeapSpace(pid_t pid) {
-    addProcessBlock(pid);
+void reserveHeapSpace(pid_t pid) { //Reserva pagina de 8k para el HEAP
+    addProcessBlock(pid,FALSE);
 }
-
-
 
 void removeProcessBlock(pid_t pid) {
+    removeProcessStack(pid);
+    removeProcessHeap(pid);
+}
 
-
-    return;
+void removeProcessStack(pid_t pid) {
+    //TODO
+}
+void removeProcessHeap(pid_t pid) {
+    //TODO
 }
  
 
