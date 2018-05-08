@@ -1,5 +1,6 @@
 #include "include/pcb.h"
 #include "include/memoryManager.h"
+#include "include/videoMode.h"
 
 static PcbTable allProcesses;
 static pid_t pidCount = 0;
@@ -38,4 +39,10 @@ void addPcbToTable(Pcb pcb) {
      free(selected);
 
  }
+
+void printPcb(Pcb pcb) {
+    putnString("PID: ", 5);
+    put_char('0'+ pcb->pid);
+    put_char('\n');
+}
 

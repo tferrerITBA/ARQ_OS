@@ -6,6 +6,7 @@
 #include "../Userland/SampleCodeModule/sampleCodeModule.h"
 #include "include/process.h"
 #include "include/videoMode.h"
+#include "include/memoryManager.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -107,6 +108,7 @@ int main()
 	ncPrint("[Finished]");
 
     putnString("antes\n",9);
+    initializeMemoryManager();
     createReadyQueue();
     initializeFirstProcess(callTerminal);
 

@@ -3,11 +3,11 @@
 #include "include/videoMode.h"
 
 static int terminalIsBlocked = FALSE;
+extern void printPcb(Pcb pcb);
 
 void * schedule() {
 
     if(runningPcb == NULL && isEmpty(readyQueue)) {
-        putnString("null\n",5);
         return NULL;
     }
     if(isEmpty(readyQueue)) {
@@ -28,7 +28,7 @@ void * schedule() {
         terminalIsBlocked = TRUE;
     }
     runningPcb = dequeue(readyQueue);
-    put_char(runningPcb->pid + '0');
+    printPcb(runningPcb);
     runningPcb->state = RUNNING;
 
     return runningPcb->stackPointer;
