@@ -5,6 +5,7 @@
 extern void enqueueProcess(Queue q, Pcb pcb);
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap) {
+
     Process newP = malloc(sizeof(process));
     newP->pcb = newPcb();
     newP->pcb->stackPointer = stackPointer;
@@ -62,9 +63,6 @@ void initializeFirstProcess(terminalCaller ti) {
 }
 
 pid_t getRunningProcessPid() {
-    if(runningPcb->pid == NULL) {
-        return 0;
-    }
     return runningPcb->pid;
 }
 

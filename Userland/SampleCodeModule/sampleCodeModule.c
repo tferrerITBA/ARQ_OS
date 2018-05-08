@@ -9,8 +9,13 @@
 #define FOREGROUND 1
 #define BACKGROUND 0
 
+int main(void) {
+    printf("Welcome to userland\n");
+	firstProcess(terminal);
+    return 1;
+}
 
-int main() {
+void terminal() {
 	char command[SIZE] = {0};
 	int index = 0;
 	int ret = 1;
@@ -53,7 +58,6 @@ int main() {
 			}
 		}
 	}
-	return 0;
 }
 
 int readCommand(char command[], int mode) {

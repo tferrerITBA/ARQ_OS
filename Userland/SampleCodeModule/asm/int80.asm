@@ -6,6 +6,7 @@ GLOBAL changeBColors
 GLOBAL changeCColors
 GLOBAL pixelInt
 GLOBAL fork
+GLOBAL firstProcess
 
 section .text
 
@@ -63,5 +64,11 @@ readStr:
 
 fork:
 	mov rax, 2
+	int 0x80
+	ret
+
+firstProcess:
+	mov rax, 8
+	mov rbx, rdi
 	int 0x80
 	ret

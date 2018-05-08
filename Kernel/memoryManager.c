@@ -1,4 +1,5 @@
 #include "include/memoryManager.h"
+#include "include/videoMode.h"
 
 extern pid_t getRunningProcessPid();
 extern void put_char(int c);
@@ -8,28 +9,25 @@ p_block PB_HEAD = NULL;
 p_block LAST = NULL;
 p_block BASE = (p_block)HEAP_BASE;
 
-uint64_t pageAddresses[PAGE_QUANTITY];
+void * pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
 void initializeMemoryManager() { //Intialize pages and kernel page
-
     initializePages();
     PB_HEAD = BASE;
     PB_HEAD->pid = 0;
     PB_HEAD->isStack = FALSE;
-    PB_HEAD->address = (char *)HEAP_BASE + PB_SIZE;
+    PB_HEAD->address = (void *)(HEAP_BASE + PB_SIZE);
     PB_HEAD->next = NULL;
     PB_HEAD->allocated = PB_SIZE;
-    pageAddresses[0] = TRUE;
-
+    pageFlag[0] = TRUE;
 }
 
 void initializePages() {
     int i;
     for(i = 0 ; i < PAGE_QUANTITY ; i++) {
         pageFlag[i] = FALSE;
-        pageAddresses[i] = (uint64_t)(HEAP_BASE + i * PAGE_SIZE);
-        put_char((int) pageAddresses[i]);
+        pageAddresses[i] = (void *)(HEAP_BASE + i * PAGE_SIZE);
     }
 }
 
@@ -37,7 +35,6 @@ void * malloc(size_t size) {
 
     if(size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)) return NULL;
     pid_t pid = getRunningProcessPid();
-    put_char(pid);
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
     if(pb == NULL) { //No process block associated with process asking for memory

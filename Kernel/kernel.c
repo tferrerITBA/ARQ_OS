@@ -18,7 +18,6 @@ static const uint64_t PageSize = 0x1000;
 
 extern void createReadyQueue();
 extern void load_idt();
-void callTerminal();
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
@@ -90,33 +89,13 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncNewline();
-	ncNewline();
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("[Finished]");
-
-    putnString("antes\n",9);
     initializeMemoryManager();
     createReadyQueue();
-    initializeFirstProcess(callTerminal);
+
+
+    ((EntryPoint)sampleCodeModuleAddress)();
+
 
 	while(1);
     return 1;
-}
-
-void callTerminal() {
-    putnString("llamando\n",9);
-	((EntryPoint)sampleCodeModuleAddress)();
 }

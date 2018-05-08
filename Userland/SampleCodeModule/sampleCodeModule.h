@@ -2,6 +2,9 @@
 #include "commands.h"
 #include <stdint.h>
 
+typedef void (*terminalCaller)(void);
+
+void terminal();
 int toInt(char c);
 int shSelectAction(char command[], int mode, int foreground);
 int readCommand(char command[], int mode);
@@ -16,3 +19,4 @@ int isDigit(char c);
 int toInt(char c);
 int length(char word[]);
 extern void raiseInvOp();
+extern void firstProcess(terminalCaller ti);
