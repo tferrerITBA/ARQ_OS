@@ -23,11 +23,9 @@ cont_switch_end:
 		PUSH RDX
 		PUSH RSI
 		PUSH RDI
-		PUSHFQ
 %endmacro
 
 %macro POPAQ 0
-		POPFQ
 		POP RDI
 		POP RSI
 		POP RDX

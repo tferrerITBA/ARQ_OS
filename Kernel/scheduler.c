@@ -5,7 +5,7 @@ static int terminalIsBlocked = FALSE;
 
 void * schedule() {
 
-    if(runningPcb == NULL) {
+    if(runningPcb == NULL && isEmpty(readyQueue)) {
         return NULL;
     }
     if(isEmpty(readyQueue)) {

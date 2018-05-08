@@ -1,4 +1,5 @@
 #include "include/pcb.h"
+#include "include/memoryManager.h"
 
 static PcbTable allProcesses;
 static pid_t pidCount;

@@ -10,7 +10,7 @@
 #define BACKGROUND 0
 
 
-int terminal() {
+int main() {
 	char command[SIZE] = {0};
 	int index = 0;
 	int ret = 1;

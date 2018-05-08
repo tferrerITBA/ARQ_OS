@@ -2,7 +2,6 @@
 #include "commands.h"
 #include <stdint.h>
 
-int terminal();
 int toInt(char c);
 int shSelectAction(char command[], int mode, int foreground);
 int readCommand(char command[], int mode);

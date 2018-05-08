@@ -4,7 +4,6 @@
 #include "include/moduleLoader.h"
 #include "include/naiveConsole.h"
 #include "../Userland/SampleCodeModule/sampleCodeModule.h"
-#include "include/scheduler.h"
 #include "include/process.h"
 
 extern uint8_t text;
@@ -15,6 +14,7 @@ extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
+extern void createReadyQueue();
 extern void load_idt();
 void callTerminal();
 
@@ -89,22 +89,21 @@ int main()
 {	
 	load_idt();
 
-//	ncPrint("[Kernel Main]");
-//	ncNewline();
-//	ncPrint("  Sample code module at 0x");
-//	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-//	ncNewline();
-//	ncPrint("  Calling the sample code module returned: ");
-//	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-//	ncNewline();
-//	ncNewline();
-//	ncPrint("  Sample data module at 0x");
-//	ncPrintHex((uint64_t)sampleDataModuleAddress);
-//	ncNewline();
-//	ncPrint("  Sample data module contents: ");
-//	ncPrint((char*)sampleDataModuleAddress);
-//	ncNewline();
-//	ncPrint("[Finished]");
+	ncPrint("[Kernel Main]");
+	ncNewline();
+	ncPrint("  Sample code module at 0x");
+	ncPrintHex((uint64_t)sampleCodeModuleAddress);
+	ncNewline();
+	ncPrint("  Calling the sample code module returned: ");
+	ncNewline();
+	ncNewline();
+	ncPrint("  Sample data module at 0x");
+	ncPrintHex((uint64_t)sampleDataModuleAddress);
+	ncNewline();
+	ncPrint("  Sample data module contents: ");
+	ncPrint((char*)sampleDataModuleAddress);
+	ncNewline();
+	ncPrint("[Finished]");
 
     createReadyQueue();
     initializeFirstProcess(callTerminal);
@@ -114,5 +113,5 @@ int main()
 }
 
 void callTerminal() {
-    terminal();
+	((EntryPoint)sampleCodeModuleAddress)();
 }

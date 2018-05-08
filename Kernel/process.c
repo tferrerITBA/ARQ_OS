@@ -19,6 +19,7 @@ int terminateProcess(Process p) {
     free(p->pcb->stackBase-STACK_SIZE);
     free(p->pcb);
     p->pcb->state = TERMINATED;
+    return 1;
 }
 
 pid_t processFork() {
