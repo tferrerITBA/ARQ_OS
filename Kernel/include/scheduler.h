@@ -10,10 +10,8 @@
 #define FALSE 0
 
 Queue readyQueue;
-Pcb runningPcb = NULL;
 
-extern void * getRSP();
-void * schedule();
+void * schedule(void * rsp);
 int terminateProcess(Process p);
-void enqueueProcess(Queue q, Pcb pcb);
+void enqueueProcess(Pcb pcb);
 void createReadyQueue();

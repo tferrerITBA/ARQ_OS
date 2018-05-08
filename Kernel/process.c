@@ -2,7 +2,7 @@
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
 
-extern void enqueueProcess(Queue q, Pcb pcb);
+extern void enqueueProcess(Pcb pcb);
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap) {
 
@@ -11,7 +11,7 @@ Process newProcess(void * stackPointer, void * stackBase, void * heap) {
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;
     newP->pcb->heapBase = heap;
-    enqueueProcess(readyQueue,newP->pcb);
+    enqueueProcess(newP->pcb);
     addPcbToTable(newP->pcb);
     return newP;
 }
@@ -32,7 +32,7 @@ pid_t processFork() {
     void * childHeap = duplicateHeap();
 
     Process newP = newProcess(childStackPointer, childStackLimit + STACK_SIZE, childHeap);
-    enqueueProcess(readyQueue,newP->pcb);
+    enqueueProcess(newP->pcb);
 
     if(runningPcb->pid == newP->pcb->pid) {
         return 0;
@@ -56,10 +56,23 @@ void * duplicateHeap() {
 }
 
 void initializeFirstProcess(terminalCaller ti) {
+    int i;
+    int zero = 0;
+    int flags = 0x202;
     void * stack = initializeProcessStack();
     void * heap = reserveHeapSpace(1);
-    memcpy(stack,ti, sizeof(terminalCaller));
-    newProcess(stack,stack,heap);
+    void * stackPointer = stack;
+    for (i = 0; i < 20; i ++) {
+        stackPointer -= 8;
+        if( i == 2) { //rflag
+            memcpy(stackPointer, &flags, 8);
+        } else if(i == 4) {
+            memcpy(stackPointer,ti,8);
+        } else {
+            memcpy(stackPointer, &zero, 8);
+        }
+    }
+    newProcess(stackPointer,stack,heap);
 }
 
 pid_t getRunningProcessPid() {

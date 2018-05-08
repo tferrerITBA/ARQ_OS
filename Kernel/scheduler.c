@@ -2,10 +2,9 @@
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
 
-static int terminalIsBlocked = FALSE;
 extern void printPcb(Pcb pcb);
 
-void * schedule() {
+void * schedule(void * rsp) {
 
     if(runningPcb == NULL && isEmpty(readyQueue)) {
         putnString("null\n",5);
@@ -19,26 +18,25 @@ void * schedule() {
     putnString("EN SCHEDULER!\n",14);
 
 
-    runningPcb->stackPointer = getRSP();
+    runningPcb->stackPointer = rsp;
 
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
     } else if(runningPcb->state == RUNNING) {
-
-        enqueueProcess(readyQueue,runningPcb);
-    } else if(runningPcb->state == BLOCKED) {
-        terminalIsBlocked = TRUE;
+        putnString("enqueue\n",8);
+        enqueueProcess(runningPcb);
     }
+
     runningPcb = dequeue(readyQueue);
     printPcb(runningPcb);
     runningPcb->state = RUNNING;
-
+    putnString("retornando!\n",12);
     return runningPcb->stackPointer;
 }
 
-void enqueueProcess(Queue q, Pcb pcb) {
+void enqueueProcess(Pcb pcb) {
     pcb->state = WAITING;
-    enqueue(q,pcb);
+    enqueue(readyQueue,pcb);
 }
 
 void createReadyQueue() {

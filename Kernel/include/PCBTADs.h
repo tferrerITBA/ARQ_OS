@@ -22,3 +22,5 @@ typedef struct pcbTable{
 } pcbTable;
 
 typedef pcbTable * PcbTable;
+
+extern Pcb runningPcb;

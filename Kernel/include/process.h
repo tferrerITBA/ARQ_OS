@@ -3,12 +3,11 @@
 #include "lib.h"
 #include "queue.h"
 #include "processTADs.h"
+#include "processStates.h"
 
 #define STACK_SIZE 256
 #define HEAP_SIZE 256
 
-extern Queue readyQueue;
-extern Pcb runningPcb;
 typedef void (*terminalCaller)(void);
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap);
