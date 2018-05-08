@@ -10,12 +10,11 @@ p_block BASE = (p_block)HEAP_BASE;
 uint64_t pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
-//LLAMAR ESTA FUNCION CUANDO SE INICIALIZA EL PROGRAMA
-void initializeMemoryManager() {
+void initializeMemoryManager() { //Intialize pages and kernel page
 
     initializePages();
     PB_HEAD = BASE;
-    PB_HEAD->pid = 999;
+    PB_HEAD->pid = 0;
     PB_HEAD->isStack = FALSE;
     PB_HEAD->address = (char *)HEAP_BASE + PB_SIZE;
     PB_HEAD->next = NULL;
@@ -102,7 +101,7 @@ p_block getProcessBlock(pid_t pid) {
         return NULL;
 
     p_block aux = PB_HEAD;
-    while(aux != NULL && aux->pid != pid && aux->isStack == FALSE) {
+    while(aux != NULL && (aux->pid != pid || aux->isStack == FALSE)) {
         aux = aux->next;
     }
     return aux;
@@ -178,7 +177,7 @@ void joinDataBlocks(m_block m1, m_block m2) {
 
 void * popPage() {
     int i;
-    for(i = 0; pageFlag[i]  ; i++) {
+    for(i = 0; pageFlag[i] == TRUE  ; i++) {
         if (i == PAGE_QUANTITY) return NULL;
     }
     pageFlag[i] = TRUE;
@@ -232,27 +231,3 @@ void removeProcessHeap(pid_t pid) {
         pb->allocated = 0;
     }
 }
-
-void * kernelMalloc(size_t size) {
-
-    pid_t kernelPid = 999;
-
-    p_block pb = getProcessBlock(pid);
-    m_block mb = (m_block)pb->address;
-    m_block newBlock = getDataBlock(size,mb);
-    if(newBlock == NULL) return NULL;
-    pb->allocated += size + BLOCK_SIZE;
-    return (char *)dataBlock + BLOCK_SIZE;
-
-    return NULL;
-}
- 
-
-
-
-
-
-
-
-
-
