@@ -1,6 +1,7 @@
 #include "include/memoryManager.h"
 
 extern pid_t getRunningProcessPid();
+extern void put_char(int c);
 
 //Main reference to process block Linked List
 p_block PB_HEAD = NULL;
@@ -23,12 +24,12 @@ void initializeMemoryManager() { //Intialize pages and kernel page
 
 }
 
-
 void initializePages() {
     int i;
     for(i = 0 ; i < PAGE_QUANTITY ; i++) {
         pageFlag[i] = FALSE;
         pageAddresses[i] = (uint64_t)(HEAP_BASE + i * PAGE_SIZE);
+        put_char((int) pageAddresses[i]);
     }
 }
 
@@ -36,6 +37,7 @@ void * malloc(size_t size) {
 
     if(size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)) return NULL;
     pid_t pid = getRunningProcessPid();
+    put_char(pid);
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
     if(pb == NULL) { //No process block associated with process asking for memory

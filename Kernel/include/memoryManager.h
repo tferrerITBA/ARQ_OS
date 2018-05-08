@@ -12,7 +12,6 @@
 #define HEAP_BASE 0x400000
 #define HEAP_LIMIT 0x799999
 
-
 typedef struct processBlock * p_block;
 struct processBlock {   //Bloque que inidica owner de dicha pagina
     pid_t pid;
