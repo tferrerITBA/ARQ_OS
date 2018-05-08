@@ -10,7 +10,7 @@
 #define FALSE 0
 
 Queue readyQueue;
-Pcb runningPcb;
+Pcb runningPcb = NULL;
 
 extern void * getRSP();
 void * schedule();

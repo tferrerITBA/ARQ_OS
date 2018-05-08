@@ -15,6 +15,9 @@ int getLength(Queue queue) {
 }
 
 int isEmpty(Queue queue) {
+    if(queue == NULL) {
+        return 1;
+    }
     return queue->length == 0;
 }
 

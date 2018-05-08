@@ -5,6 +5,7 @@ GLOBAL clearScr
 GLOBAL changeBColors
 GLOBAL changeCColors
 GLOBAL pixelInt
+GLOBAL fork
 
 section .text
 
@@ -61,6 +62,6 @@ readStr:
 	ret
 
 fork:
-	mov rax, 13
+	mov rax, 2
 	int 0x80
 	ret

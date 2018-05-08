@@ -5,6 +5,7 @@
 #include "include/naiveConsole.h"
 #include "../Userland/SampleCodeModule/sampleCodeModule.h"
 #include "include/process.h"
+#include "include/videoMode.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -105,6 +106,7 @@ int main()
 	ncNewline();
 	ncPrint("[Finished]");
 
+    putnString("antes\n",6);
     createReadyQueue();
     initializeFirstProcess(callTerminal);
 
@@ -113,5 +115,6 @@ int main()
 }
 
 void callTerminal() {
+    putnString("llamando\n",9);
 	((EntryPoint)sampleCodeModuleAddress)();
 }

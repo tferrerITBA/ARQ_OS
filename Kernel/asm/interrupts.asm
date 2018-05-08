@@ -170,6 +170,5 @@ haltcpu:
 	ret
 
 
-
 SECTION .bss
 	aux resq 1

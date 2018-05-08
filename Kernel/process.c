@@ -1,5 +1,6 @@
 #include "include/process.h"
 #include "include/memoryManager.h"
+#include "include/videoMode.h"
 
 extern void enqueueProcess(Queue q, Pcb pcb);
 
@@ -9,6 +10,7 @@ Process newProcess(void * stackPointer, void * stackBase, void * heap) {
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;
     newP->pcb->heapBase = heap;
+    enqueueProcess(readyQueue,newP->pcb);
     addPcbToTable(newP->pcb);
     return newP;
 }
@@ -39,7 +41,7 @@ pid_t processFork() {
 }
 
 void * duplicateStack(void * stackPointer) {
-    void * stackLimit = malloc(STACK_SIZE);
+    void * stackLimit = initializeProcessStack();
     size_t stackLen = runningPcb->stackBase - runningPcb->stackPointer;
     stackPointer = stackLimit + STACK_SIZE - stackLen;
     memcpy(stackPointer,runningPcb->stackPointer,stackLen);
@@ -47,17 +49,16 @@ void * duplicateStack(void * stackPointer) {
 }
 
 void * duplicateHeap() {
-    void * heap = malloc(HEAP_SIZE);
+    void * heap = reserveHeapSpace(runningPcb->pid);
     memcpy(heap,runningPcb->heapBase,HEAP_SIZE);
     return heap;
 }
 
 void initializeFirstProcess(terminalCaller ti) {
-    void * stack = malloc(STACK_SIZE);
-    void * heap = malloc(HEAP_SIZE);
+    void * stack = initializeProcessStack();
+    void * heap = reserveHeapSpace(1);
     memcpy(stack,ti, sizeof(terminalCaller));
     newProcess(stack,stack,heap);
-
 }
 
 pid_t getRunningProcessPid() {

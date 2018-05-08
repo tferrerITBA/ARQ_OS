@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include "commands.h"
 #include "lib.h"
 #include "functionGraph.h"
@@ -126,7 +127,7 @@ void sh(function functionName, int foreground) {
 	if(foreground) {
 		functionName();
 	} else {
-		forkRet = (pid_t )fork();
+		forkRet = (pid_t)fork();
 		if(forkRet == 0) {
 			functionName();
 		}

@@ -4,6 +4,7 @@
 
 typedef void (*hardwareI)(void);
 
+extern void tick_handler();
 void irqDispatcher(uint64_t irq);
 void int_20();
 
@@ -14,5 +15,5 @@ void irqDispatcher(uint64_t irq) {
 }
 
 void int_20() {
-	timer_handler();
+	tick_handler();
 }
