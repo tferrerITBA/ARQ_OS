@@ -16,9 +16,9 @@ cont_switch_end:
 		;POPAQ
 		;MOV AL, 20h
         ;OUT 20h, AL
-        mov rdi, cadena
-        mov rsi, longitud
-        call putnString
+        ;mov rdi, cadena
+        ;mov rsi, longitud
+        ;call putnString
 		RET
 
 %macro PUSHAQ 0

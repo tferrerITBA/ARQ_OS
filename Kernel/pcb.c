@@ -2,7 +2,7 @@
 #include "include/memoryManager.h"
 
 static PcbTable allProcesses;
-static pid_t pidCount;
+static pid_t pidCount = 0;
 
 Pcb newPcb() {
     Pcb ret = malloc(sizeof(pcb));

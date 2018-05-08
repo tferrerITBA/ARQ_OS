@@ -10,7 +10,7 @@ Queue newQueue(size_t size) {
     return q;
 }
 
-int getLength(Queue queue) {
+int getSize(Queue queue) {
     return queue->length;
 }
 

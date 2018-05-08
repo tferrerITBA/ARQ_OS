@@ -62,6 +62,9 @@ void initializeFirstProcess(terminalCaller ti) {
 }
 
 pid_t getRunningProcessPid() {
+    if(runningPcb->pid == NULL) {
+        return 0;
+    }
     return runningPcb->pid;
 }
 

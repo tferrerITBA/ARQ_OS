@@ -22,11 +22,13 @@ void * schedule() {
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
     } else if(runningPcb->state == RUNNING) {
+
         enqueueProcess(readyQueue,runningPcb);
     } else if(runningPcb->state == BLOCKED) {
         terminalIsBlocked = TRUE;
     }
     runningPcb = dequeue(readyQueue);
+    put_char(runningPcb->pid + '0');
     runningPcb->state = RUNNING;
 
     return runningPcb->stackPointer;

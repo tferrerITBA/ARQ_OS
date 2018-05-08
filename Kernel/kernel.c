@@ -107,6 +107,7 @@ int main()
 	ncPrint("[Finished]");
 
     putnString("antes\n",6);
+    init
     createReadyQueue();
     initializeFirstProcess(callTerminal);
 
