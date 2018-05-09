@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <errno.h>
 #include "commands.h"
 #include "lib.h"
 #include "functionGraph.h"
@@ -103,7 +104,7 @@ void colorFade(uint8_t from[], uint8_t to[]) {
 			} else if(cRed > to[2]) {
 				cRed -= STEP;
 			}
-			
+
 		}
 		for(j = 0; j < 127; j++) {
 			putChar(' ');
@@ -140,5 +141,20 @@ void ps() {
 }
 
 void prodcons() {
-	//TODO
+	/*
+	pid_t pid;
+
+	createMessageQueue();
+
+	if ((pid = fork()) == -1) {
+        perror("ERROR - Fork fail: ");
+        exit(1);
+    }
+
+    if (pid == 0) {
+        consume();
+    } else {
+		produce();
+	}
+	*/
 }
