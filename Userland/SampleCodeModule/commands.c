@@ -11,6 +11,7 @@ extern char * timeInt();
 extern char * changeBColors(uint8_t colors[]);
 extern char * changeCColors(uint8_t colors[]);
 extern char * fork();
+extern char * psint();
 
 
 void runHelp() {
@@ -135,7 +136,7 @@ void sh(function functionName, int foreground) {
 }
 
 void ps() {
-	//TODO
+	psint();
 }
 
 void prodcons() {

@@ -8,3 +8,5 @@ Pcb newPcb();
 void addPcbToTable(Pcb pcb);
 void removeProcessFromTable(pid_t pid);
 void printPcb(Pcb pcb);
+
+extern PcbTable allProcesses;

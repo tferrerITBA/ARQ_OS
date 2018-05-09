@@ -6,6 +6,8 @@
 #include "include/RTC.h"
 #include "include/process.h"
 
+extern void printAll();
+
 char *fork(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
@@ -40,7 +42,7 @@ typedef struct {
 #pragma pack(pop)        /* Reestablece la alinceación actual */
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, &fork, &read, &write, &pixel, &colors, &getpid, &initFirstProc, 0, 0, 0, 0, &time};
+sysCalls sc[] = {0, 0, &fork, &read, &write, &pixel, &colors, &getpid, &initFirstProc, &ps, 0, 0, 0, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -129,5 +131,10 @@ char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 char * initFirstProc(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     initializeFirstProcess((terminalCaller)rbx);
+    return (char*)0x1;
+}
+
+char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx ) {
+    printAll();
     return (char*)0x1;
 }

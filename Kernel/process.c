@@ -57,6 +57,7 @@ void * duplicateHeap() {
 }
 
 void initializeFirstProcess(terminalCaller ti) {
+
     uint64_t i;
     uint64_t zero = 0x000;
     uint64_t flags = 0x202;
@@ -73,6 +74,7 @@ void initializeFirstProcess(terminalCaller ti) {
             memcpy(stackPointer, &zero, sizeof(uint64_t));
         }
     }
+
     newProcess(stackPointer,stack,heap);
 }
 

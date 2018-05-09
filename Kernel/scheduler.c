@@ -11,14 +11,14 @@ void * schedule(void * rsp) {
         return NULL;
 
     }
+
+    runningPcb->stackPointer = rsp;
+
     if(isEmpty(readyQueue)) {
         return runningPcb->stackPointer;
     }
 
     putnString("EN SCHEDULER!\n",14);
-
-
-    runningPcb->stackPointer = rsp;
 
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);

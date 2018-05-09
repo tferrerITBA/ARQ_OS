@@ -2,7 +2,7 @@
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
 
-static PcbTable allProcesses;
+PcbTable allProcesses = NULL;
 static pid_t pidCount = 0;
 
 Pcb newPcb() {
@@ -41,8 +41,29 @@ void addPcbToTable(Pcb pcb) {
  }
 
 void printPcb(Pcb pcb) {
-    putnString("PID: ", 5);
+    putString("PID: ");
     put_char('0'+ pcb->pid);
     put_char('\n');
+    putString("State: ");
+    if(pcb->state == RUNNING) {
+        putString("running\n");
+    }
+    if(pcb->state == BLOCKED) {
+        putString("blocked\n");
+    }
+    if(pcb->state == CREATED) {
+        putString("created\n");
+    }
+    if(pcb->state == WAITING) {
+        putString("waiting\n");
+    }
+}
+
+void printAll() {
+    TableNode current = allProcesses-> first;
+    while(current != NULL) {
+        printPcb(current->block);
+        current = current->next;
+    }
 }
 

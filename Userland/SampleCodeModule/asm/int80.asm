@@ -7,6 +7,7 @@ GLOBAL changeCColors
 GLOBAL pixelInt
 GLOBAL fork
 GLOBAL firstProcess
+GLOBAL psInt
 
 section .text
 
@@ -70,5 +71,10 @@ fork:
 firstProcess:
 	mov rax, 8
 	mov rbx, rdi
+	int 0x80
+	ret
+
+psint:
+	mov rax, 9
 	int 0x80
 	ret
