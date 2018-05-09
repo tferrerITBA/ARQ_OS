@@ -2,6 +2,8 @@
 #include <string.h>
 #include "include/queue.h"
 
+Queue readyQueue = NULL;
+
 Queue newQueue(size_t size) {
     Queue q = malloc(sizeof(queueStruct));
     q->length = 0;
@@ -10,7 +12,7 @@ Queue newQueue(size_t size) {
     return q;
 }
 
-int getSize(Queue queue) {
+int getLength(Queue queue) {
     return queue->length;
 }
 

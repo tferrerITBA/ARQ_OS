@@ -18,7 +18,7 @@ void * schedule(void * rsp) {
         return runningPcb->stackPointer;
     }
 
-    putnString("EN SCHEDULER!\n",14);
+    putnString("EN SCHEDULER! Cola no vacia\n",14);
 
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
@@ -30,6 +30,7 @@ void * schedule(void * rsp) {
     runningPcb = dequeue(readyQueue);
     printPcb(runningPcb);
     runningPcb->state = RUNNING;
+    printPcb(runningPcb);
     printHex(runningPcb->stackPointer);
     put_char('\n');
     return runningPcb->stackPointer;

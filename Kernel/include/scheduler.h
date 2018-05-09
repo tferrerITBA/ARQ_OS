@@ -9,8 +9,6 @@
 #define TRUE 1
 #define FALSE 0
 
-Queue readyQueue;
-
 void * schedule(void * rsp);
 int terminateProcess(Process p);
 void enqueueProcess(Pcb pcb);
