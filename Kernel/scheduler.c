@@ -22,7 +22,7 @@ void * schedule(void * rsp) {
 
     if(runningPcb->state == TERMINATED) {
         free(runningPcb);
-    } else if(runningPcb->state == RUNNING) {
+    } else {
         putnString("enqueue\n",8);
         enqueueProcess(runningPcb);
     }
@@ -30,7 +30,8 @@ void * schedule(void * rsp) {
     runningPcb = dequeue(readyQueue);
     printPcb(runningPcb);
     runningPcb->state = RUNNING;
-    putnString("retornando!\n",12);
+    printHex(runningPcb->stackPointer);
+    put_char('\n');
     return runningPcb->stackPointer;
 }
 

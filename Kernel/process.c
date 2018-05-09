@@ -1,6 +1,7 @@
 #include "include/process.h"
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
+#include "../../../../../usr/lib/gcc/x86_64-linux-gnu/5/include/stdint-gcc.h"
 
 extern void enqueueProcess(Pcb pcb);
 
@@ -56,20 +57,20 @@ void * duplicateHeap() {
 }
 
 void initializeFirstProcess(terminalCaller ti) {
-    int i;
-    int zero = 0;
-    int flags = 0x202;
+    uint64_t i;
+    uint64_t zero = 0x000;
+    uint64_t flags = 0x202;
     void * stack = initializeProcessStack();
     void * heap = reserveHeapSpace(1);
-    void * stackPointer = stack;
+    void * stackPointer = stack -8;
     for (i = 0; i < 20; i ++) {
         stackPointer -= 8;
         if( i == 2) { //rflag
-            memcpy(stackPointer, &flags, 8);
+            memcpy(stackPointer, &flags, sizeof(uint64_t));
         } else if(i == 4) {
-            memcpy(stackPointer,ti,8);
+            memcpy(stackPointer,ti,sizeof(uint64_t));
         } else {
-            memcpy(stackPointer, &zero, 8);
+            memcpy(stackPointer, &zero, sizeof(uint64_t));
         }
     }
     newProcess(stackPointer,stack,heap);

@@ -5,6 +5,9 @@ GLOBAL picMasterMask
 GLOBAL picSlaveMask
 GLOBAL haltcpu
 GLOBAL _hlt
+EXTERN schedule
+EXTERN putnString
+
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
@@ -100,6 +103,7 @@ _int80Handler:
 	iretq
 %endmacro
 
+
 _hlt:
 	sti
 	hlt
@@ -133,7 +137,24 @@ picSlaveMask:
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
-	irqHandlerMaster 0
+	pushState
+
+	MOV RDI, RSP
+    CALL schedule
+    CMP RAX, 0
+    JE cont_switch_end
+    MOV RSP, RAX
+cont_switch_end:
+    ;mov rdi, cadena
+    ;mov rsi, longitud
+    ;call putnString
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popState
+	iretq
 
 ;Keyboard
 _irq01Handler:
@@ -168,6 +189,10 @@ haltcpu:
 	cli
 	hlt
 	ret
+
+section .data
+	cadena db "retorne",10
+	longitud equ $-cadena
 
 
 SECTION .bss
