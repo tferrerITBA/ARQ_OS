@@ -24,6 +24,8 @@ char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * initFirstProc(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
+char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx );
+
 extern void _int80Handler();
 
 extern void _exception6Handler();

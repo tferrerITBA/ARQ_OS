@@ -7,7 +7,7 @@ GLOBAL changeCColors
 GLOBAL pixelInt
 GLOBAL fork
 GLOBAL firstProcess
-GLOBAL psInt
+GLOBAL psint
 
 section .text
 
