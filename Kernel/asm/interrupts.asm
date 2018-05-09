@@ -7,6 +7,7 @@ GLOBAL haltcpu
 GLOBAL _hlt
 EXTERN schedule
 EXTERN putnString
+EXTERN printStack
 
 
 GLOBAL _irq00Handler
@@ -88,6 +89,7 @@ _int80Handler:
 	out 20h, al
 
 	popState
+
 	iretq
 %endmacro
 
@@ -154,6 +156,8 @@ cont_switch_end:
 	out 20h, al
 
 	popState
+	mov rdi, rsp
+    call printStack
 	iretq
 
 ;Keyboard
