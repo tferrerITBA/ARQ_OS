@@ -1,5 +1,4 @@
 #include <sys/types.h>
-#include <errno.h>
 #include "commands.h"
 #include "lib.h"
 #include "functionGraph.h"
