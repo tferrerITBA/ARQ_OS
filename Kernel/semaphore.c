@@ -1,9 +1,10 @@
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
+//#include <stdlib.h>
+//#include <stdio.h>
+//#include <errno.h>
 #include <sys/types.h>
-#include <unistd.h>
+//#include <unistd.h>
+#include <stddef.h>
 #include "include/semaphore.h"
 #include "include/processStates.h"
 

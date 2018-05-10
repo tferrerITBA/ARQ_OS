@@ -5,7 +5,7 @@
 #include "processStates.h"
 #include "PCBTADs.h"
 #include "processTADs.h"
-#include "../../../../../../usr/include/stdint.h"
+#include <stdint.h>
 
 #define QUEUE_SIZE 10
 #define TRUE 1

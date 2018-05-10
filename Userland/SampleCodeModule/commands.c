@@ -1,9 +1,5 @@
-#include <sys/types.h>
 #include "commands.h"
-#include "lib.h"
 #include "functionGraph.h"
-#include <stdint.h>
-#include <time.h>
 
 #define STEP 6
 extern char * clearScr();

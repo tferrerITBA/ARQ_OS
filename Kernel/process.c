@@ -1,7 +1,6 @@
 #include "include/process.h"
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
-#include "../../../../../usr/lib/gcc/x86_64-linux-gnu/5/include/stdint-gcc.h"
 
 extern void enqueueProcess(Pcb pcb);
 
