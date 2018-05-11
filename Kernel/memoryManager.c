@@ -80,7 +80,7 @@ m_block getDataBlock(size_t size, m_block mb) {
         newBlock->size = size;
     }
     else {
-        int prevSize = aux->size;
+        size_t prevSize = aux->size;
         newBlock = aux;
         newBlock->free=FALSE;
         if(prevSize >= size + BLOCK_SIZE) { //Split Block
@@ -133,10 +133,10 @@ void free(void * ptr) {
 }
 
 void * calloc(size_t size) {
-
+    int i;
     void * ptr = malloc(size);
     if(ptr != NULL) {
-        for (int i = 0; i < size; i++) {
+        for (i = 0; i < size; i++) {
             *((char *)ptr + i) = 0;
         }
     }
@@ -195,8 +195,9 @@ void removeProcessStack(pid_t pid) {
         pb = pb->next;
     }
     if(pb != NULL) {
-        for(int i=0 ; i < PAGE_QUANTITY ; i++) {
-            if(pageAddresses[i] == (uint64_t)pb->address) {
+        int i;
+        for(i=0 ; i < PAGE_QUANTITY ; i++) {
+            if(pageAddresses[i] == pb->address) {
                 pageFlag[i] = 0;
             }
         }
@@ -210,6 +211,7 @@ void removeProcessHeap(pid_t pid) {
         pb = pb->next;
     }
     if(pb != NULL) {
+        int i;
         for(int i=0 ; i < PAGE_QUANTITY ; i++) {
             if (pageAddresses[i] == (uint64_t) pb->address) {
                 pageFlag[i] = 0;

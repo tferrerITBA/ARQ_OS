@@ -42,3 +42,4 @@ int terminateProcess(Process p);
 void enqueueProcess(Pcb pcb);
 void createReadyQueue();
 void printStack(trapframe * tf);
+void printRIP(trapframe * tf);

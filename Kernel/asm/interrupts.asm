@@ -8,6 +8,7 @@ GLOBAL _hlt
 EXTERN schedule
 EXTERN putnString
 EXTERN printStack
+EXTERN printRIP
 
 
 GLOBAL _irq00Handler
@@ -58,9 +59,13 @@ _int80Handler:
 	push r13
 	push r14
 	push r15
+	push fs
+	push gs
 %endmacro
 
 %macro popState 0
+	pop gs
+	pop fs
 	pop r15
 	pop r14
 	pop r13
@@ -156,8 +161,8 @@ cont_switch_end:
 	out 20h, al
 
 	popState
-	mov rdi, rsp
-    call printStack
+	;mov rdi, rsp
+    ;call printRIP
 	iretq
 
 ;Keyboard

@@ -8,6 +8,7 @@ Queue newQueue(size_t size) {
     q->length = 0;
     q->size = size;
     q->last = NULL;
+    q->first = NULL;
     return q;
 }
 
@@ -48,6 +49,5 @@ void * dequeue(Queue queue) {
     ret = firstElement->info;
     queue->first = firstElement->next;
     queue->length--;
-    free(firstElement);
     return ret;
 }

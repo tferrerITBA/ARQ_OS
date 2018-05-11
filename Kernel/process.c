@@ -1,6 +1,7 @@
 #include "include/process.h"
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
+#include "../../../../../usr/include/stdint.h"
 
 extern void enqueueProcess(Pcb pcb);
 
@@ -87,20 +88,19 @@ void initializeFirstProcess(terminalCaller ti) {
 
     void * stack = initializeProcessStack();
     void * heap = reserveHeapSpace();
-    void * stackPointer = stack - 23*sizeof(void *);
-    printHex(ti);
-    putString("\n--------\n");
-    putString("\n--------\n");
-    buildStackFrame(ti,stackPointer);
-    printHex(stackPointer);
-    putString("\n--------\n");
+    void * stackPointer = stack;
+    stackPointer = buildStackFrame(ti,stackPointer);
     newProcess(stackPointer,stack,heap);
+    putString("Terminal RIP: ");
+    printHex(ti);
+    putString("\n");
+    printHex(*((uint64_t *)(stackPointer+17*8)));
+    putString("\n");
+    printHex(stack);
+    putString("\n");
 }
 
 pid_t getRunningProcessPid() {
-    if(runningPcb == NULL) {
-        return 0;
-    }
     return runningPcb->pid;
 }
 

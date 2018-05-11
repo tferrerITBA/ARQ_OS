@@ -10,12 +10,12 @@
 #define BACKGROUND 0
 
 int main(void) {
-    printf("Welcome to userland\n");
 	firstProcess(terminal);
     return 1;
 }
 
 void terminal() {
+    printf("Llegue a la terminal\n");
 	char command[SIZE] = {0};
 	int index = 0;
 	int ret = 1;

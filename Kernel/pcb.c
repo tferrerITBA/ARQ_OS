@@ -3,7 +3,7 @@
 #include "include/videoMode.h"
 
 PcbTable allProcesses = NULL;
-static pid_t pidCount = 0;
+extern pid_t pidCount = 0;
 
 Pcb newPcb() {
     Pcb ret = malloc(sizeof(pcb));

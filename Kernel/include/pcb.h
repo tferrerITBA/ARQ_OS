@@ -10,3 +10,4 @@ void removeProcessFromTable(pid_t pid);
 void printPcb(Pcb pcb);
 
 extern PcbTable allProcesses;
+extern pid_t pidCount;
