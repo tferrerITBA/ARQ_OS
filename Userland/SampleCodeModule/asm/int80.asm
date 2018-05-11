@@ -8,6 +8,8 @@ GLOBAL pixelInt
 GLOBAL fork
 GLOBAL firstProcess
 GLOBAL psint
+GLOBAL upInt
+GLOBAL downInt
 
 section .text
 
@@ -76,5 +78,17 @@ firstProcess:
 
 psint:
 	mov rax, 9
+	int 0x80
+	ret
+
+downInt:
+	mov rax, 10
+	mov rbx, rdi
+	int 0x80
+	ret
+
+upInt:
+	mov rax, 11
+	mov rbx, rdi
 	int 0x80
 	ret

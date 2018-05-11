@@ -1,3 +1,8 @@
+#ifndef PCB_TADS_H
+#define PCB_TADS_H
+
+#include <stddef.h>
+
 typedef struct pcbCDT{
     int pid;
     int state;
@@ -24,3 +29,5 @@ typedef struct pcbTable{
 typedef pcbTable * PcbTable;
 
 extern Pcb runningPcb;
+
+#endif

@@ -24,46 +24,56 @@ void initializeMemoryManager() { //Intialize pages and kernel page
 }
 
 void initializePages() {
-    int i;
-    for(i = 0 ; i < PAGE_QUANTITY ; i++) {
+    for (int i = 0 ; i < PAGE_QUANTITY ; i++) {
         pageFlag[i] = FALSE;
         pageAddresses[i] = (void *)(HEAP_BASE + i * PAGE_SIZE);
     }
 }
 
 void * malloc(size_t size) {
+    if (size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE))
+		return NULL;
 
-    if(size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)) return NULL;
     pid_t pid = getRunningProcessPid();
+
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
-       if(pb == NULL) { //No process block associated with process asking for memory
+
+	if (pb == NULL) { //No process block associated with process asking for memory
         pb = (p_block)addProcessBlock(pid,FALSE);
-        if(pb == NULL) return NULL;
+
+        if (pb == NULL)
+			return NULL;
+
         pb->allocated = size + BLOCK_SIZE;
         mb = (m_block)pb->address;
         mb->free = FALSE;
         mb->size = size;
         mb->next = NULL;
+
         return ((char *)mb) + BLOCK_SIZE;
     }
 
     else { //Process already mapped to a 8K page
-        if(((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE - PB_SIZE))) return NULL;
+        if (((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)))
+			return NULL;
 
         mb = (m_block)pb->address;
         m_block dataBlock =(m_block)getDataBlock(size,mb);
-        if(dataBlock == NULL) return NULL;
+
+		if (dataBlock == NULL)
+			return NULL;
+
         pb->allocated += size + BLOCK_SIZE;
+
         return ((char *)dataBlock) + BLOCK_SIZE;
     }
 }
 
 m_block getDataBlock(size_t size, m_block mb) {
-
     m_block aux = mb;
     m_block last = mb;
-    while(aux != NULL && (aux->free = FALSE || aux->size < size)) {
+    while (aux != NULL && (aux->free = FALSE || aux->size < size)) {
         last = aux;
         aux = aux->next;
         if(aux != NULL && aux->free && last->free && ((aux->size + last->size + BLOCK_SIZE ) >= size)) {
@@ -72,18 +82,19 @@ m_block getDataBlock(size_t size, m_block mb) {
             return (m_block)((char *)last + BLOCK_SIZE);
         }
     }
+
     m_block newBlock;
-    if(aux == NULL) {
+
+    if (aux == NULL) {
         newBlock = (m_block)((char *)last + BLOCK_SIZE + last->size);
         newBlock->free = FALSE;
         newBlock->next = NULL;
         newBlock->size = size;
-    }
-    else {
-        size_t prevSize = aux->size;
+    } else {
+        int prevSize = aux->size;
         newBlock = aux;
         newBlock->free=FALSE;
-        if(prevSize >= size + BLOCK_SIZE) { //Split Block
+        if (prevSize >= size + BLOCK_SIZE) { //Split Block
             m_block splitBlock = (m_block)((char *)newBlock + BLOCK_SIZE + size);
             splitBlock->free = TRUE;
             splitBlock->size = prevSize - size - BLOCK_SIZE;
@@ -92,6 +103,7 @@ m_block getDataBlock(size_t size, m_block mb) {
             newBlock->size = size;
         }
     }
+
     return (m_block)((char *)newBlock + BLOCK_SIZE);
 }
 
@@ -156,7 +168,7 @@ void * realloc(void * ptr, size_t size) {
     return ret;
 }
 
-void joinDataBlocks(m_block m1, m_block m2) { 
+void joinDataBlocks(m_block m1, m_block m2) {
 
     m1->size += m2->size + BLOCK_SIZE;
     m1->next = m2->next;

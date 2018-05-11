@@ -1,5 +1,8 @@
+#ifndef PCB_H
+#define PCB_H
+
 //Process control block. Guarda informacion de los procesos
-#include <sys/param.h>
+#include <sys/types.h>
 #include "lib.h"
 #include "processStates.h"
 #include "PCBTADs.h"
@@ -11,3 +14,5 @@ void printPcb(Pcb pcb);
 
 extern PcbTable allProcesses;
 extern pid_t pidCount;
+
+#endif

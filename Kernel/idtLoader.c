@@ -5,8 +5,11 @@
 #include "include/videoMode.h"
 #include "include/RTC.h"
 #include "include/process.h"
+#include "include/mutex.h"
 
 extern void printAll();
+extern void downMutex(int *mutex);
+extern void upMutex(int *mutex);
 
 char *fork(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -24,7 +27,10 @@ char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * initFirstProc(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx );
+char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
+char *down(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *up(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 extern void _int80Handler();
 
@@ -44,7 +50,8 @@ typedef struct {
 #pragma pack(pop)        /* Reestablece la alinceación actual */
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, &fork, &read, &write, &pixel, &colors, &getpid, &initFirstProc, &ps, 0, 0, 0, &time};
+sysCalls sc[] = {0, 0, &fork, &read, &write, &pixel, &colors, &getpid,
+	&initFirstProc, &ps, &down, &up, 0, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -136,7 +143,17 @@ char * initFirstProc(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return (char*)0x1;
 }
 
-char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx ) {
+char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     printAll();
     return (char*)0x1;
+}
+
+char * down(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+	downMutex((int *)rbx);
+	return (char *)0x1;
+}
+
+char * up(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+	upMutex((int *)rbx);
+	return (char *)0x1;
 }

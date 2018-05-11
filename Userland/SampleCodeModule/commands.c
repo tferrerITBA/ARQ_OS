@@ -8,6 +8,8 @@ extern char * changeBColors(uint8_t colors[]);
 extern char * changeCColors(uint8_t colors[]);
 extern char * fork();
 extern char * psint();
+extern void consume();
+extern void produce();
 
 
 void runHelp() {
@@ -136,14 +138,11 @@ void ps() {
 }
 
 void prodcons() {
-	/*
 	pid_t pid;
 
-	createMessageQueue();
-
 	if ((pid = fork()) == -1) {
-        perror("ERROR - Fork fail: ");
-        exit(1);
+        printf("Error - prodcons: failed to fork\n");
+        return;
     }
 
     if (pid == 0) {
@@ -151,5 +150,4 @@ void prodcons() {
     } else {
 		produce();
 	}
-	*/
 }

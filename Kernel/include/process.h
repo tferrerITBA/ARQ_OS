@@ -1,3 +1,6 @@
+#ifndef PROCESS_H
+#define PROCESS_H
+
 #include <sys/types.h>
 #include <stdint.h>
 #include "pcb.h"
@@ -20,3 +23,5 @@ int terminateProcess(Process p);
 pid_t processFork();
 pid_t getRunningProcessPid();
 void * buildStackFrame(void * entryPoint, void * userStack);
+
+#endif

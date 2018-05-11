@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include "lib.h"
+
 typedef void (*function)(void);
 
 void runHelp();
@@ -19,5 +20,3 @@ void sh(function functionName, int foreground);
 void ps();
 void prodcons();
 uint8_t getDistance(uint8_t a, uint8_t b);
-
-
