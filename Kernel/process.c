@@ -1,7 +1,7 @@
 #include "include/process.h"
-#include "include/memoryManager.h"
+
 #include "include/videoMode.h"
-#include "../../../../../usr/include/stdint.h"
+#include "../../../../../usr/lib/gcc/x86_64-linux-gnu/5/include/stdint-gcc.h"
 
 extern void enqueueProcess(Pcb pcb);
 
@@ -57,13 +57,19 @@ int terminateProcess(Process p) {
     return 1;
 }
 
-pid_t processFork() {
+pid_t processFork(uint64_t rsp) {
 
+    void * childStackBase;
     void * childStackPointer;
-    void * childStackLimit = duplicateStack(childStackPointer);
-    void * childHeap = duplicateHeap();
+    void * childHeap;
+    uint64_t offset;
 
-    Process newP = newProcess(childStackPointer, childStackLimit + STACK_SIZE, childHeap);
+    offset = (uint64_t)(runningPcb->stackBase) - rsp;
+    childStackBase = duplicateStack(offset);
+    childStackPointer = childStackBase - offset;
+    childHeap = duplicateHeap();
+
+    Process newP = newProcess(childStackPointer, childStackBase, childHeap);
     enqueueProcess(newP->pcb);
 
     if(runningPcb->pid == newP->pcb->pid) {
@@ -73,16 +79,15 @@ pid_t processFork() {
     return runningPcb->pid;
 }
 
-void * duplicateStack(void * stackPointer) {
-    void * stackLimit = initializeProcessStack();
-    size_t stackLen = runningPcb->stackBase - runningPcb->stackPointer;
-    stackPointer = stackLimit + STACK_SIZE - stackLen;
-    memcpy(stackPointer,runningPcb->stackPointer,stackLen);
-    return stackPointer;
+void * duplicateStack(uint64_t offset) {
+
+    void * stackBase = initializeProcessStack();
+    memcpy(stackBase - offset,runningPcb->stackPointer,offset+1);
+    return stackBase;
 }
 
 void * duplicateHeap() {
-    void * heap = reserveHeapSpace(runningPcb->pid);
+    void * heap = reserveHeapSpace();
     memcpy(heap,runningPcb->heapBase,HEAP_SIZE);
     return heap;
 }
@@ -94,13 +99,6 @@ void initializeFirstProcess(terminalCaller ti) {
     void * stackPointer = stack;
     stackPointer = buildStackFrame(ti,stackPointer);
     newProcess(stackPointer,stack,heap);
-    putString("Terminal RIP: ");
-    printHex(ti);
-    putString("\n");
-    printHex(*((uint64_t *)(stackPointer+17*8)));
-    putString("\n");
-    printHex(stack);
-    putString("\n");
 }
 
 pid_t getRunningProcessPid() {

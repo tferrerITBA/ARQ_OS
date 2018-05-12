@@ -7,14 +7,13 @@ extern void printPcb(Pcb pcb);
 void * schedule(void * rsp) {
 
     if(runningPcb == NULL && isEmpty(readyQueue)) {
-        //putString("NULL\n");
+        putString("NULL Running Pcb\n");
         return NULL;
     }
 
     if(isEmpty(readyQueue)) {
         //putString("Empty queue\n");
         return rsp;
-
     }
 
     if(runningPcb->state == RUNNING) {
@@ -22,9 +21,14 @@ void * schedule(void * rsp) {
         enqueueProcess(runningPcb);
     }
 
-    Pcb deq = dequeue(readyQueue);
-    runningPcb = deq;
+    runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
+    if(runningPcb->pid == 2){
+        putString("Dequeueing forked process\nStack pointer: ");
+        printHex(runningPcb->stackPointer);
+        putString("\n");
+
+    }
 
     return runningPcb->stackPointer;
 }

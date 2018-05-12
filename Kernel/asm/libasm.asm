@@ -26,8 +26,3 @@ cpuVendor:
 	mov rsp, rbp
 	pop rbp
 	ret
-
-getRSP:
-	mov rbx, [rsp]
-	mov rax, [rbx + 8*7]
-	ret

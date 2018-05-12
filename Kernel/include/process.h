@@ -9,18 +9,18 @@
 #include "processTADs.h"
 #include "processStates.h"
 
-#define STACK_SIZE 256
-#define HEAP_SIZE 256
+#define STACK_SIZE 8192
+#define HEAP_SIZE 8192
 
 typedef void (*terminalCaller)(void);
 
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap);
-void * duplicateStack(void * stackPointer);
+void * duplicateStack(uint64_t offset);
 void * duplicateHeap();
 void initializeFirstProcess(terminalCaller ti);
 int terminateProcess(Process p);
-pid_t processFork();
+pid_t processFork(uint64_t rsp);
 pid_t getRunningProcessPid();
 void * buildStackFrame(void * entryPoint, void * userStack);
 

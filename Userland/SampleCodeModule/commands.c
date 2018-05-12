@@ -124,9 +124,12 @@ void sh(function functionName, int foreground) {
 	pid_t forkRet;
 
 	if(foreground) {
+		printf("Running in foreground\n");
 		functionName();
 	} else {
-		forkRet = (pid_t)fork();
+		printf("Before fork\n");
+		forkRet = fork();
+        printf("After fork\n");
 		if(forkRet == 0) {
 			functionName();
 		}
@@ -150,4 +153,13 @@ void prodcons() {
     } else {
 		produce();
 	}
+}
+
+void forkDemo() {
+    int i;
+    double result = 1.0;
+    for(i = 0; i < 500000000; i++ ) {
+        result += result/2;
+    }
+    printf("Result is ready\n");
 }

@@ -131,7 +131,7 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 char * fork(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return (char*)processFork();
+    return (char*)processFork(rbx);
 }
 
 char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx) {

@@ -28,15 +28,10 @@ void enqueue(Queue queue, void * elem) {
     if(queue == NULL || elem == NULL) {
         return;
     }
-    putString("Element enqueued: ");
-    printHex(elem);
-    put_char('\n');
+
     Element newElement = malloc(sizeof(queueElement));
     Element currentLast = queue->last;
     newElement->info = elem;
-    putString("Element enqueued: ");
-    printHex(newElement->info);
-    put_char('\n');
 
     if(queue->length == 0) {
         queue->first = newElement;
@@ -48,9 +43,6 @@ void enqueue(Queue queue, void * elem) {
     queue->last = newElement;
     queue->length= queue->length+1;
 
-    putString("First element: ");
-    printHex(queue->first->info);
-    put_char('\n');
 }
 
 void * dequeue(Queue queue) {
@@ -62,8 +54,5 @@ void * dequeue(Queue queue) {
     ret = firstElement->info;
     queue->first = firstElement->next;
     queue->length = queue->length-1;
-    putString("Element dequeued: ");
-    printHex(ret);
-    put_char('\n');
     return ret;
 }

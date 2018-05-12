@@ -60,13 +60,6 @@ void terminal() {
 	}
 }
 
-int shSelectAction(char command[], int mode, int foreground) {
-    char name[SIZE] = {0};
-
-    if(strequals(command,"prodcons")) {
-        prodcons();
-    }
-}
 
 int readCommand(char command[], int mode) {
     char action[SIZE] = {0};
@@ -104,11 +97,7 @@ int readCommand(char command[], int mode) {
             return STANDARD;
         } else if(strequals(command,"help")) {
             runHelp();
-        } else if(strequals(command,"sh&")) {
-            shSelectAction(command + 4,mode, FOREGROUND);
-        } else if(strequals(command,"sh")) {
-            shSelectAction(command + 3,mode,BACKGROUND);
-        } else if(strequals(command,"ps")) {
+        }  else if(strequals(command,"ps")) {
             ps();
         }
             /* Commands with arguments */
@@ -119,6 +108,11 @@ int readCommand(char command[], int mode) {
             if(strequals(action,"echo")) {
                 printf(params);
                 printf("\n");
+
+            } else if(strequals(action,"sh&")) {
+                shSelectAction(command + 4,mode, FOREGROUND);
+            } else if(strequals(action,"sh")) {
+                shSelectAction(command + 3,mode,BACKGROUND);
             } else if(strequals(action,"chcolor")) {
                 retValue = validateColors(colors, params);
                 if(retValue != 0) {
@@ -149,6 +143,17 @@ int readCommand(char command[], int mode) {
         return SECURITY;
     }
     return STANDARD;
+}
+
+
+int shSelectAction(char command[], int mode, int foreground) {
+    char name[SIZE] = {0};
+
+    if(strequals(command,"prodcons")) {
+        sh(prodcons,foreground);
+    } else if(strequals(command,"forkDemo")) {
+        sh(forkDemo,foreground);
+    }
 }
 
 /**
