@@ -14,18 +14,17 @@ void * schedule(void * rsp) {
         return rsp;
     }
 
-    if(runningPcb->state == TERMINATED) {
-        free(runningPcb);
-    } else {
+    if(runningPcb->state == RUNNING) {
         enqueueProcess(runningPcb);
     }
 
-    runningPcb = dequeue(readyQueue);
+    Pcb deq = dequeue(readyQueue);
+    runningPcb = deq;
     runningPcb->state = RUNNING;
 
-//    putString("\n-----Running Stack-----\n");
-//    printHex(runningPcb);
-//    putString("\n-----------------------\n");
+    putString("Stack pointer for dequeued process: ");
+    printHex(runningPcb->stackPointer);
+    put_char('\n');
 
 
     //printPcb(runningPcb);

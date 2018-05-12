@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "include/queue.h"
+#include "include/videoMode.h"
 
 Queue readyQueue = NULL;
 
@@ -24,11 +25,19 @@ int isEmpty(Queue queue) {
 }
 
 void enqueue(Queue queue, void * elem) {
-    size_t assignedMemory = (queue->size);
+    if(queue == NULL || elem == NULL) {
+        return;
+    }
+    putString("Element enqueued: ");
+    printHex(elem);
+    put_char('\n');
     Element newElement = malloc(sizeof(queueElement));
     Element currentLast = queue->last;
-    newElement->info = malloc(assignedMemory);
-    memcpy(newElement->info, elem, assignedMemory);
+    newElement->info = elem;
+    putString("Element enqueued: ");
+    printHex(newElement->info);
+    put_char('\n');
+
     if(queue->length == 0) {
         queue->first = newElement;
     }
@@ -37,7 +46,11 @@ void enqueue(Queue queue, void * elem) {
         currentLast->next = newElement;
     }
     queue->last = newElement;
-    queue->length++;
+    queue->length= queue->length+1;
+
+    putString("First element: ");
+    printHex(queue->first->info);
+    put_char('\n');
 }
 
 void * dequeue(Queue queue) {
@@ -48,6 +61,9 @@ void * dequeue(Queue queue) {
     Element firstElement = queue->first;
     ret = firstElement->info;
     queue->first = firstElement->next;
-    queue->length--;
+    queue->length = queue->length-1;
+    putString("Element dequeued: ");
+    printHex(ret);
+    put_char('\n');
     return ret;
 }

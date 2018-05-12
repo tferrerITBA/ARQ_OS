@@ -41,6 +41,9 @@ Process newProcess(void * stackPointer, void * stackBase, void * heap) {
     newP->pcb->stackBase = stackBase;
     newP->pcb->heapBase = heap;
     enqueueProcess(newP->pcb);
+    putString("Stack pointer for new process: ");
+    printHex(newP->pcb->stackPointer);
+    put_char('\n');
     addPcbToTable(newP->pcb);
     return newP;
 }
