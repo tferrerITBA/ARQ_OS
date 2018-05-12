@@ -7,14 +7,18 @@ extern void printPcb(Pcb pcb);
 void * schedule(void * rsp) {
 
     if(runningPcb == NULL && isEmpty(readyQueue)) {
+        //putString("NULL\n");
         return NULL;
     }
 
     if(isEmpty(readyQueue)) {
+        //putString("Empty queue\n");
         return rsp;
+
     }
 
     if(runningPcb->state == RUNNING) {
+        putString("Enqueuing\n");
         enqueueProcess(runningPcb);
     }
 
@@ -22,12 +26,6 @@ void * schedule(void * rsp) {
     runningPcb = deq;
     runningPcb->state = RUNNING;
 
-    putString("Stack pointer for dequeued process: ");
-    printHex(runningPcb->stackPointer);
-    put_char('\n');
-
-
-    //printPcb(runningPcb);
     return runningPcb->stackPointer;
 }
 

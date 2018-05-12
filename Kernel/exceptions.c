@@ -31,7 +31,7 @@ static void invalid_opcode(uint64_t rsp) {
 }
 
 static void printExceptionDetails(trapframe * tf) {
-	putString("RIP: 0x");
+	putString("\nRIP: 0x");
 	printHex(tf->ip);
 	putString("\nCS: 0x");
 	printHex(tf->cs);

@@ -60,26 +60,15 @@ void terminal() {
 	}
 }
 
-int readCommand(char command[], int mode) {
+int shSelectAction(char command[], int mode, int foreground) {
     char name[SIZE] = {0};
 
-	readWordFromCommand(name,command,0,' ');
-    if(strequals(name,"sh&")) {
-        shSelectAction(command + 4,mode, FOREGROUND);
-    } else if(strequals(name,"sh")) {
-        shSelectAction(command,mode,BACKGROUND);
-    } else if(strequals(command,"ps")) {
-        ps();
-    } else if(strequals(command,"prodcons")) {
+    if(strequals(command,"prodcons")) {
         prodcons();
-    } else if(strequals(command,"help")) {
-        runHelp();
-    } else {
-        printf("Invalid command. Try 'help' for information about avaliable options\n");
     }
 }
 
-int shSelectAction(char command[], int mode, int foreground) {
+int readCommand(char command[], int mode) {
     char action[SIZE] = {0};
     char params[SIZE] = {0};
     uint8_t colors[3] = {0};
@@ -113,6 +102,14 @@ int shSelectAction(char command[], int mode, int foreground) {
         } else if(strequals(command,"securityoff")) {
             printf("Security mode is off\n");
             return STANDARD;
+        } else if(strequals(command,"help")) {
+            runHelp();
+        } else if(strequals(command,"sh&")) {
+            shSelectAction(command + 4,mode, FOREGROUND);
+        } else if(strequals(command,"sh")) {
+            shSelectAction(command + 3,mode,BACKGROUND);
+        } else if(strequals(command,"ps")) {
+            ps();
         }
             /* Commands with arguments */
         else{

@@ -152,17 +152,11 @@ _irq00Handler:
     JE cont_switch_end
     MOV RSP, RAX
 cont_switch_end:
-    ;mov rdi, cadena
-    ;mov rsi, longitud
-    ;call putnString
-
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
 
 	popState
-	;mov rdi, rsp
-    ;call printRIP
 	iretq
 
 ;Keyboard
