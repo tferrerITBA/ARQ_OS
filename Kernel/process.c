@@ -1,9 +1,11 @@
 #include "include/process.h"
 
 #include "include/videoMode.h"
-#include "../../../../../usr/lib/gcc/x86_64-linux-gnu/5/include/stdint-gcc.h"
 
 extern void enqueueProcess(Pcb pcb);
+extern void * pushRegisters();
+extern void * popRegisters();
+extern void * getRSP();
 
 typedef struct StackFrame {
 
@@ -57,20 +59,25 @@ int terminateProcess(Process p) {
     return 1;
 }
 
-pid_t processFork(uint64_t rsp) {
+pid_t processFork() {
 
+    void * currentRSP;
     void * childStackBase;
     void * childStackPointer;
     void * childHeap;
     uint64_t offset;
+    Process newP;
 
-    offset = (uint64_t)(runningPcb->stackBase) - rsp;
+    currentRSP = pushRegisters();
+
     childStackBase = duplicateStack(offset);
     childStackPointer = childStackBase - offset;
     childHeap = duplicateHeap();
 
-    Process newP = newProcess(childStackPointer, childStackBase, childHeap);
+    newP = newProcess(childStackPointer, childStackBase, childHeap);
+    currentRSP = pushRegisters();
     enqueueProcess(newP->pcb);
+
 
     if(runningPcb->pid == newP->pcb->pid) {
         return 0;
@@ -80,9 +87,8 @@ pid_t processFork(uint64_t rsp) {
 }
 
 void * duplicateStack(uint64_t offset) {
-
     void * stackBase = initializeProcessStack();
-    memcpy(stackBase - offset,runningPcb->stackPointer,offset+1);
+    memcpy(stackBase - offset -1,runningPcb->stackPointer,offset+1);
     return stackBase;
 }
 

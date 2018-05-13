@@ -20,7 +20,7 @@ void * duplicateStack(uint64_t offset);
 void * duplicateHeap();
 void initializeFirstProcess(terminalCaller ti);
 int terminateProcess(Process p);
-pid_t processFork(uint64_t rsp);
+pid_t processFork();
 pid_t getRunningProcessPid();
 void * buildStackFrame(void * entryPoint, void * userStack);
 

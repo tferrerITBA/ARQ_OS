@@ -193,6 +193,8 @@ haltcpu:
 	hlt
 	ret
 
+
+
 section .data
 	cadena db "retorne",10
 	longitud equ $-cadena

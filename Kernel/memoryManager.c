@@ -187,7 +187,7 @@ void * popPage() {
 void * initializeProcessStack() {//Reserva pagina de 8k para el STACK
     pid_t pid = getRunningProcessPid();
     p_block stack = addProcessBlock(pid,TRUE);
-    return (char *)stack + PB_SIZE;
+    return (void *)stack + PB_SIZE;
 }
 
 void * reserveHeapSpace() { //Reserva pagina de 8k para el HEAP, can return NULL value if no page available
