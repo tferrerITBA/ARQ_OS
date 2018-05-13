@@ -1,6 +1,7 @@
 GLOBAL cpuVendor
 GLOBAL getRSP
 GLOBAL pushRegisters
+GLOBAL popRegisters
 
 section .text
 	
@@ -33,12 +34,19 @@ getRSP:
 	ret
 
 pushRegisters:
-	pushState
-	mov rax, rsp
+	mov rcx, rsp ; guardo el valor original de rsp
+	mov rsp, rdi ; cargo el valor de stack al que quiero pushear registros
+	pushState ;pusheo los registros
+	mov rax, rsp ;muevo el nuevo valor de stack pointer a rax
+	mov rsp, rcx ;reestablezco el valor del stack cuando llegue
 	ret
 
+popRegisters:
+	popState
+	mov rax, rsp
+
 %macro pushState 0
-	push base
+	push rbp
 	push ss
 	push rsp
 	pushfq
@@ -84,7 +92,7 @@ pushRegisters:
 	pop rip
     pop cs
     popfq
-    pop rsp;
-    pop ss;
-    pop base;
+    pop rsp
+    pop ss
+    pop rbp
 %endmacro

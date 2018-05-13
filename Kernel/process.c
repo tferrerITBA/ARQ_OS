@@ -3,8 +3,8 @@
 #include "include/videoMode.h"
 
 extern void enqueueProcess(Pcb pcb);
-extern void * pushRegisters();
-extern void * popRegisters();
+extern void * pushRegisters(void *);
+extern void * popRegisters(void *);
 extern void * getRSP();
 
 typedef struct StackFrame {
@@ -61,23 +61,40 @@ int terminateProcess(Process p) {
 
 pid_t processFork() {
 
-    void * currentRSP;
     void * childStackBase;
     void * childStackPointer;
     void * childHeap;
     uint64_t offset;
     Process newP;
 
-    currentRSP = pushRegisters();
+    putString("Stack pointer before refreshing: ");
+    printHex(runningPcb->stackPointer);
+    put_char('\n');
+
+    runningPcb->stackPointer = getRSP(); //RSP del padre
+    offset = runningPcb->stackBase - runningPcb->stackPointer;
+
+    putString("Stack after refreshing: ");
+    printHex(runningPcb->stackPointer);
+    put_char('\n');
 
     childStackBase = duplicateStack(offset);
     childStackPointer = childStackBase - offset;
     childHeap = duplicateHeap();
 
-    newP = newProcess(childStackPointer, childStackBase, childHeap);
-    currentRSP = pushRegisters();
-    enqueueProcess(newP->pcb);
+    putString("Child stack pointer before pushing regs: ");
+    printHex(childStackPointer);
+    put_char('\n');
 
+    //No se esta actualizando el stackpointer de runningpcb
+    childStackPointer = pushRegisters(childStackPointer);
+
+    putString("Child stack pointer after pushing regs: ");
+    printHex(childStackPointer);
+    put_char('\n');
+
+    newP = newProcess(childStackPointer, childStackBase, childHeap);
+    enqueueProcess(newP->pcb);
 
     if(runningPcb->pid == newP->pcb->pid) {
         return 0;
@@ -85,6 +102,7 @@ pid_t processFork() {
 
     return runningPcb->pid;
 }
+
 
 void * duplicateStack(uint64_t offset) {
     void * stackBase = initializeProcessStack();
