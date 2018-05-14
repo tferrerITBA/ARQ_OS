@@ -4,7 +4,6 @@
 extern pid_t getRunningProcessPid();
 extern void put_char(int c);
 
-//Main reference to process block Linked List
 p_block PB_HEAD = NULL;
 p_block LAST = NULL;
 p_block BASE = (p_block)HEAP_BASE;
@@ -12,7 +11,7 @@ p_block BASE = (p_block)HEAP_BASE;
 void * pageAddresses[PAGE_QUANTITY];
 char pageFlag[PAGE_QUANTITY];
 
-void initializeMemoryManager() { //Intialize pages and kernel page
+void initializeMemoryManager() {
     initializePages();
     PB_HEAD = BASE;
     PB_HEAD->pid = 0;
@@ -39,13 +38,13 @@ void * malloc(size_t size) {
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
 
-	if (pb == NULL) { //No process block associated with process asking for memory
+	if (pb == NULL) {
         pb = (p_block)addProcessBlock(pid,FALSE);
 
         if (pb == NULL)
 			return NULL;
 
-        pb->allocated = size + BLOCK_SIZE;
+        pb->allocated += size + BLOCK_SIZE;
         mb = (m_block)pb->address;
         mb->free = FALSE;
         mb->size = size;
@@ -54,8 +53,8 @@ void * malloc(size_t size) {
         return ((char *)mb) + BLOCK_SIZE;
     }
 
-    else { //Process already mapped to a 8K page
-        if (((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE - PB_SIZE)))
+    else {
+        if (((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE )))
 			return NULL;
 
         mb = (m_block)pb->address;
@@ -66,7 +65,7 @@ void * malloc(size_t size) {
 
         pb->allocated += size + BLOCK_SIZE;
 
-        return ((char *)dataBlock) + BLOCK_SIZE;
+        return (void *)dataBlock;
     }
 }
 
@@ -82,10 +81,8 @@ m_block getDataBlock(size_t size, m_block mb) {
             return (m_block)((char *)last + BLOCK_SIZE);
         }
     }
-
     m_block newBlock;
-
-    if (aux == NULL) {
+    if (aux == NULL && hasFreeSpace((char *)aux,size)) {
         newBlock = (m_block)((char *)last + BLOCK_SIZE + last->size);
         newBlock->free = FALSE;
         newBlock->next = NULL;
@@ -94,12 +91,12 @@ m_block getDataBlock(size_t size, m_block mb) {
         int prevSize = aux->size;
         newBlock = aux;
         newBlock->free=FALSE;
-        if (prevSize >= size + BLOCK_SIZE) { //Split Block
+        if (prevSize > size + BLOCK_SIZE) { //Split Block
             m_block splitBlock = (m_block)((char *)newBlock + BLOCK_SIZE + size);
             splitBlock->free = TRUE;
             splitBlock->size = prevSize - size - BLOCK_SIZE;
-            splitBlock->next = (m_block)newBlock->next;
-            newBlock->next = (m_block)splitBlock;
+            splitBlock->next = newBlock->next;
+            newBlock->next = splitBlock;
             newBlock->size = size;
         }
     }
@@ -184,13 +181,13 @@ void * popPage() {
     return (void*) pageAddresses[i];
 }
 
-void * initializeProcessStack() {//Reserva pagina de 8k para el STACK
+void * initializeProcessStack() {
     pid_t pid = getRunningProcessPid();
     p_block stack = addProcessBlock(pid,TRUE);
     return (void *)stack + PB_SIZE;
 }
 
-void * reserveHeapSpace() { //Reserva pagina de 8k para el HEAP, can return NULL value if no page available
+void * reserveHeapSpace() {
     pid_t pid = getRunningProcessPid();
     return addProcessBlock(pid,FALSE);
 }
@@ -210,10 +207,11 @@ void removeProcessStack(pid_t pid) {
         int i;
         for(i=0 ; i < PAGE_QUANTITY ; i++) {
             if(pageAddresses[i] == pb->address) {
-                pageFlag[i] = 0;
+                pageFlag[i] = FALSE;
             }
         }
         pb->pid = -1;
+        clearBlocks(pb->address);
     }
 }
 
@@ -226,17 +224,24 @@ void removeProcessHeap(pid_t pid) {
         int i;
         for(int i=0 ; i < PAGE_QUANTITY ; i++) {
             if (pageAddresses[i] == (uint64_t) pb->address) {
-                pageFlag[i] = 0;
+                pageFlag[i] = FALSE;
             }
         }
         pb->pid = -1;
         pb->allocated = 0;
+        clearBlocks(pb->address);
     }
 }
 
-void freePage(void * address) {
+int hasFreeSpace(char * address, int size) {
+    return (PAGE_SIZE - address) > (size + BLOCK_SIZE );
+}
 
+void clearBlocks(m_block mb) {
 
-
+    while(mb != NULL) {
+        mb->FREE = TRUE;
+        mb = mb->next;
+    }
 
 }

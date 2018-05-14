@@ -13,7 +13,7 @@
 #define HEAP_LIMIT 0x799999
 
 typedef struct processBlock * p_block;
-struct processBlock {   //Bloque que inidica owner de dicha pagina
+struct processBlock {
     pid_t pid;
     int isStack;
     p_block next;
@@ -22,7 +22,7 @@ struct processBlock {   //Bloque que inidica owner de dicha pagina
 };
 
 typedef struct memBlock * m_block;
-struct memBlock {   //Bloque de memoria pedido por un proceso
+struct memBlock {
     int free; 
     m_block next;
     size_t size;
@@ -44,4 +44,4 @@ void * reserveHeapSpace();
 void removeProcessMemory();
 void removeProcessStack(pid_t pid);
 void removeProcessHeap(pid_t pid);
-void freePage(void * address);
+int hasFreeSpace(char * address, int size);
