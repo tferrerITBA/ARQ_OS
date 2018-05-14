@@ -138,18 +138,8 @@ void ps() {
 }
 
 void prodcons() {
-//	pid_t pid;
-//
-//	if ((pid = fork()) == -1) {
-//        printf("Error - prodcons: failed to fork\n");
-//        return;
-//    }
-//
-//    if (pid == 0) {
-//        consume();
-//    } else {
-//		produce();
-//	}
+	newProcess(consume);
+    produce();
 }
 
 void multiDemo() {

@@ -3,9 +3,6 @@
 #include "include/videoMode.h"
 
 extern void enqueueProcess(Pcb pcb);
-extern void * pushRegisters(void *);
-extern void * popRegisters(void *);
-extern void * getRSP();
 
 typedef struct StackFrame {
 

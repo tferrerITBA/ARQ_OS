@@ -10,17 +10,12 @@ void * schedule(void * rsp) {
     Pcb terminated = NULL;
 
     if(runningPcb == NULL && isEmpty(readyQueue)) {
-        putString("NULL Running Pcb\n");
         return NULL;
     }
-
     if(isEmpty(readyQueue)) {
-        //putString("Empty queue\n");
         return rsp;
     }
-
     if(runningPcb->state == RUNNING) {
-//        putString("Enqueuing\n");
         runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);
     } else if(runningPcb->state == TERMINATED) {
@@ -29,9 +24,11 @@ void * schedule(void * rsp) {
 
     runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
+
     if(terminated != NULL) {
         freeProcessResources(terminated);
     }
+
     return runningPcb->stackPointer;
 }
 

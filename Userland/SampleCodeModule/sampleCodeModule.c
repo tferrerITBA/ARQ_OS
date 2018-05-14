@@ -15,7 +15,6 @@ int main(void) {
 }
 
 void terminal() {
-    printf("Llegue a la terminal\n");
 	char command[SIZE] = {0};
 	int index = 0;
 	int ret = 1;
