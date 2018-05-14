@@ -1,13 +1,16 @@
 #include "commands.h"
 #include "functionGraph.h"
+#include "../../Kernel/include/PCBTADs.h"
 
 #define STEP 6
 extern char * clearScr();
 extern char * timeInt();
 extern char * changeBColors(uint8_t colors[]);
 extern char * changeCColors(uint8_t colors[]);
-extern char * fork();
+extern char * newProcess(void *);
 extern char * psint();
+extern char * kill(int pid);
+extern char * getpid();
 extern void consume();
 extern void produce();
 
@@ -121,18 +124,12 @@ uint8_t getDistance(uint8_t a, uint8_t b) {
 }
 
 void sh(function functionName, int foreground) {
-	pid_t forkRet;
 
 	if(foreground) {
 		printf("Running in foreground\n");
 		functionName();
 	} else {
-		printf("Before fork\n");
-		forkRet = fork();
-        printf("After fork\n");
-		if(forkRet == 0) {
-			functionName();
-		}
+		newProcess(functionName);
 	}
 }
 
@@ -141,25 +138,35 @@ void ps() {
 }
 
 void prodcons() {
-	pid_t pid;
-
-	if ((pid = fork()) == -1) {
-        printf("Error - prodcons: failed to fork\n");
-        return;
-    }
-
-    if (pid == 0) {
-        consume();
-    } else {
-		produce();
-	}
+//	pid_t pid;
+//
+//	if ((pid = fork()) == -1) {
+//        printf("Error - prodcons: failed to fork\n");
+//        return;
+//    }
+//
+//    if (pid == 0) {
+//        consume();
+//    } else {
+//		produce();
+//	}
 }
 
-void forkDemo() {
+void multiDemo() {
     int i;
     double result = 1.0;
-    for(i = 0; i < 500000000; i++ ) {
+
+    for(i = 0; i < 50000000; i++ ) {
         result += result/2;
     }
-    printf("Result is ready\n");
+    printf("\nResult is ready\n>");
+    endOfProcess();
 }
+
+void endOfProcess() {
+    int pid = (int)getpid();
+    kill(pid);
+    while(1);
+}
+
+

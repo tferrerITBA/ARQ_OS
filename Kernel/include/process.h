@@ -12,15 +12,13 @@
 #define STACK_SIZE 8192
 #define HEAP_SIZE 8192
 
-typedef void (*terminalCaller)(void);
+typedef void (*functionIP)(void);
 
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap);
-void * duplicateStack(uint64_t offset);
-void * duplicateHeap();
-void initializeFirstProcess(terminalCaller ti);
-int terminateProcess(Process p);
-pid_t processFork();
+void initializeProcess(functionIP ip);
+void terminateProcess(pid_t pid);
+void freeProcessResources(Pcb pcb);
 pid_t getRunningProcessPid();
 void * buildStackFrame(void * entryPoint, void * userStack);
 

@@ -19,4 +19,4 @@ int isDigit(char c);
 int toInt(char c);
 int length(char word[]);
 extern void raiseInvOp();
-extern void firstProcess(terminalCaller ti);
+extern void newProcess(terminalCaller ti);

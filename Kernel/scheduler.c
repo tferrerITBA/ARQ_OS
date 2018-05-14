@@ -3,8 +3,11 @@
 #include "include/videoMode.h"
 
 extern void printPcb(Pcb pcb);
+extern void freeProcessResources(Pcb pcb);
 
 void * schedule(void * rsp) {
+
+    Pcb terminated = NULL;
 
     if(runningPcb == NULL && isEmpty(readyQueue)) {
         putString("NULL Running Pcb\n");
@@ -17,19 +20,18 @@ void * schedule(void * rsp) {
     }
 
     if(runningPcb->state == RUNNING) {
-        putString("Enqueuing\n");
+//        putString("Enqueuing\n");
+        runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);
+    } else if(runningPcb->state == TERMINATED) {
+        terminated = runningPcb;
     }
 
     runningPcb = dequeue(readyQueue);
     runningPcb->state = RUNNING;
-    if(runningPcb->pid == 2){
-        putString("Dequeueing forked process\nStack pointer: ");
-        printHex(runningPcb->stackPointer);
-        putString("\n");
-
+    if(terminated != NULL) {
+        freeProcessResources(terminated);
     }
-
     return runningPcb->stackPointer;
 }
 

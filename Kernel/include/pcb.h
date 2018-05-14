@@ -9,9 +9,10 @@
 
 Pcb newPcb();
 void addPcbToTable(Pcb pcb);
-void removeProcessFromTable(pid_t pid);
+void initializePcbTable();
+Pcb getProcess(pid_t pid);
 void printPcb(Pcb pcb);
-
+void printPid(pid_t pid);
 extern PcbTable allProcesses;
 extern pid_t pidCount;
 

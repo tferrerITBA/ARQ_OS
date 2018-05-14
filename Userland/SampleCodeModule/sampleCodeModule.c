@@ -10,7 +10,7 @@
 #define BACKGROUND 0
 
 int main(void) {
-	firstProcess(terminal);
+	newProcess(terminal);
     return 1;
 }
 
@@ -151,9 +151,11 @@ int shSelectAction(char command[], int mode, int foreground) {
 
     if(strequals(command,"prodcons")) {
         sh(prodcons,foreground);
-    } else if(strequals(command,"forkDemo")) {
-        sh(forkDemo,foreground);
-    }
+    } else if(strequals(command,"multiDemo")) {
+        sh(multiDemo,foreground);
+    } else {
+		printf("Invalid action for sh command\n");
+	}
 }
 
 /**

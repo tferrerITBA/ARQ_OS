@@ -42,81 +42,26 @@ Process newProcess(void * stackPointer, void * stackBase, void * heap) {
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;
     newP->pcb->heapBase = heap;
-    enqueueProcess(newP->pcb);
-    putString("Stack pointer for new process: ");
-    printHex(newP->pcb->stackPointer);
-    put_char('\n');
     addPcbToTable(newP->pcb);
+    enqueueProcess(newP->pcb);
     return newP;
 }
 
-int terminateProcess(Process p) {
-    removeProcessFromTable(p->pcb->pid);
-    free(p->pcb->heapBase);
-    free(p->pcb->stackBase-STACK_SIZE);
-    free(p->pcb);
-    p->pcb->state = TERMINATED;
-    return 1;
+void terminateProcess(pid_t pid) {
+    Pcb p = getProcess(pid);
+    p->state = TERMINATED;
 }
 
-pid_t processFork() {
-
-    void * childStackBase;
-    void * childStackPointer;
-    void * childHeap;
-    uint64_t offset;
-    Process newP;
-
-    putString("Stack pointer before refreshing: ");
-    printHex(runningPcb->stackPointer);
-    put_char('\n');
-
-    runningPcb->stackPointer = getRSP(); //RSP del padre
-    offset = runningPcb->stackBase - runningPcb->stackPointer;
-
-    putString("Stack after refreshing: ");
-    printHex(runningPcb->stackPointer);
-    put_char('\n');
-
-    childStackBase = duplicateStack(offset);
-    childStackPointer = childStackBase - offset;
-    childHeap = duplicateHeap();
-
-    putString("Child stack pointer before pushing regs: ");
-    printHex(childStackPointer);
-    put_char('\n');
-
-    //No se esta actualizando el stackpointer de runningpcb
-    childStackPointer = pushRegisters(childStackPointer);
-
-    putString("Child stack pointer after pushing regs: ");
-    printHex(childStackPointer);
-    put_char('\n');
-
-    newP = newProcess(childStackPointer, childStackBase, childHeap);
-    enqueueProcess(newP->pcb);
-
-    if(runningPcb->pid == newP->pcb->pid) {
-        return 0;
-    }
-
-    return runningPcb->pid;
+void freeProcessResources(Pcb pcb) {
+    free(pcb->heapBase);
+    free(pcb->stackBase);
+    pcb->heapBase = NULL;
+    pcb->stackBase = NULL;
+    pcb->stackPointer = NULL;
 }
 
 
-void * duplicateStack(uint64_t offset) {
-    void * stackBase = initializeProcessStack();
-    memcpy(stackBase - offset -1,runningPcb->stackPointer,offset+1);
-    return stackBase;
-}
-
-void * duplicateHeap() {
-    void * heap = reserveHeapSpace();
-    memcpy(heap,runningPcb->heapBase,HEAP_SIZE);
-    return heap;
-}
-
-void initializeFirstProcess(terminalCaller ti) {
+void initializeProcess(functionIP ti) {
 
     void * stack = initializeProcessStack();
     void * heap = reserveHeapSpace();

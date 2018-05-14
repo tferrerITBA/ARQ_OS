@@ -11,8 +11,6 @@ extern void printAll();
 extern void downMutex(int *mutex);
 extern void upMutex(int *mutex);
 
-char *fork(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
 char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *write(uint64_t rbx, uint64_t rcx, uint64_t rdx);
@@ -25,12 +23,15 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char * initFirstProc(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *down(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
 char *up(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
+char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 extern void _int80Handler();
 
@@ -50,8 +51,8 @@ typedef struct {
 #pragma pack(pop)        /* Reestablece la alinceación actual */
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, &fork, &read, &write, &pixel, &colors, &getpid,
-	&initFirstProc, &ps, &down, &up, 0, &time};
+sysCalls sc[] = {0, 0, 0, &read, &write, &pixel, &colors, &getpid,
+	&createProcess, &ps, &down, &up, &kill, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -130,16 +131,13 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return 0x0;
 }
 
-char * fork(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return (char*)processFork();
-}
 
 char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return (char*)getRunningProcessPid();
 }
 
-char * initFirstProc(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    initializeFirstProcess((terminalCaller)rbx);
+char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    initializeProcess((functionIP)rbx);
     return (char*)0x1;
 }
 
@@ -156,4 +154,9 @@ char * down(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 char * up(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 	upMutex((int *)rbx);
 	return (char *)0x1;
+}
+
+char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    terminateProcess((pid_t)rbx);
+    return (char *)0x1;
 }
