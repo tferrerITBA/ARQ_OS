@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include "lib.h"
+#include "functionGraph.h"
+#define STEP 6
 
 typedef void (*function)(void);
 
@@ -13,7 +15,6 @@ void runTime();
 void runChcolor(uint8_t blue, uint8_t green, uint8_t red);
 void runBgcolor(uint8_t blue, uint8_t green, uint8_t red);
 void runMath(double a, double b, double c);
-extern void raiseInvOp();
 void colorFade(uint8_t from[], uint8_t to[]);
 void sh(function functionName, int foreground);
 void ps();
@@ -24,3 +25,12 @@ void multiDemo();
 void mallocDemo();
 void endOfProcess();
 uint8_t getDistance(uint8_t a, uint8_t b);
+extern void raiseInvOp();
+extern char * newProcess(void *);
+extern char * psint();
+extern char * kill(int pid);
+extern char * getpid();
+extern char * malloc(size_t size);
+extern char * free(void *);
+extern void consumeInt();
+extern void produceInt();

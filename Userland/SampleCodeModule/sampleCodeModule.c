@@ -61,13 +61,9 @@ void terminal() {
 
 
 int readCommand(char command[], int mode) {
-    char action[SIZE] = {0};
-    char params[SIZE] = {0};
-    uint8_t colors[3] = {0};
-    uint8_t colorAux[3] = {0};
-    double mathCons[3];
-    int i;
-    int retValue = 0;
+
+
+
     if(mode == 2) {
         if(strequals(command,"exit")) {
             runClear();
@@ -96,46 +92,22 @@ int readCommand(char command[], int mode) {
             return STANDARD;
         } else if(strequals(command,"help")) {
             runHelp();
-        }  else if(strequals(command,"ps")) {
+        } else if(strequals(command,"ps")) {
             ps();
-        }
-            /* Commands with arguments */
-        else{
-            readWordFromCommand(action, command,0,' ');
-            i = length(action) + 1;
-            readWordFromCommand(params, command, i, END);
-            if(strequals(action,"echo")) {
-                printf(params);
-                printf("\n");
-
-            } else if(strequals(action,"sh&")) {
-                shSelectAction(command + 4,mode, FOREGROUND);
-            } else if(strequals(action,"sh")) {
-                shSelectAction(command + 3,mode,BACKGROUND);
-            } else if(strequals(action,"chcolor")) {
-                retValue = validateColors(colors, params);
-                if(retValue != 0) {
-                    runChcolor(colors[0], colors[1], colors[2]);
-                }
-            } else if(strequals(action,"bgcolor")) {
-                retValue = validateColors(colors, params);
-                if(retValue != 0) {
-                    runBgcolor(colors[0], colors[1], colors[2]);
-                }
-            } else if(strequals(action,"colorfade")) {
-                retValue = validateFade(colors, colorAux, params);
-                if(retValue != 0) {
-                    colorFade(colors, colorAux);
-                }
-            } else if(strequals(action,"math")) {
-                retValue = validateMath(mathCons, params);
-                if(retValue != 0) {
-                    runMath(mathCons[0], mathCons[1], mathCons[2]);
-                    return MATH;
-                }
-            } else {
-                printf("Invalid command. Try 'help' for information about avaliable options\n");
-            }
+        } else if(strequals(command,"prodcons")) {
+			sh(prodcons, BACKGROUND);
+		} else if(strequals(command,"multiDemo")) {
+			sh(multiDemo,BACKGROUND);
+		} else if (strequals(command, "mallocDemo")) {
+			sh(mallocDemo, BACKGROUND);
+		} else if(strequals(command,"prodcons&")) {
+			sh(prodcons, FOREGROUND);
+		} else if(strequals(command,"multiDemo&")) {
+			sh(multiDemo,FOREGROUND);
+		} else if (strequals(command, "mallocDemo&")) {
+			sh(mallocDemo, FOREGROUND);
+		} else{
+           readCommandwithArguments(command, mode);
         }
     }
     if(mode == 3) {
@@ -144,20 +116,49 @@ int readCommand(char command[], int mode) {
     return STANDARD;
 }
 
+int readCommandwithArguments(char command[], int mode) {
 
-int shSelectAction(char command[], int mode, int foreground) {
-    char name[SIZE] = {0};
+    char action[SIZE] = {0};
+    char params[SIZE] = {0};
+    int retValue = 0;
+    uint8_t colors[3] = {0};
+    uint8_t colorAux[3] = {0};
+    double mathCons[3];
+    int i;
 
-    if(strequals(command,"prodcons")) {
-        sh(prodcons, foreground);
-    } else if(strequals(command,"multiDemo")) {
-        sh(multiDemo,foreground);
-    } else if (strequals(command, "mallocDemo")) {
-        sh(mallocDemo, foreground);
+
+    readWordFromCommand(action, command,0,' ');
+    i = length(action) + 1;
+    readWordFromCommand(params, command, i, END);
+    if(strequals(action,"echo")) {
+        printf(params);
+        printf("\n");
+    } else if(strequals(action,"chcolor")) {
+        retValue = validateColors(colors, params);
+        if(retValue != 0) {
+            runChcolor(colors[0], colors[1], colors[2]);
+        }
+    } else if(strequals(action,"bgcolor")) {
+        retValue = validateColors(colors, params);
+        if(retValue != 0) {
+            runBgcolor(colors[0], colors[1], colors[2]);
+        }
+    } else if(strequals(action,"colorfade")) {
+        retValue = validateFade(colors, colorAux, params);
+        if(retValue != 0) {
+            colorFade(colors, colorAux);
+        }
+    } else if(strequals(action,"math")) {
+        retValue = validateMath(mathCons, params);
+        if(retValue != 0) {
+            runMath(mathCons[0], mathCons[1], mathCons[2]);
+            return MATH;
+        }
     } else {
-		printf("Invalid action for sh command\n");
-	}
+        printf("Invalid command. Try 'help' for information about avaliable options\n");
+    }
 }
+
 
 /**
  * readWordFromCommand returns a char array with a single word to be

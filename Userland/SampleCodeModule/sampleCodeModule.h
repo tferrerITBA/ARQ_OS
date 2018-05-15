@@ -6,8 +6,8 @@ typedef void (*terminalCaller)(void);
 
 void terminal();
 int toInt(char c);
-int shSelectAction(char command[], int mode, int foreground);
 int readCommand(char command[], int mode);
+int readCommandwithArguments(char command[], int mode);
 void readWordFromCommand(char word[], char command[], int from, char to);
 int validateColors(uint8_t ret[], char params[]);
 int validateFade(uint8_t ret[], uint8_t aux[], char params[]);

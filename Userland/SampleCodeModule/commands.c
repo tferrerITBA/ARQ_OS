@@ -1,19 +1,4 @@
 #include "commands.h"
-#include "functionGraph.h"
-
-#define STEP 6
-extern char * clearScr();
-extern char * timeInt();
-extern char * changeBColors(uint8_t colors[]);
-extern char * changeCColors(uint8_t colors[]);
-extern char * newProcess(void *);
-extern char * psint();
-extern char * kill(int pid);
-extern char * getpid();
-extern char * malloc(size_t size);
-extern char * free(void *);
-extern void consumeInt();
-extern void produceInt();
 
 
 void runHelp() {
@@ -168,7 +153,7 @@ void multiDemo() {
 
 void mallocDemo() {
     void * demo = malloc(30);
-    printf("\nMemory allcoated\n>");
+    printf("\nMemory allcoated");
     free(demo);
     printf("\nMemory deallocated\n>");
     endOfProcess();
