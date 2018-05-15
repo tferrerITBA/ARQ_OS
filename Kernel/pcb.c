@@ -6,7 +6,7 @@ PcbTable allProcesses = NULL;
 pid_t pidCount = 0;
 
 Pcb newPcb(pid_t newPid) {
-    Pcb ret = malloc(sizeof(pcb));
+    Pcb ret = malloc(sizeof(pcb), newPid);
     ret->pid = newPid;
     ret->state = CREATED;
 
@@ -14,7 +14,7 @@ Pcb newPcb(pid_t newPid) {
 }
 
 void initializePcbTable() {
-    allProcesses = malloc(sizeof(pcbTable));
+    allProcesses = malloc(sizeof(pcbTable),(pid_t)1);
     allProcesses->size = 0;
 }
 
@@ -22,7 +22,7 @@ void addPcbToTable(Pcb pcb) {
     if(allProcesses == NULL) {
         initializePcbTable();
     }
-    TableNode new = malloc(sizeof(tableNode));
+    TableNode new = malloc(sizeof(tableNode),(pid_t)1);
     new->block = pcb;
     new->next = allProcesses->first;
     allProcesses->first = new;

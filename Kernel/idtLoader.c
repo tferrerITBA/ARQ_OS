@@ -56,7 +56,7 @@ typedef struct {
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
 sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
-	&createProcess, &ps, &produceInt, &consumeInt, &kill, &time};
+	&createProcess, &ps, &produceInt, &consumeInt, &kill, &time, &mallocInt, &freeInt};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -166,7 +166,7 @@ char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return (char *)malloc(rbx);
+    return (char *)malloc(rbx,getRunningProcessPid());
 }
 
 char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {

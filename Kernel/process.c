@@ -34,7 +34,7 @@ typedef struct StackFrame {
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap, pid_t newPid) {
 
-    Process newP = malloc(sizeof(process));
+    Process newP = malloc(sizeof(process),newPid);
     newP->pcb = newPcb(newPid);
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;

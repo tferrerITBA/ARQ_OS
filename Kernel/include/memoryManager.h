@@ -34,13 +34,13 @@ struct memBlock {
 
 void initializeMemoryManager();
 void initializePages();
-void * malloc(size_t size);
+void * malloc(size_t size, pid_t pid);
 m_block getDataBlock(size_t size, m_block mb);
 p_block getProcessBlock(pid_t pid);
 p_block addProcessBlock(pid_t pid,int isStack);
 void free(void * ptr);
-void * calloc(size_t size);
-void * realloc(void * ptr, size_t size);
+void * calloc(size_t size, pid_t pid);
+void * realloc(void * ptr, size_t size, pid_t pid);
 void joinDataBlocks(m_block m1, m_block m2);
 void * popPage();
 void * initializeProcessStack(pid_t pid);

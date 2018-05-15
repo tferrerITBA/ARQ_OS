@@ -29,11 +29,10 @@ void initializePages() {
     }
 }
 
-void * malloc(size_t size) {
+void * malloc(size_t size, pid_t pid) {
     if (size >= (PAGE_SIZE - BLOCK_SIZE - PB_SIZE))
 		return NULL;
 
-    pid_t pid = getRunningProcessPid();
 
     p_block pb = (p_block)getProcessBlock(pid);
     m_block mb;
@@ -139,9 +138,9 @@ void free(void * ptr) {
     pb->allocated -= mblock->size;
 }
 
-void * calloc(size_t size) {
+void * calloc(size_t size, pid_t pid) {
     int i;
-    void * ptr = malloc(size);
+    void * ptr = malloc(size, pid);
     if(ptr != NULL) {
         for (i = 0; i < size; i++) {
             *((char *)ptr + i) = 0;
@@ -150,11 +149,11 @@ void * calloc(size_t size) {
     return ptr;
 }
 
-void * realloc(void * ptr, size_t size) {
+void * realloc(void * ptr, size_t size, pid_t pid) {
 
     if(ptr == NULL || size > (PAGE_SIZE - BLOCK_SIZE)) return NULL;
 
-    void * ret = malloc(size);
+    void * ret = malloc(size, pid);
     if(ret == NULL) return NULL;
     m_block memBlock = (m_block) ptr - 1;
 
