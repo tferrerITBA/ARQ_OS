@@ -3,10 +3,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdint.h>
+#include "lib.h"
 #define PAGE_SIZE 8192
 #define PAGE_QUANTITY ((HEAP_LIMIT - HEAP_BASE)/PAGE_SIZE)
 #define BLOCK_SIZE sizeof(struct memBlock)
-#define PB_SIZE sizeof(struct processBlock) 
+#define PB_SIZE sizeof(struct processBlock)
 #define TRUE 1
 #define FALSE 0
 #define HEAP_BASE 0x600000
@@ -23,7 +24,7 @@ struct processBlock {
 
 typedef struct memBlock * m_block;
 struct memBlock {
-    int free; 
+    int free;
     m_block next;
     size_t size;
 };
@@ -44,4 +45,4 @@ void * reserveHeapSpace();
 void removeProcessMemory();
 void removeProcessStack(pid_t pid);
 void removeProcessHeap(pid_t pid);
-int hasFreeSpace(char * address, int size);
+void clearBlocks(m_block mb);

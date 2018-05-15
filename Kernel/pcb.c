@@ -70,9 +70,8 @@ void printPid(pid_t pid) {
         put_char('0' + pid);
     } else if (pid < 100){
         put_char(pid/10 + '0');
-        put_char(pid%0 + '0');
+        put_char(pid%10 + '0');
     }
     putString("\t\t");
 
 }
-

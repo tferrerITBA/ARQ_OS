@@ -11,9 +11,9 @@ extern void printAll();
 extern void downMutex(int *mutex);
 extern void upMutex(int *mutex);
 
-char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *read_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char *write(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *write_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *time(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -21,7 +21,7 @@ char *pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * getPid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -51,7 +51,7 @@ typedef struct {
 #pragma pack(pop)        /* Reestablece la alinceación actual */
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, 0, &read, &write, &pixel, &colors, &getpid,
+sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
 	&createProcess, &ps, &down, &up, &kill, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
@@ -94,7 +94,7 @@ char *time(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 //rbx es 1 para putnstring, 0 para clear; rcx es un char * y rdx es la longitud
-char *write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+char *write_(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     if (rbx == 1) {
         putnString((char *) rcx, rdx);
         return (char *) 0x1;
@@ -107,7 +107,7 @@ char *write(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 //rbx es 1 para stdin, rcx es el char * destino y rdx la longitud a leer
-char *read(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+char *read_(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
     if (rbx == 1) {
         return readBuffer(rbx, (char *) rcx, rdx);
@@ -132,7 +132,7 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 
-char * getpid(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+char * getPid(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return (char*)getRunningProcessPid();
 }
 

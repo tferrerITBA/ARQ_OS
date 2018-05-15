@@ -8,6 +8,7 @@
 #include "queue.h"
 #include "processTADs.h"
 #include "processStates.h"
+#include "memoryManager.h"
 
 #define STACK_SIZE 8192
 #define HEAP_SIZE 8192

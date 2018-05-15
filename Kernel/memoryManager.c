@@ -54,11 +54,11 @@ void * malloc(size_t size) {
     }
 
     else {
-        if (((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE )))
+        if (((pb->allocated + size)  > (PAGE_SIZE - BLOCK_SIZE)))
 			return NULL;
 
         mb = (m_block)pb->address;
-        m_block dataBlock =(m_block)getDataBlock(size,mb);
+        m_block dataBlock = (m_block)getDataBlock(size,mb);
 
 		if (dataBlock == NULL)
 			return NULL;
@@ -82,7 +82,7 @@ m_block getDataBlock(size_t size, m_block mb) {
         }
     }
     m_block newBlock;
-    if (aux == NULL && hasFreeSpace((char *)aux,size)) {
+    if (aux == NULL) {
         newBlock = (m_block)((char *)last + BLOCK_SIZE + last->size);
         newBlock->free = FALSE;
         newBlock->next = NULL;
@@ -131,7 +131,7 @@ p_block addProcessBlock(pid_t pid, int isStack) {
 
 void free(void * ptr) {
 
-    pid_t pid = getpid();
+    pid_t pid = getPid();
     p_block pb = getProcessBlock(pid);
     if(ptr == NULL || pb == NULL) return;
 
@@ -221,7 +221,6 @@ void removeProcessHeap(pid_t pid) {
         pb = pb->next;
     }
     if(pb != NULL) {
-        int i;
         for(int i=0 ; i < PAGE_QUANTITY ; i++) {
             if (pageAddresses[i] == (uint64_t) pb->address) {
                 pageFlag[i] = FALSE;
@@ -233,15 +232,9 @@ void removeProcessHeap(pid_t pid) {
     }
 }
 
-int hasFreeSpace(char * address, int size) {
-    return (PAGE_SIZE - address) > (size + BLOCK_SIZE );
-}
-
 void clearBlocks(m_block mb) {
-
     while(mb != NULL) {
-        mb->FREE = TRUE;
+        mb->free = TRUE;
         mb = mb->next;
     }
-
 }
