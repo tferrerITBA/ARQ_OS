@@ -10,6 +10,6 @@ void createBuffer();
 void produce();
 void consume();
 void make();
-void take();
+char *take();
 
 #endif

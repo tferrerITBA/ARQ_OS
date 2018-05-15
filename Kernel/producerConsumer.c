@@ -11,27 +11,27 @@ int emptySlots = BUFFER_SIZE;
 char *buffer[BUFFER_SIZE] = {NULL};
 
 
-void make(char **buff, char *product) {
+void make(char *product) {
     /*
     int i;
     for (i = 0; *product; i++)
         buff[fullSlots][i] = product[i];
     buff[fullSlots][i] = 0;
     */
-    buff[fullSlots] = product;
-    semFullSlots++;
-    semEmptySlots--;
+    buffer[fullSlots] = product;
+    fullSlots++;
+    emptySlots--;
 }
 
-void take() {
-
+char *take() {
+    return buffer[fullSlots];
 }
 
 void produce() {
     while (1) {
         downSem(semEmptySlots);
 		down(&mutex);
-        make(buffer, "Producing");
+        make("Producing");
 		up(&mutex);
         upSem(semFullSlots);
     }
