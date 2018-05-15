@@ -50,5 +50,7 @@ void removeProcessStack(pid_t pid);
 void removeProcessHeap(pid_t pid);
 void clearBlocks(m_block mb);
 void clearMemory(pid_t pid, int isStack);
+void * shmget(pid_t id);
+void shmfree(pid_t id);
 
 #endif
