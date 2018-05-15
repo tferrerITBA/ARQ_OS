@@ -2,6 +2,9 @@
 #define PRODUCERCONSUMER_H
 
 #include <stddef.h>
+#include "mutex.h"
+
+#define BUFFER_SIZE 3
 
 void createBuffer();
 void produce();

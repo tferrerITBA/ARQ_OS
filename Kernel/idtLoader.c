@@ -27,9 +27,9 @@ char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char * down(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *produceInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char * up(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *consumeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -56,7 +56,7 @@ typedef struct {
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
 sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
-	&createProcess, &ps, &down, &up, &kill, &time, &mallocInt, &freeInt};
+	&createProcess, &ps, &produceInt, &consumeInt, &kill, &time};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -150,13 +150,13 @@ char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return (char*)0x1;
 }
 
-char * down(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-	downMutex((int *)rbx);
+char * produceInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+	produce();
 	return (char *)0x1;
 }
 
-char * up(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-	upMutex((int *)rbx);
+char * consumeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+	consume();
 	return (char *)0x1;
 }
 

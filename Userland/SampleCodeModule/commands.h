@@ -18,6 +18,8 @@ void colorFade(uint8_t from[], uint8_t to[]);
 void sh(function functionName, int foreground);
 void ps();
 void prodcons();
+void producer();
+void consumer();
 void multiDemo();
 void mallocDemo();
 void endOfProcess();

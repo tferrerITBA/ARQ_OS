@@ -7,8 +7,8 @@ GLOBAL changeCColors
 GLOBAL pixelInt
 GLOBAL newProcess
 GLOBAL psint
-GLOBAL upInt
-GLOBAL downInt
+GLOBAL consumeInt
+GLOBAL produceInt
 GLOBAL kill
 GLOBAL getpid
 GLOBAL malloc
@@ -77,15 +77,13 @@ psint:
 	int 0x80
 	ret
 
-downInt:
+produceInt:
 	mov rax, 10
-	mov rbx, rdi
 	int 0x80
 	ret
 
-upInt:
+consumeInt:
 	mov rax, 11
-	mov rbx, rdi
 	int 0x80
 	ret
 
@@ -112,5 +110,3 @@ free:
 	mov rbx, rdi
 	int 0x80
 	ret
-
-

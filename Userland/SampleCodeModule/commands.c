@@ -12,8 +12,8 @@ extern char * kill(int pid);
 extern char * getpid();
 extern char * malloc(size_t size);
 extern char * free(void *);
-extern void consume();
-extern void produce();
+extern void consumeInt();
+extern void produceInt();
 
 
 void runHelp() {
@@ -125,7 +125,6 @@ uint8_t getDistance(uint8_t a, uint8_t b) {
 }
 
 void sh(function functionName, int foreground) {
-
 	if(foreground) {
 		printf("Running in foreground\n");
 		functionName();
@@ -139,8 +138,16 @@ void ps() {
 }
 
 void prodcons() {
-	newProcess(consume);
-    produce();
+	newProcess(producer);
+	newProcess(consumer);
+}
+
+void producer() {
+	produceInt();
+}
+
+void consumer() {
+	consumeInt();
 }
 
 void multiDemo() {
@@ -168,5 +175,3 @@ void endOfProcess() {
     kill(pid);
     while(1);
 }
-
-

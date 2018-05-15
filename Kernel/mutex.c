@@ -1,19 +1,19 @@
 #include <sys/types.h>
 #include <stddef.h>
 #include "include/mutex.h"
+#include "producerConsumer.h"
 
-
-#define FAIL -1
-#define SUCCESS 1
-#define FREE 1
-#define LOCKED 0
-
-
-
+/*
+int *mutexList = NULL;
+int mutexListSize = 0;
+int **semList = NULL;
+int semSize = BUFFER_SIZE;
+int semListSize = 0;
+*/
 extern int lockMutexAndShowPrevState(int *mutex);
 
 
-void downMutex(int *mutex) {
+void down(int *mutex) {
     int previousState;
 
     if (mutex == NULL) {
@@ -32,11 +32,45 @@ void downMutex(int *mutex) {
 	}
 }
 
-void upMutex(int *mutex) {
+void up(int *mutex) {
     if (mutex == NULL) {
 		runningPcb->state = TERMINATED;
 		return;
 	}
 
-    *mutex += 1;
+    *mutex = LOCKED;
 }
+
+void downSem(int *sem) {
+    
+}
+
+void upSem(int *sem) {
+
+}
+
+/*
+void addNewMutex() {
+    if (mutexList == NULL)
+        mutexList = malloc(sizeof(int));
+    else
+        realloc(mutexList, sizeof(int));
+
+    mutexListSize++;
+    mutexList[mutexListSize - 1] = FREE;
+}
+
+void addNewSem() {
+    if (semList == NULL)
+        semList = malloc(sizeof(int *));
+    else
+        realloc(semList, sizeof(int *));
+
+    semListSize++;
+    semList[semListSize - 1] = malloc(semSize * sizeof(int *));
+    // Each sem is an array of semSize mutexes
+
+    for (int i = 0; i < semSize; i++)
+        semList[semListSize - 1][i] = FREE;
+}
+*/

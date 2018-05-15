@@ -31,7 +31,7 @@ void terminal() {
 					ret = readCommand(command,ret);
 					index = 0;
 					command[0] = 0;
-				} 
+				}
 				putChar('>');
 			} else if(c == BACKSPACE) {
 				if(index > 0) {
@@ -53,7 +53,7 @@ void terminal() {
 					putChar(c);
 				} else {
 					putChar('*');
-				}	
+				}
 			}
 		}
 	}
@@ -149,7 +149,7 @@ int shSelectAction(char command[], int mode, int foreground) {
     char name[SIZE] = {0};
 
     if(strequals(command,"prodcons")) {
-        sh(prodcons,foreground);
+        sh(prodcons, foreground);
     } else if(strequals(command,"multiDemo")) {
         sh(multiDemo,foreground);
     } else if (strequals(command, "mallocDemo")) {
@@ -160,7 +160,7 @@ int shSelectAction(char command[], int mode, int foreground) {
 }
 
 /**
- * readWordFromCommand returns a char array with a single word to be 
+ * readWordFromCommand returns a char array with a single word to be
  * compared with the valid commands
 **/
 void readWordFromCommand(char word[], char command[], int from, char to) {
@@ -177,7 +177,7 @@ void readWordFromCommand(char word[], char command[], int from, char to) {
 int isDigit(char c) {
 	if(c >= '0' && c <= '9') {
 		return 1;
-	} 
+	}
 	return 0;
 }
 
@@ -200,7 +200,7 @@ int validateColors(uint8_t ret[], char params[]) {
 		len = length(number);
 		if(len > 3) {
 			printf("Invalid color parameters\n");
-			return 0; 
+			return 0;
 		}
 		j += len + 1;
 		returnValue = integerValue(number, len, ret, i);
@@ -208,7 +208,7 @@ int validateColors(uint8_t ret[], char params[]) {
 			return 0;
 		}
 	}
-	return 1;	
+	return 1;
 }
 
 int integerValue(char num[], int len, uint8_t colVals[] , int index) {
@@ -219,7 +219,7 @@ int integerValue(char num[], int len, uint8_t colVals[] , int index) {
 			if(isDigit(num[1]) && isDigit(num[2])) {
 				ret = (toInt(num[0]))*100 +  (toInt(num[1]))*10 + (toInt(num[2]));
 				colVals[index] = ret;
-				return 1; 
+				return 1;
 			}
 		} else if(num[0] == '2') {
 			if(num[1] >= '0' && num[1] <= '5') {
@@ -227,17 +227,17 @@ int integerValue(char num[], int len, uint8_t colVals[] , int index) {
 					if(num[2] >= '0' && num[2] <= '5') {
 						ret = (toInt(num[0]))*100 +  (toInt(num[1]))*10 + toInt(num[2]);
 						colVals[index] = ret;
-						return 1; 
+						return 1;
 					}
 				} else {
 					if(isDigit(num[2])) {
 						ret = (toInt(num[0]))*100 +  (toInt(num[1]))*10 + toInt(num[2]);
 						colVals[index] = ret;
-						return 1; 
+						return 1;
 					}
-				}				
+				}
 			}
-		} 
+		}
 		printf("Color values should be integers between 0 and 256\n");
 		return -1;
 	} else if(len == 2) {
@@ -264,7 +264,7 @@ int validateFade(uint8_t * colors, uint8_t * colorsAux, char * params) {
 		colors[2] = 0;
 		colorsAux[0] = 0;
 		colorsAux[1] = 0;
-		colorsAux[2] = 255;	
+		colorsAux[2] = 255;
 		return 1;
 	} else if(strequals(params,"blue red") || strequals(params,"red blue")) {
 		colors[0] = 255;
@@ -272,7 +272,7 @@ int validateFade(uint8_t * colors, uint8_t * colorsAux, char * params) {
 		colors[2] = 0;
 		colorsAux[0] = 0;
 		colorsAux[1] = 0;
-		colorsAux[2] = 255;	
+		colorsAux[2] = 255;
 		return 1;
 	} else if (strequals(params,"blue green") || strequals(params,"green blue")) {
 		colors[0] = 0;
@@ -321,7 +321,7 @@ int validateMath(double ret[], char params[]) {
 			return 0;
 		}
 		k = 0;
-		
+
 		if(number[0] == '-') {
 			calculateFactor(factor,intPart - 1);
 			k++;
@@ -366,7 +366,7 @@ void calculateFactor(double arr[], int digits) {
 	} else {
 		printf("digits es menor que 0\n");
 	}
-	
+
 }
 
 int integerPartLength(char number[]) {
@@ -376,7 +376,7 @@ int integerPartLength(char number[]) {
 	}
 	while(number[i] != 0 && isDigit(number[i])) {
 		i++;
-	}	
+	}
 	if(i == 0 || number[i] != '.' || (i == 1 && number[0] == '-')) {
 		return -1;
 	}
