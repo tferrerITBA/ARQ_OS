@@ -32,10 +32,10 @@ typedef struct StackFrame {
     uint64_t base;
 } StackFrame;
 
-Process newProcess(void * stackPointer, void * stackBase, void * heap) {
+Process newProcess(void * stackPointer, void * stackBase, void * heap, pid_t newPid) {
 
     Process newP = malloc(sizeof(process));
-    newP->pcb = newPcb();
+    newP->pcb = newPcb(newPid);
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;
     newP->pcb->heapBase = heap;
@@ -50,8 +50,7 @@ void terminateProcess(pid_t pid) {
 }
 
 void freeProcessResources(Pcb pcb) {
-    free(pcb->heapBase);
-    free(pcb->stackBase);
+    removeProcessMemory(pcb->pid);
     pcb->heapBase = NULL;
     pcb->stackBase = NULL;
     pcb->stackPointer = NULL;
@@ -59,12 +58,12 @@ void freeProcessResources(Pcb pcb) {
 
 
 void initializeProcess(functionIP ti) {
-
-    void * stack = initializeProcessStack();
-    void * heap = reserveHeapSpace();
+    pid_t newPid = ++pidCount;
+    void * stack = initializeProcessStack(newPid);
+    void * heap = reserveHeapSpace(newPid);
     void * stackPointer = stack;
     stackPointer = buildStackFrame(ti,stackPointer);
-    newProcess(stackPointer,stack,heap);
+    newProcess(stackPointer,stack,heap, newPid);
 }
 
 pid_t getRunningProcessPid() {

@@ -130,7 +130,6 @@ p_block addProcessBlock(pid_t pid, int isStack) {
 }
 
 void free(void * ptr) {
-
     pid_t pid = getRunningProcessPid();
     p_block pb = getProcessBlock(pid);
     if(ptr == NULL || pb == NULL) return;
@@ -138,7 +137,6 @@ void free(void * ptr) {
     m_block mblock = (m_block)ptr - 1;
     mblock->free = TRUE;
     pb->allocated -= mblock->size;
-
 }
 
 void * calloc(size_t size) {
@@ -181,20 +179,17 @@ void * popPage() {
     return (void*) pageAddresses[i];
 }
 
-void * initializeProcessStack() {
-    pid_t pid = getRunningProcessPid();
+void * initializeProcessStack(pid_t pid) {
     p_block stack = addProcessBlock(pid,TRUE);
     return (void *)stack + PB_SIZE;
 }
 
-void * reserveHeapSpace() {
-    pid_t pid = getRunningProcessPid();
+void * reserveHeapSpace(pid_t pid) {
     p_block heap = addProcessBlock(pid,FALSE);
     return (void *)heap + PB_SIZE;
 }
 
-void removeProcessMemory() {
-    pid_t pid = getRunningProcessPid();
+void removeProcessMemory(pid_t pid) {
     clearMemory(pid,TRUE); //stack
     clearMemory(pid,FALSE); //heap
 }

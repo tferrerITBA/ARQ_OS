@@ -5,9 +5,9 @@
 PcbTable allProcesses = NULL;
 pid_t pidCount = 0;
 
-Pcb newPcb() {
+Pcb newPcb(pid_t newPid) {
     Pcb ret = malloc(sizeof(pcb));
-    ret->pid = ++pidCount;
+    ret->pid = newPid;
     ret->state = CREATED;
 
     return ret;

@@ -140,19 +140,23 @@ void ps() {
 void prodcons() {
 	newProcess(producer);
 	newProcess(consumer);
+    endOfProcess();
 }
 
 void producer() {
 	produceInt();
+    endOfProcess();
 }
 
 void consumer() {
 	consumeInt();
+    endOfProcess();
 }
 
 void multiDemo() {
     int i;
     double result = 1.0;
+    pid_t pid;
 
     for(i = 0; i < 50000000; i++ ) {
         result += result/2;
@@ -172,6 +176,8 @@ void mallocDemo() {
 
 void endOfProcess() {
     int pid = (int)getpid();
-    kill(pid);
-    while(1);
+    if(pid != 1) {
+        kill(pid);
+        while(1);
+    }
 }

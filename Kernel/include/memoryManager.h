@@ -43,11 +43,12 @@ void * calloc(size_t size);
 void * realloc(void * ptr, size_t size);
 void joinDataBlocks(m_block m1, m_block m2);
 void * popPage();
-void * initializeProcessStack();
-void * reserveHeapSpace();
-void removeProcessMemory();
+void * initializeProcessStack(pid_t pid);
+void * reserveHeapSpace(pid_t pid);
+void removeProcessMemory(pid_t pid);
 void removeProcessStack(pid_t pid);
 void removeProcessHeap(pid_t pid);
 void clearBlocks(m_block mb);
+void clearMemory(pid_t pid, int isStack);
 
 #endif
