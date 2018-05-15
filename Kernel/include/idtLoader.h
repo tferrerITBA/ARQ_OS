@@ -1,3 +1,6 @@
+#ifndef IDT_LOADER_H
+#define IDT_LOADER_H
+
 #include <stdint.h>
 #include "defs.h"
 #include "interrupts.h"
@@ -16,3 +19,5 @@ extern void _sti();
 extern void picMasterMask(uint8_t);
 
 extern void picSlaveMask(uint8_t);
+
+#endif

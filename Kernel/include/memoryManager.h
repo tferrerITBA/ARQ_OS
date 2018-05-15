@@ -1,3 +1,6 @@
+#ifndef MEMORY_MANAGER_H
+#define MEMORY_MANAGER_H
+
 #include <assert.h>
 //#include <string.h>
 #include <sys/types.h>
@@ -46,3 +49,5 @@ void removeProcessMemory();
 void removeProcessStack(pid_t pid);
 void removeProcessHeap(pid_t pid);
 void clearBlocks(m_block mb);
+
+#endif

@@ -131,7 +131,7 @@ p_block addProcessBlock(pid_t pid, int isStack) {
 
 void free(void * ptr) {
 
-    pid_t pid = getPid();
+    pid_t pid = getRunningProcessPid();
     p_block pb = getProcessBlock(pid);
     if(ptr == NULL || pb == NULL) return;
 
@@ -206,7 +206,7 @@ void removeProcessStack(pid_t pid) {
     if(pb != NULL) {
         int i;
         for(i=0 ; i < PAGE_QUANTITY ; i++) {
-            if(pageAddresses[i] == pb->address) {
+            if((p_block)pageAddresses[i] == pb->address) {
                 pageFlag[i] = FALSE;
             }
         }
@@ -222,7 +222,7 @@ void removeProcessHeap(pid_t pid) {
     }
     if(pb != NULL) {
         for(int i=0 ; i < PAGE_QUANTITY ; i++) {
-            if (pageAddresses[i] == (uint64_t) pb->address) {
+            if ((p_block)pageAddresses[i] == pb->address) {
                 pageFlag[i] = FALSE;
             }
         }

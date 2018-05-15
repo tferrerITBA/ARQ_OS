@@ -1,3 +1,6 @@
+#ifndef QUEUE_H
+#define QUEUE_H
+
 #include <stddef.h>
 typedef struct queueStruct {
     struct queueElement * first;
@@ -25,3 +28,4 @@ int getLength(Queue queue);
 void enqueue(Queue queue, void * elem);
 void * dequeue(Queue queue);
 
+#endif

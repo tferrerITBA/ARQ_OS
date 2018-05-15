@@ -1,3 +1,6 @@
+#ifndef SCHEDULER_H
+#define SCHEDULER_H
+
 #include <sys/types.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -43,3 +46,5 @@ void enqueueProcess(Pcb pcb);
 void createReadyQueue();
 void printStack(trapframe * tf);
 void printRIP(trapframe * tf);
+
+#endif
