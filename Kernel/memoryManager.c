@@ -189,46 +189,40 @@ void * initializeProcessStack() {
 
 void * reserveHeapSpace() {
     pid_t pid = getRunningProcessPid();
-    return addProcessBlock(pid,FALSE);
+    p_block heap = addProcessBlock(pid,FALSE);
+    return (void *)heap + PB_SIZE;
 }
 
 void removeProcessMemory() {
     pid_t pid = getRunningProcessPid();
-    removeProcessStack(pid);
-    removeProcessHeap(pid);
+    clearMemory(pid,TRUE); //stack
+    clearMemory(pid,FALSE); //heap
 }
 
-void removeProcessStack(pid_t pid) {
+
+void clearMemory(pid_t pid, int isStack) { 
     p_block pb = PB_HEAD;
-    while(pb != NULL && (pb->pid != pid || !(pb->isStack))) {
+    p_block prev = NULL;
+
+    while(pb != NULL && (pb->pid != pid || pb->isStack != isStack)) {
+        prev = pb;
         pb = pb->next;
     }
     if(pb != NULL) {
         int i;
         for(i=0 ; i < PAGE_QUANTITY ; i++) {
-            if((p_block)pageAddresses[i] == pb->address) {
+            if(pageAddresses[i] == (void *)pb) {
                 pageFlag[i] = FALSE;
             }
         }
-        pb->pid = -1;
-        clearBlocks(pb->address);
-    }
-}
-
-void removeProcessHeap(pid_t pid) {
-    p_block pb = PB_HEAD;
-    while(pb != NULL && (pb->pid != pid || pb->isStack)) {
-        pb = pb->next;
-    }
-    if(pb != NULL) {
-        for(int i=0 ; i < PAGE_QUANTITY ; i++) {
-            if ((p_block)pageAddresses[i] == pb->address) {
-                pageFlag[i] = FALSE;
-            }
+        if (pb == PB_HEAD) {
+            PB_HEAD = pb->next;   
         }
-        pb->pid = -1;
-        pb->allocated = 0;
+        else {
+            prev->next = pb->next; 
+        }
         clearBlocks(pb->address);
+        pb->allocated = PB_SIZE;
     }
 }
 
