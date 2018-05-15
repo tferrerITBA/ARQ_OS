@@ -152,6 +152,8 @@ int shSelectAction(char command[], int mode, int foreground) {
         sh(prodcons,foreground);
     } else if(strequals(command,"multiDemo")) {
         sh(multiDemo,foreground);
+    } else if (strequals(command, "mallocDemo")) {
+        sh(mallocDemo, foreground);
     } else {
 		printf("Invalid action for sh command\n");
 	}

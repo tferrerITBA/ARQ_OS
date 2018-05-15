@@ -19,5 +19,6 @@ void sh(function functionName, int foreground);
 void ps();
 void prodcons();
 void multiDemo();
+void mallocDemo();
 void endOfProcess();
 uint8_t getDistance(uint8_t a, uint8_t b);

@@ -11,14 +11,10 @@ GLOBAL upInt
 GLOBAL downInt
 GLOBAL kill
 GLOBAL getpid
+GLOBAL malloc
+GLOBAL free
 
 section .text
-
-timeInt:
-	mov rax, 13
-	mov rcx, rdi
-	int 0x80
-	ret
 
 changeBColors:
 	mov rbx, 0
@@ -95,6 +91,24 @@ upInt:
 
 kill:
 	mov rax, 12
+	mov rbx, rdi
+	int 0x80
+	ret
+
+timeInt:
+	mov rax, 13
+	mov rcx, rdi
+	int 0x80
+	ret
+
+malloc:
+	mov rax, 14
+	mov rbx, rdi
+	int 0x80
+	ret
+
+free:
+	mov rax, 15
 	mov rbx, rdi
 	int 0x80
 	ret

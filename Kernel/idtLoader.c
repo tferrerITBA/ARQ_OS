@@ -27,11 +27,15 @@ char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char *down(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * down(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
-char *up(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * up(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
+char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
+char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 extern void _int80Handler();
 
@@ -52,7 +56,7 @@ typedef struct {
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
 sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
-	&createProcess, &ps, &down, &up, &kill, &time};
+	&createProcess, &ps, &down, &up, &kill, &time, &mallocInt, &freeInt};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -158,5 +162,14 @@ char * up(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     terminateProcess((pid_t)rbx);
+    return (char *)0x1;
+}
+
+char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    return (char *)malloc(rbx);
+}
+
+char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    free((void *)rbx);
     return (char *)0x1;
 }

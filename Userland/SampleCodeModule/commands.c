@@ -1,6 +1,5 @@
 #include "commands.h"
 #include "functionGraph.h"
-#include "../../Kernel/include/PCBTADs.h"
 
 #define STEP 6
 extern char * clearScr();
@@ -11,6 +10,8 @@ extern char * newProcess(void *);
 extern char * psint();
 extern char * kill(int pid);
 extern char * getpid();
+extern char * malloc(size_t size);
+extern char * free(void *);
 extern void consume();
 extern void produce();
 
@@ -150,6 +151,15 @@ void multiDemo() {
         result += result/2;
     }
     printf("\nResult is ready\n>");
+    endOfProcess();
+}
+
+
+void mallocDemo() {
+    void * demo = malloc(30);
+    printf("\nMemory allcoated\n>");
+    free(demo);
+    printf("\nMemory deallocated\n>");
     endOfProcess();
 }
 
