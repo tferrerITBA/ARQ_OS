@@ -1,8 +1,8 @@
 
 section .text
-global lockMutexAndShowPrevState
+global lockSemAndShowPrevState
 
-lockMutexAndShowPrevState:
+lockSemAndShowPrevState:
 	push rbp
 	mov rbp, rsp
 	mov rax, [rdi]	; rdi is the sem address

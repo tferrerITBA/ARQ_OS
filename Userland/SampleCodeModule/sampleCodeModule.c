@@ -10,7 +10,7 @@
 #define BACKGROUND 0
 
 int main(void) {
-	newProcess(terminal);
+	newProcessInt(terminal);
     return 1;
 }
 

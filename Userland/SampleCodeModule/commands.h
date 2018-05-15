@@ -1,3 +1,6 @@
+#ifndef COMMANDS_H
+#define COMMANDS_H
+
 #include <stdint.h>
 #include <sys/types.h>
 #include "lib.h"
@@ -26,7 +29,7 @@ void mallocDemo();
 void endOfProcess();
 uint8_t getDistance(uint8_t a, uint8_t b);
 extern void raiseInvOp();
-extern char * newProcess(void *);
+extern char * newProcessInt(void *);
 extern char * psint();
 extern char * kill(int pid);
 extern char * getpid();
@@ -34,3 +37,5 @@ extern char * malloc(size_t size);
 extern char * free(void *);
 extern void consumeInt();
 extern void produceInt();
+
+#endif COMMANDS_H

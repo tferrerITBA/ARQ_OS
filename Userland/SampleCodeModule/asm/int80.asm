@@ -5,10 +5,11 @@ GLOBAL clearScr
 GLOBAL changeBColors
 GLOBAL changeCColors
 GLOBAL pixelInt
-GLOBAL newProcess
+GLOBAL newProcessInt
 GLOBAL psint
 GLOBAL consumeInt
 GLOBAL produceInt
+GLOBAL initializeProdConsInt
 GLOBAL kill
 GLOBAL getpid
 GLOBAL malloc
@@ -66,7 +67,7 @@ getpid:
 	int 0x80
 	ret
 
-newProcess:
+newProcessInt:
 	mov rax, 8
 	mov rbx, rdi
 	int 0x80
@@ -108,5 +109,10 @@ malloc:
 free:
 	mov rax, 15
 	mov rbx, rdi
+	int 0x80
+	ret
+
+initializeProdConsInt:
+	mov rax, 16
 	int 0x80
 	ret

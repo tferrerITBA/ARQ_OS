@@ -114,7 +114,7 @@ void sh(function functionName, int foreground) {
 		printf("Running in foreground\n");
 		functionName();
 	} else {
-		newProcess(functionName);
+		newProcessInt(functionName);
 	}
 }
 
@@ -123,19 +123,20 @@ void ps() {
 }
 
 void prodcons() {
-	newProcess(producer);
-	newProcess(consumer);
-    endOfProcess();
+	initializeProdConsInt();
+	newProcessInt(producer);
+	newProcessInt(consumer);
+	endOfProcess();
 }
 
 void producer() {
 	produceInt();
-    endOfProcess();
+	endOfProcess();
 }
 
 void consumer() {
 	consumeInt();
-    endOfProcess();
+	endOfProcess();
 }
 
 void multiDemo() {

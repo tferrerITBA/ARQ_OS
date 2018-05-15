@@ -5,11 +5,10 @@
 #include "include/videoMode.h"
 #include "include/RTC.h"
 #include "include/process.h"
-#include "include/mutex.h"
+#include "include/sem.h"
+#include "include/producerConsumer.h"
 
 extern void printAll();
-extern void downMutex(int *mutex);
-extern void upMutex(int *mutex);
 
 char *read_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
@@ -37,6 +36,8 @@ char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
 char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 
+char * initializeProdConsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+
 extern void _int80Handler();
 
 extern void _exception6Handler();
@@ -56,7 +57,7 @@ typedef struct {
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
 sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
-	&createProcess, &ps, &produceInt, &consumeInt, &kill, &time, &mallocInt, &freeInt};
+	&createProcess, &ps, &produceInt, &consumeInt, &kill, &time, &mallocInt, &freeInt, &initializeProdConsInt};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
@@ -158,6 +159,11 @@ char * produceInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 char * consumeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 	consume();
 	return (char *)0x1;
+}
+
+char * initializeProdConsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    initializeProdCons();
+    return (char *)0x1;
 }
 
 char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
