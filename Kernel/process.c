@@ -46,7 +46,9 @@ Process newProcess(void * stackPointer, void * stackBase, void * heap, pid_t new
 
 void terminateProcess(pid_t pid) {
     Pcb p = getProcess(pid);
-    p->state = TERMINATED;
+    if(p != 0) {
+        p->state = TERMINATED;
+    }
 }
 
 void freeProcessResources(Pcb pcb) {

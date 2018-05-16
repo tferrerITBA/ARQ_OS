@@ -33,6 +33,9 @@ Pcb getProcess(pid_t pid) {
     TableNode current = allProcesses->first;
     while (current->block->pid != pid) {
         current = current->next;
+        if(current == NULL) {
+            return NULL;
+        }
     }
     return current->block;
 }
@@ -56,11 +59,14 @@ void printPcb(Pcb pcb) {
     if(pcb->state == CREATED) {
         putString("created\n");
     }
-    if(pcb->state == WAITING) {
-        putString("waiting\n");
+    if(pcb->state == READY) {
+        putString("ready\n");
     }
     if(pcb->state == TERMINATED) {
         putString("terminated\n");
+    }
+    if(pcb->state == BLOCKED) {
+        putString("blocked\n");
     }
 }
 

@@ -141,14 +141,12 @@ void consumer() {
 }
 
 void multiDemo() {
-    int i;
-    double result = 1.0;
-    pid_t pid;
-
-    for(i = 0; i < 50000000; i++ ) {
-        result += result/2;
+    int i=0;
+    while(i< 500000000) {
+        i++;
     }
-    printf("\nResult is ready\n>");
+
+    printf("\nLoop is finished\n>");
     endOfProcess();
 }
 
@@ -160,6 +158,18 @@ void mallocDemo() {
     printf("\nMemory deallocated\n>");
     endOfProcess();
 }
+
+void killDemo() {
+    pid_t pid = getpid();
+    printf("My pid is: ");
+    if(pid >= 10) {
+        putChar('0' + pid/10);
+    }
+    putChar('0' + pid%10);
+    putChar('\n');
+    while(1);
+}
+
 
 void endOfProcess() {
     int pid = (int)getpid();

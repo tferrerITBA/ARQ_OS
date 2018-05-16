@@ -100,12 +100,16 @@ int readCommand(char command[], int mode) {
 			sh(multiDemo,BACKGROUND);
 		} else if (strequals(command, "mallocDemo")) {
 			sh(mallocDemo, BACKGROUND);
+		} else if (strequals(command, "killDemo")) {
+			sh(killDemo, BACKGROUND);
 		} else if(strequals(command,"prodcons&")) {
 			sh(prodcons, FOREGROUND);
 		} else if(strequals(command,"multiDemo&")) {
 			sh(multiDemo,FOREGROUND);
 		} else if (strequals(command, "mallocDemo&")) {
 			sh(mallocDemo, FOREGROUND);
+		} else if (strequals(command, "killDemo&")) {
+			sh(killDemo, FOREGROUND);
 		} else{
            readCommandwithArguments(command, mode);
         }
@@ -154,7 +158,18 @@ int readCommandwithArguments(char command[], int mode) {
             runMath(mathCons[0], mathCons[1], mathCons[2]);
             return MATH;
         }
-    } else {
+    } else if(strequals(action,"kill")) {
+		int pid = calculatePid(params);
+		if(pid > 1) {
+			kill(pid);
+		} else {
+            if(pid == 1) {
+                printf("Killing main process is forbidden \n");
+            } else {
+                printf("Invalid pid entry\n");
+            }
+		}
+	} else {
         printf("Invalid command. Try 'help' for information about avaliable options\n");
     }
 }
@@ -392,4 +407,15 @@ int length(char * word) {
 	}
 
 	return i;
+}
+
+int calculatePid(char * string) {
+
+	if(isDigit(string[0]) && string[1] == 0) {
+		return string[0] - '0';
+	} else if (isDigit(string[1]) && isDigit(string[0]) && string[2] == 0){
+		return (string[0] - '0')*10 + string[1] - '0';
+	} else {
+		return -1;
+	}
 }

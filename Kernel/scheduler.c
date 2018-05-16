@@ -47,7 +47,7 @@ void * schedule(void * rsp) {
 }
 
 void enqueueProcess(Pcb pcb) {
-    pcb->state = WAITING;
+    pcb->state = READY;
     enqueue(readyQueue,pcb);
 }
 

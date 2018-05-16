@@ -21,7 +21,7 @@ int isEmpty(Queue queue) {
     if(queue == NULL) {
         return 1;
     }
-    return queue->length == 0;
+    return getLength(queue) == 0;
 }
 
 void enqueue(Queue queue, void * elem) {
@@ -54,5 +54,6 @@ void * dequeue(Queue queue) {
     ret = firstElement->info;
     queue->first = firstElement->next;
     queue->length = queue->length-1;
+    free(firstElement);
     return ret;
 }

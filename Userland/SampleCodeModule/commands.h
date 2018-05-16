@@ -26,6 +26,7 @@ void producer();
 void consumer();
 void multiDemo();
 void mallocDemo();
+void killDemo();
 void endOfProcess();
 uint8_t getDistance(uint8_t a, uint8_t b);
 extern void raiseInvOp();
@@ -37,5 +38,6 @@ extern char * malloc(size_t size);
 extern char * free(void *);
 extern char * consumeInt();
 extern char * produceInt();
+extern char * initializeProdConsInt();
 
 #endif COMMANDS_H
