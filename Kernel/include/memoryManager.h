@@ -2,7 +2,6 @@
 #define MEMORY_MANAGER_H
 
 #include <assert.h>
-//#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -50,5 +49,7 @@ void removeProcessStack(pid_t pid);
 void removeProcessHeap(pid_t pid);
 void clearBlocks(m_block mb);
 void clearMemory(pid_t pid, int isStack);
+void * shmget(pid_t id);
+void shmfree(pid_t id);
 
 #endif

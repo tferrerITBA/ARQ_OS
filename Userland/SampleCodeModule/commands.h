@@ -1,3 +1,6 @@
+#ifndef COMMANDS_H
+#define COMMANDS_H
+
 #include <stdint.h>
 #include <sys/types.h>
 #include "lib.h"
@@ -34,3 +37,5 @@ extern char * malloc(size_t size);
 extern char * free(void *);
 extern char * consumeInt();
 extern char * produceInt();
+
+#endif COMMANDS_H

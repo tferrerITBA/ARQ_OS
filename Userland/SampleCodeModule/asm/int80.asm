@@ -9,6 +9,7 @@ GLOBAL newProcess
 GLOBAL psint
 GLOBAL consumeInt
 GLOBAL produceInt
+GLOBAL initializeProdConsInt
 GLOBAL kill
 GLOBAL getpid
 GLOBAL malloc
@@ -108,5 +109,10 @@ malloc:
 free:
 	mov rax, 15
 	mov rbx, rdi
+	int 0x80
+	ret
+
+initializeProdConsInt:
+	mov rax, 16
 	int 0x80
 	ret

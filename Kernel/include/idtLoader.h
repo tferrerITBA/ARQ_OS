@@ -6,7 +6,7 @@
 #include "interrupts.h"
 #include "videoMode.h"
 #include "RTC.h"
-#include "mutex.h"
+#include "sem.h"
 
 static void setup_IDT_entry (int index, uint64_t offset);
 

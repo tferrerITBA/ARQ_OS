@@ -226,3 +226,18 @@ void clearBlocks(m_block mb) {
         mb = mb->next;
     }
 }
+
+void * shmget(pid_t id) {
+
+    p_block pb = getProcessBlock(id);
+    if(pb == NULL) {
+        pb = addProcessBlock(id,2);
+    }
+    return (void *)pb + PB_SIZE;
+}
+
+void shmfree(pid_t id) {
+    p_block pb = getProcessBlock(id);
+    clearMemory(id,2);
+}
+
