@@ -32,5 +32,5 @@ extern char * kill(int pid);
 extern char * getpid();
 extern char * malloc(size_t size);
 extern char * free(void *);
-extern void consumeInt();
-extern void produceInt();
+extern char * consumeInt();
+extern char * produceInt();

@@ -2,8 +2,6 @@
 #include "commands.h"
 #include <stdint.h>
 
-typedef void (*terminalCaller)(void);
-
 void terminal();
 int toInt(char c);
 int readCommand(char command[], int mode);
@@ -19,4 +17,3 @@ int isDigit(char c);
 int toInt(char c);
 int length(char word[]);
 extern void raiseInvOp();
-extern void newProcess(terminalCaller ti);
