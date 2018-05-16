@@ -1,75 +1,13 @@
-#include <stdint.h>
 #include "include/idtLoader.h"
-#include "include/defs.h"
-#include "include/interrupts.h"
-#include "include/videoMode.h"
-#include "include/RTC.h"
-#include "include/process.h"
-#include "include/sem.h"
-#include "include/producerConsumer.h"
 
-extern void printAll();
-
-char *read_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char *write_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char *time(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char *pixel(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * getPid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char *produceInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char *consumeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-char * initializeProdConsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-
-extern void _int80Handler();
-
-extern void _exception6Handler();
-
-#pragma pack(push)        /* Push de la alineación actual */
-#pragma pack (1)        /* Alinear las siguiente estructuras a 1 byte */
-
-/* Descriptor de interrupcion */
-typedef struct {
-    uint16_t offset_l, selector;
-    uint8_t cero, access;
-    uint16_t offset_m;
-    uint32_t offset_h, other_cero;
-} DESCR_INT;
-
-#pragma pack(pop)        /* Reestablece la alinceación actual */
-
-typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
-sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
-	&createProcess, &ps, &produceInt, &consumeInt, &kill, &time, &mallocInt, &freeInt, &initializeProdConsInt};
-
-DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
-
-static void setup_IDT_entry(int index, uint64_t offset);
 
 void load_idt() {
 
-    setup_IDT_entry(0x20, (uint64_t) & _irq00Handler);
-    setup_IDT_entry(0x00, (uint64_t) & _exception0Handler);
-    setup_IDT_entry(0x06, (uint64_t) & _exception6Handler);
-    setup_IDT_entry(0x21, (uint64_t) & _irq01Handler);
-    setup_IDT_entry(0x80, (uint64_t) & _int80Handler);
+    setup_IDT_entry(0x20, (uint64_t) &_irq00Handler);
+    setup_IDT_entry(0x00, (uint64_t) &_exception0Handler);
+    setup_IDT_entry(0x06, (uint64_t) &_exception6Handler);
+    setup_IDT_entry(0x21, (uint64_t) &_irq01Handler);
+    setup_IDT_entry(0x80, (uint64_t) &_int80Handler);
 
     //Solo interrupcion timer tick  y teclado habilitadas
     picMasterMask(0xFC); // 1111 1100

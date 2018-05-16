@@ -12,8 +12,8 @@
 #define PB_SIZE sizeof(struct processBlock)
 #define TRUE 1
 #define FALSE 0
-#define HEAP_BASE 0x600000
-#define HEAP_LIMIT 0x799999
+#define HEAP_BASE 0x800000
+#define HEAP_LIMIT 0x9999999
 
 typedef struct processBlock * p_block;
 struct processBlock {

@@ -9,8 +9,6 @@ static void zero_division();
 static void invalid_opcode(uint64_t rsp);
 static void printExceptionDetails(trapframe * tf);
 
-typedef void (*exceptionI)(void);
-
 void exceptionDispatcher(int exception, uint64_t rsp) {
 	if (exception == ZERO_EXCEPTION_ID)
 		zero_division(rsp);

@@ -3,28 +3,24 @@
 
 void runHelp() {
 	printf("clear: erases all visible text \n");
-	printf("\n");
 	printf("chcolor b g r: changes characters color (previously written characters keep the original color). b, g and r are hexadecimal values for red, green and blue components\n");
-	printf("\n");
 	printf("bgcolor b g r: changes background color. b, g and r are hexadecimal values for blue, green and red components \n");
-	printf("\n");
 	printf("zerodiv: shows zero division exception handling\n");
-	printf("\n");
-	printf("overflow: shows overflow exception handling\n");
-	printf("\n");
 	printf("invopc: shows invalid opcode exception handling\n");
-	printf("\n");
-	printf("zerodiv: shows zero division exception handling\n");
-	printf("\n");
 	printf("echo str: prints string str\n");
 	printf("math a b c: plots mathemathical function ax^2 + bx + c\n");
-	printf("\n");
 	printf("securityon: hides input characters until securityoff is invoked\n");
-	printf("\n");
 	printf("securityoff: recovers from securityon mode\n");
-	printf("\n");
 	printf("colorfade from to: prints a color fade effect between any of the primary colors or between black and white\n");
-	printf("\n");
+	printf("-----------------------------------------------------------\n");
+	printf("-----------------------------------------------------------\n");
+	printf("multiDemo: enters a finite loop. It allows the user to run new processes in the meantime \n");
+	printf("killDemo: enters an infinite loop so that the only way for it to finish is killing it with the command kill\n");
+	printf("kill [pid]: kills the process with the given PID\n");
+	printf("mallocDemo: a simple usage of user level malloc and free\n");
+	printf("ps: lists all processes including terminated ones\n");
+	printf("prodcons: a simple implementation of producer consumer problem\n");
+	putChar('\n');
 }
 
 void runClear() {
@@ -152,8 +148,13 @@ void multiDemo() {
 
 
 void mallocDemo() {
-    void * demo = malloc(30);
-    printf("\nMemory allcoated");
+    char * demo = malloc(30);
+    printf("\nMemory allcoated\n");
+    demo[0] = 'a';
+    demo[1] = 'b';
+    demo[2] = 'c';
+    demo[3] =  0;
+    printf(demo);
     free(demo);
     printf("\nMemory deallocated\n>");
     endOfProcess();
