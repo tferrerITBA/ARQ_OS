@@ -159,7 +159,7 @@ int readCommandwithArguments(char command[], int mode) {
             return MATH;
         }
     } else if(strequals(action,"kill")) {
-		int pid = calculatePid(params);
+		pid_t pid = calculatePid(params);
 		if(pid > 1) {
 			kill(pid);
 		} else {
