@@ -29,7 +29,7 @@ void mallocDemo();
 void endOfProcess();
 uint8_t getDistance(uint8_t a, uint8_t b);
 extern void raiseInvOp();
-extern char * newProcess(void *);
+extern char * newProcessInt(void *);
 extern char * psint();
 extern char * kill(int pid);
 extern char * getpid();

@@ -5,7 +5,7 @@ GLOBAL clearScr
 GLOBAL changeBColors
 GLOBAL changeCColors
 GLOBAL pixelInt
-GLOBAL newProcess
+GLOBAL newProcessInt
 GLOBAL psint
 GLOBAL consumeInt
 GLOBAL produceInt
@@ -67,7 +67,7 @@ getpid:
 	int 0x80
 	ret
 
-newProcess:
+newProcessInt:
 	mov rax, 8
 	mov rbx, rdi
 	int 0x80
