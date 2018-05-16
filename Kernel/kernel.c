@@ -3,7 +3,7 @@
 #include "include/lib.h"
 #include "include/moduleLoader.h"
 #include "include/naiveConsole.h"
-//#include "../Userland/SampleCodeModule/sampleCodeModule.h"
+#include "include/messages.h"
 #include "include/process.h"
 #include "include/videoMode.h"
 #include "include/memoryManager.h"
@@ -91,6 +91,7 @@ int main()
 	load_idt();
     initializeMemoryManager();
     createReadyQueue();
+	createMessageQueue();
 
 
     ((EntryPoint)sampleCodeModuleAddress)();

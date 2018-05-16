@@ -3,6 +3,7 @@
 #include "include/videoMode.h"
 
 Queue readyQueue = NULL;
+Queue messageQueue = NULL;
 
 Queue newQueue(size_t size) {
     Queue q = malloc(sizeof(queueStruct));
