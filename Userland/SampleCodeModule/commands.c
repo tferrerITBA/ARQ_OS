@@ -122,7 +122,7 @@ void prodcons() {
 	initializeProdCons();
 	newProcessInt(producer);
 	//newProcessInt(producer);
-	newProcessInt(consumer);
+	//newProcessInt(consumer);
 	endOfProcess();
 }
 

@@ -39,6 +39,9 @@ int down(int semType) {
         }
 	}
 
+    //printDecimal(sem->count);
+    //putString("\n");
+
     return prodConState;
 }
 

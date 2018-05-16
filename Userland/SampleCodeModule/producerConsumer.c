@@ -9,9 +9,9 @@ void make(char *product) {
     fullSlots++;
     emptySlots--;
     buffer[fullSlots] = product;
-    printf("Making product, ");
-    printInt(emptySlots);
-    printf(" emptySlots left\n");
+    //printf("Making product, ");
+    //printInt(emptySlots);
+    //printf(" emptySlots left\n");
 }
 
 char *take() {
@@ -20,9 +20,9 @@ char *take() {
     emptySlots++;
     product = buffer[fullSlots];
     buffer[fullSlots] = NULL;
-    printf("Consuming product, ");
-    printInt(emptySlots);
-    printf(" emptySlots left\n");
+    //printf("Consuming product, ");
+    //printInt(emptySlots);
+    //printf(" emptySlots left\n");
     return product;
 }
 
@@ -34,8 +34,10 @@ void produce() {
 
         if (!blocked) {
             blocked = downInt(MUTEX_T);
+            printInt(emptySlots);
+            printf(" emptySlots\n");
 
-            if (!blocked  && fullSlots <= BUFFER_SIZE) {
+            if (!blocked) {
                 make("product");
                 blocked = upInt(MUTEX_T);
                 blocked = upInt(SEM_FULL_T);

@@ -10,7 +10,6 @@
 #include "defs.h"
 #include "process.h"
 #include "sem.h"
-#include "producerConsumer.h"
 
 static void setup_IDT_entry (int index, uint64_t offset);
 void load_idt();
@@ -27,14 +26,15 @@ char *colors(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * getPid(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-char *produceInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
-char *consumeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *upInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char *downInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * initializeProdConsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * reallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * callocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * initializeSemsAndMutexInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 extern void _int80Handler();
 extern void _exception6Handler();
 
@@ -53,8 +53,9 @@ typedef struct {
 
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
 sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
-                 &createProcess, &ps, &produceInt, &consumeInt, &kill, &time,
-                 &mallocInt, &freeInt, &initializeProdConsInt, &reallocInt,&callocInt};
+                 &createProcess, &ps, &upInt, &downInt, &kill, &time,
+                 &mallocInt, &freeInt, &initializeSemsAndMutexInt, &reallocInt,
+                  &callocInt};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
