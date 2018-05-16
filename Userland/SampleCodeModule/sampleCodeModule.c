@@ -108,8 +108,6 @@ int readCommand(char command[], int mode) {
 			sh(multiDemo,FOREGROUND);
 		} else if (strequals(command, "mallocDemo&")) {
 			sh(mallocDemo, FOREGROUND);
-		} else if (strequals(command, "killDemo&")) {
-			sh(killDemo, FOREGROUND);
 		} else{
            readCommandwithArguments(command, mode);
         }
