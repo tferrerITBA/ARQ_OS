@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include "lib.h"
 #include "functionGraph.h"
+#include "producerConsumer.h"
 #define STEP 6
 
 typedef void (*function)(void);
@@ -36,8 +37,5 @@ extern char * kill(int pid);
 extern char * getpid();
 extern char * malloc(size_t size);
 extern char * free(void *);
-extern char * consumeInt();
-extern char * produceInt();
-extern char * initializeProdConsInt();
 
 #endif COMMANDS_H

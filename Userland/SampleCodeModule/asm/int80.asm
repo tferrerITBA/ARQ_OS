@@ -7,13 +7,13 @@ GLOBAL changeCColors
 GLOBAL pixelInt
 GLOBAL newProcessInt
 GLOBAL psint
-GLOBAL consumeInt
-GLOBAL produceInt
-GLOBAL initializeProdConsInt
+GLOBAL downInt
+GLOBAL upInt
 GLOBAL kill
 GLOBAL getpid
 GLOBAL malloc
 GLOBAL free
+GLOBAL initializeSemsAndMutexInt
 
 section .text
 
@@ -78,13 +78,15 @@ psint:
 	int 0x80
 	ret
 
-produceInt:
+upInt:
 	mov rax, 10
+	mov rbx, rdi
 	int 0x80
 	ret
 
-consumeInt:
+downInt:
 	mov rax, 11
+	mov rbx, rdi
 	int 0x80
 	ret
 
@@ -112,7 +114,7 @@ free:
 	int 0x80
 	ret
 
-initializeProdConsInt:
+initializeSemsAndMutexInt:
 	mov rax, 16
 	int 0x80
 	ret
