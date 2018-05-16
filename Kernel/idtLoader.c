@@ -117,3 +117,11 @@ char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     free((void *)rbx);
     return (char *)0x1;
 }
+
+char * reallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    return (char *)realloc((void *)rbx,rcx,getRunningProcessPid());
+}
+
+char * callocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    return (char *)calloc(rbx,getRunningProcessPid());
+}

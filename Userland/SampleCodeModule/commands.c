@@ -146,16 +146,29 @@ void multiDemo() {
     endOfProcess();
 }
 
-
 void mallocDemo() {
+
     char * demo = malloc(30);
-    printf("\nMemory allcoated\n");
+    printf("\nMemory allocated\n");
     demo[0] = 'a';
     demo[1] = 'b';
     demo[2] = 'c';
     demo[3] =  0;
     printf(demo);
+    printf("\n");
+    printf("\nMemory Reallocated\n");
+    char * redemo = realloc(demo,40);
+    printf(demo);
+    printf("\n");
+    printf("\nMemory allocated with zeros\n");
+    char * c_demo = calloc(20);
+    c_demo[0] = 'a';
+    c_demo[1] = 'b';
+    c_demo[2] = 'c';
+    printf(c_demo);
+    printf("\n");
     free(demo);
+    free(c_demo);
     printf("\nMemory deallocated\n>");
     endOfProcess();
 }

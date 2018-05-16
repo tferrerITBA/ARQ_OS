@@ -14,6 +14,8 @@ GLOBAL kill
 GLOBAL getpid
 GLOBAL malloc
 GLOBAL free
+GLOBAL realloc
+GLOBAL calloc
 
 section .text
 
@@ -116,3 +118,17 @@ initializeProdConsInt:
 	mov rax, 16
 	int 0x80
 	ret
+
+realloc:
+	mov rax, 17
+	mov rbx, rdi
+	int 0x80
+	ret
+
+calloc:
+	mov rax, 18
+	mov rbx, rdi
+	mov rcx, rsi
+	int 0x80
+	ret
+

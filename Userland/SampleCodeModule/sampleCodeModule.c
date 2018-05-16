@@ -100,7 +100,7 @@ int readCommand(char command[], int mode) {
 		} else if (strequals(command, "mallocDemo&")) {
 			sh(mallocDemo, FOREGROUND);
 		} else{
-           readCommandwithArguments(command, mode);
+           return readCommandwithArguments(command, mode);
         }
     }
     if(mode == 3) {

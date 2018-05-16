@@ -33,6 +33,8 @@ char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char * initializeProdConsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * reallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
+char * callocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 extern void _int80Handler();
 extern void _exception6Handler();
 
@@ -52,7 +54,7 @@ typedef struct {
 typedef char *(*sysCalls)(uint64_t, uint64_t, uint64_t);
 sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
                  &createProcess, &ps, &produceInt, &consumeInt, &kill, &time,
-                 &mallocInt, &freeInt, &initializeProdConsInt};
+                 &mallocInt, &freeInt, &initializeProdConsInt, &reallocInt,&callocInt};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 
