@@ -1,14 +1,5 @@
 #include "sampleCodeModule.h"
 
-#define SIZE 128
-#define BACKSPACE 8
-#define END 0
-#define STANDARD 1
-#define MATH 2
-#define SECURITY 3
-#define FOREGROUND 1
-#define BACKGROUND 0
-
 int main(void) {
 	newProcessInt(terminal);
     return 1;

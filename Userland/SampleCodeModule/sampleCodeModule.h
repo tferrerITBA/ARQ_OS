@@ -1,6 +1,14 @@
 #include "lib.h"
 #include "commands.h"
 #include <stdint.h>
+#define SIZE 128
+#define BACKSPACE 8
+#define END 0
+#define STANDARD 1
+#define MATH 2
+#define SECURITY 3
+#define FOREGROUND 1
+#define BACKGROUND 0
 
 void terminal();
 int toInt(char c);
