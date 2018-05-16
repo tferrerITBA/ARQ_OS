@@ -16,7 +16,11 @@ void * schedule(void * rsp) {
         return rsp;
     }
 
-    if(runningPcb->state == RUNNING) {
+    if (runningPcb->state == BLOCKED) {
+        putString("proc bloquea3\n");
+    }
+
+    if (runningPcb->state == RUNNING || runningPcb->state == BLOCKED) {
         runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);
     } else if (runningPcb->state == TERMINATED) {
@@ -27,15 +31,12 @@ void * schedule(void * rsp) {
 
 
     while (runningPcb->state == BLOCKED) {
+        runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);
         runningPcb = dequeue(readyQueue);
     }
-/*
-    if (runningPcb->state == BLOCKED) {
-        while(1)
-            putString("Proceso bloqueado.   ");
-    }
-*/
+
+
     runningPcb->state = RUNNING;
 
     if (terminated != NULL) {

@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include "sem.h"
 
-#define BUFFER_SIZE 3
+#define BUFFER_SIZE 8
 
 void produce();
 void consume();

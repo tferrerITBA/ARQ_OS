@@ -125,6 +125,7 @@ void ps() {
 void prodcons() {
 	initializeProdConsInt();
 	newProcessInt(producer);
+	//newProcessInt(producer);
 	newProcessInt(consumer);
 	endOfProcess();
 }

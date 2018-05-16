@@ -14,16 +14,21 @@ void down(semT sem) {
 	}
 
 	if (sem->count == LOCKED) {
+        //putString("---BLOQUEANDO\n");
 		runningPcb->state = BLOCKED;
 	} else {
+        //putString("semCount: ");
+        //printDecimal(sem->count);
+        //putString("\n");
 		previousState = lockSemAndShowPrevState(&(sem->count));
 
-        printDecimal(previousState);
-        putString("\n");
-        printDecimal(sem->count);
-        putString("\n");
+        //putString("previousState: ");
+        //printDecimal(previousState);
+        //putString("\nnewState:");
+        //printDecimal(sem->count);
+        //putString("\n\n");
 
-		if (previousState == sem->count) {}
+		if (previousState == sem->count)
 			runningPcb->state = BLOCKED;
 			// another process locked down right before me
 	}
@@ -42,7 +47,7 @@ void up(semT sem) {
 }
 
 semT initializeSem(int initCount) {
-    semT sem = malloc(sizeof(int), getRunningProcessPid());
+    semT sem = malloc(sizeof(semStruct), getRunningProcessPid());
     sem->count = initCount;
     sem->id = 0;
     sem->type = SEM_T;
@@ -50,7 +55,7 @@ semT initializeSem(int initCount) {
 }
 
 semT initializeMutex() {
-    semT sem = malloc(sizeof(int), getRunningProcessPid());
+    semT sem = malloc(sizeof(semStruct), getRunningProcessPid());
     sem->count = FREE;
     sem->id = 0;
     sem->type = MUTEX_T;

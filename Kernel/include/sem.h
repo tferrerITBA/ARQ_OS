@@ -10,7 +10,7 @@
 #define SUCCESS 1
 #define FREE 1
 #define LOCKED 0
-#define SEM_SIZE 3
+#define SEM_SIZE 8
 #define MUTEX_T 4
 #define SEM_T 5
 

@@ -11,36 +11,53 @@ char *buffer[BUFFER_SIZE] = {NULL};
 
 
 void make(char *product) {
-    /*
-    int i;
-    for (i = 0; *product; i++)
-        buff[fullSlots][i] = product[i];
-    buff[fullSlots][i] = 0;
-    */
-    //buffer[semFullSlots->count] = product;
-    //semFullSlots->count++;
-    //semEmptySlots->count--;
+    buffer[semFullSlots->count] = product;
 }
 
 char *take() {
-    char *product = buffer[BUFFER_SIZE];
-    buffer[BUFFER_SIZE] = NULL;
+    char *product = buffer[semFullSlots->count];
+    buffer[semFullSlots->count] = NULL;
     return product;
 }
 
 void produce() {
     while (1) {
+        printDecimal(getRunningProcessPid());
+        putString(" - trying to produce :: ");
+        printDecimal(semEmptySlots->count);
+        putString(" empty slots left\n");
+
         down(semEmptySlots);
+        if (runningPcb->state == BLOCKED)
+            return;
+
 		down(mutex);
-        
-        if (semEmptySlots->count) {
-            putString("Producing\n");
-            printHex(semEmptySlots->count);
+        if (runningPcb->state == BLOCKED)
+            return;
+
+        printDecimal(getRunningProcessPid());
+        putString(" - producing :: ");
+        printDecimal(semEmptySlots->count);
+        putString(" empty slots left\n\n");
+/*
+        putString("Mutex is: ");
+
+        if (mutex->count == 1) {
+            putString("free - ");
+        } else if (mutex->count == 0) {
+            putString("locked - ");
         }
 
+        printDecimal(mutex->count);
         putString("\n");
+        */
         make("product");
-		up(mutex);
+        //printDecimal(semEmptySlots->count);
+        //putString("\n");
+        //printDecimal(semFullSlots->count);
+        //putString("\n\n");
+
+        up(mutex);
         up(semFullSlots);
     }
 }
@@ -51,12 +68,20 @@ void consume() {
     while (1) {
         putString("Consuming\n");
         down(semFullSlots);
+        if (runningPcb->state == BLOCKED)
+            return;
+
 		down(mutex);
+        if (runningPcb->state == BLOCKED)
+            return;
+
         product = take();
+
 		up(mutex);
         up(semEmptySlots);
         putString("I consumed this: ");
-        printHex(product);
+        putString(product);
+        putString("\n");
     }
 }
 
