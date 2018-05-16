@@ -89,19 +89,12 @@ char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return (char*)0x1;
 }
 
-char * produceInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-	produce();
-	return (char *)0x1;
+char * upInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+	return up(rbx);
 }
 
-char * consumeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-	consume();
-	return (char *)0x1;
-}
-
-char * initializeProdConsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    initializeProdCons();
-    return (char *)0x1;
+char * downInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+	return down(rbx);
 }
 
 char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
@@ -124,4 +117,9 @@ char * reallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 
 char * callocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     return (char *)calloc(rbx,getRunningProcessPid());
+}
+
+char * initializeSemsAndMutexInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    initializeSemsAndMutex();
+    return (char *)0x1;
 }

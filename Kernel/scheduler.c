@@ -16,10 +16,6 @@ void * schedule(void * rsp) {
         return rsp;
     }
 
-    if (runningPcb->state == BLOCKED ) {
-        putString("proc bloquea3\n");
-    }
-
     if (runningPcb->state == RUNNING || runningPcb->state == BLOCKED) {
         runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);

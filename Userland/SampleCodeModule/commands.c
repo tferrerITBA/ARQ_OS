@@ -119,7 +119,7 @@ void ps() {
 }
 
 void prodcons() {
-	initializeProdConsInt();
+	initializeProdCons();
 	newProcessInt(producer);
 	//newProcessInt(producer);
 	newProcessInt(consumer);
@@ -127,12 +127,12 @@ void prodcons() {
 }
 
 void producer() {
-	produceInt();
+	produce();
 	endOfProcess();
 }
 
 void consumer() {
-	consumeInt();
+	consume();
 	endOfProcess();
 }
 
