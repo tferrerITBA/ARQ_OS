@@ -53,25 +53,3 @@ void enqueueProcess(Pcb pcb) {
 void createReadyQueue() {
     readyQueue = newQueue(sizeof(void *));
 }
-
-void printStack(trapframe * tf) {
-    putString("RIP: 0x");
-    printHex(tf->ip);
-    putString("\nCS: 0x");
-    printHex(tf->cs);
-    putString("\nRFLAGS: 0x");
-    printHex(tf->flags);
-    putString("\nRSP: 0x");
-    printHex(tf->sp);
-    putString("\nSS: 0x");
-    printHex(tf->ss);
-    putString("\n");
-
-}
-
-void printRIP(trapframe *tf) {
-    putString("RIP: ");
-    printHex(tf->ip);
-    put_char('\t');
-
-}
