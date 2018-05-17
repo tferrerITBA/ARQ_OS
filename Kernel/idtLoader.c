@@ -123,3 +123,13 @@ char * initializeSemsAndMutexInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     initializeSemsAndMutex();
     return (char *)0x1;
 }
+
+char * sendInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    send((char *)rbx);
+    return (char*)0x1;
+}
+
+char * receiveInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    return receive();
+
+}

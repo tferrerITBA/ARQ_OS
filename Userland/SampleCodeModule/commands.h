@@ -29,6 +29,9 @@ void multiDemo();
 void mallocDemo();
 void killDemo();
 void endOfProcess();
+void sender();
+void receiver();
+void messageDemo();
 uint8_t getDistance(uint8_t a, uint8_t b);
 extern void raiseInvOp();
 extern char * newProcessInt(void *);
@@ -37,5 +40,7 @@ extern char * kill(int pid);
 extern char * getpid();
 extern char * malloc(size_t size);
 extern char * free(void *);
+extern char * send(char *);
+extern char * receive();
 
 #endif COMMANDS_H

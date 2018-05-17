@@ -4,6 +4,7 @@
 
 Queue readyQueue = NULL;
 Queue messageQueue = NULL;
+Queue blockedQueue = NULL;
 
 Queue newQueue(size_t size) {
     Queue q = malloc(sizeof(queueStruct));

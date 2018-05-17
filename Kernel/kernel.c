@@ -91,8 +91,8 @@ int main()
 	load_idt();
     initializeMemoryManager();
     createReadyQueue();
+    createBlockedQueue();
 	createMessageQueue();
-
 
     ((EntryPoint)sampleCodeModuleAddress)();
 

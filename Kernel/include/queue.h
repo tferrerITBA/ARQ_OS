@@ -22,6 +22,7 @@ typedef struct queueElement * Element;
 
 extern Queue readyQueue;
 extern Queue messageQueue;
+extern Queue blockedQueue;
 
 Queue newQueue(size_t size);
 int isEmpty(Queue queue);

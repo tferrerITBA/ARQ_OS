@@ -16,6 +16,8 @@ GLOBAL free
 GLOBAL realloc
 GLOBAL calloc
 GLOBAL initializeSemsAndMutexInt
+GLOBAL send
+GLOBAL receive
 
 section .text
 
@@ -134,5 +136,14 @@ calloc:
 	int 0x80
 	ret
 
+send:
+	mov rax, 19
+	mov rbx, rdi
+	int 0x80
+	ret
 
+receive:
+	mov rax, 20
+	int 0x80
+	ret
 

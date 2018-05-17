@@ -7,6 +7,7 @@ extern void freeProcessResources(Pcb pcb);
 
 void * schedule(void * rsp) {
     Pcb terminated = NULL;
+    Pcb blocked = NULL;
 
     if (runningPcb == NULL && isEmpty(readyQueue)) {
         return NULL;
@@ -16,11 +17,16 @@ void * schedule(void * rsp) {
         return rsp;
     }
 
-    if (runningPcb->state == RUNNING || runningPcb->state == BLOCKED) {
+    if (runningPcb->state == RUNNING) {
+        putString("Hola\n");
         runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);
     } else if (runningPcb->state == TERMINATED) {
         terminated = runningPcb;
+    } else if(runningPcb->state == BLOCKED) {
+        runningPcb->stackPointer = rsp;
+        enqueue(blockedQueue,runningPcb);
+        putString("EL que estaba corriendo se bloqueo\n");
     }
 
     if (terminated != NULL) {
@@ -29,12 +35,8 @@ void * schedule(void * rsp) {
 
     runningPcb = dequeue(readyQueue);
 
-    while (runningPcb->state == BLOCKED || runningPcb->state == TERMINATED) {
-        if(runningPcb->state == TERMINATED) {
-            terminated = runningPcb;
-        } else {
-            enqueueProcess(runningPcb);
-        }
+    while (runningPcb->state == TERMINATED) {
+        terminated = runningPcb;
         runningPcb = dequeue(readyQueue);
     }
 

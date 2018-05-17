@@ -93,7 +93,9 @@ int readCommand(char command[], int mode) {
 			sh(mallocDemo, BACKGROUND);
 		} else if (strequals(command, "killDemo")) {
 			sh(killDemo, BACKGROUND);
-		} else if(strequals(command,"prodcons&")) {
+		} else if (strequals(command, "messageDemo")) {
+            sh(messageDemo, BACKGROUND);
+        }else if(strequals(command,"prodcons&")) {
 			sh(prodcons, FOREGROUND);
 		} else if(strequals(command,"multiDemo&")) {
 			sh(multiDemo,FOREGROUND);
