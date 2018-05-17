@@ -5,6 +5,7 @@
 #include "PCBTADs.h"
 #include "processStates.h"
 #include "memoryManager.h"
+#include "queue.h"
 
 #define FAIL -1
 #define SUCCESS 1
@@ -19,7 +20,7 @@ typedef struct {
     int count;
     int id;
     int type;
-
+    Queue blockedProcs;
 } semStruct;
 
 typedef semStruct * semT;

@@ -26,6 +26,7 @@ int down(int semType) {
 
 	if (sem->count == LOCKED) {
 		runningPcb->state = BLOCKED;
+        enqueue(sem->blockedProcs, runningPcb);
         prodConState = BLOCKED;
 	} else {
 		previousState = lockSemAndShowPrevState(&(sem->count));
@@ -33,6 +34,7 @@ int down(int semType) {
 		if (previousState == sem->count) {
             // another process locked down right before me
 			runningPcb->state = BLOCKED;
+            enqueue(sem->blockedProcs, runningPcb);
             prodConState = BLOCKED;
         } else {
             prodConState = !BLOCKED;
@@ -47,6 +49,8 @@ int down(int semType) {
 
 int up(int semType) {
     semT sem = decideSemType(semType);
+    int prevSemState = sem->count;
+    Pcb blockedProc;
 
     if (sem == NULL) {
 		runningPcb->state = TERMINATED;
@@ -57,6 +61,11 @@ int up(int semType) {
         sem->count = FREE;
     else if (sem->count < SEM_SIZE)
         sem->count++;
+
+    if (prevSemState == LOCKED) {
+        blockedProc = dequeue(sem->blockedProcs);
+        blockedProc->state = RUNNING;
+    }
 
     return !BLOCKED;
 }
@@ -75,6 +84,7 @@ semT initializeSem(int initCount, int semType) {
     sem->count = initCount;
     sem->id = 0;
     sem->type = semType;
+    sem->blockedProcs = newQueue(0);
     return sem;
 }
 
