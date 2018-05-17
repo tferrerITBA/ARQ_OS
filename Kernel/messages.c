@@ -14,7 +14,6 @@ void createBlockedQueue() {
 }
 
 void send(char * msg) {
-    putString("Encolando mensaje\n");
     enqueue(messageQueue,msg);
     if(isEmpty(blockedQueue)) {
         return;

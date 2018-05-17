@@ -203,7 +203,6 @@ void messageDemo() {
 void sender() {
 	char * msg = "Message";
 	send(msg);
-    printf("Ya envie\n");
 	endOfProcess();
 }
 
@@ -213,6 +212,7 @@ void receiver() {
     printf("I received the following message: ");
 	printf(message);
 	putChar('\n');
+    putChar('>');
 	endOfProcess();
 }
 
