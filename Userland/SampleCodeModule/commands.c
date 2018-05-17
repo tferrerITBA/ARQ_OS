@@ -197,21 +197,20 @@ void messageDemo() {
 
 	newProcessInt(sender);
 	newProcessInt(receiver);
-    newProcessInt(receiver);
-    printf("Llegue\n");
-    newProcessInt(sender);
     endOfProcess();
 }
 
 void sender() {
 	char * msg = "Message";
 	send(msg);
+    printf("Ya envie\n");
 	endOfProcess();
 }
 
 void receiver() {
-	char * message = receive();
-	printf("I received the following message: ");
+	char * message;
+    message = receive();
+    printf("I received the following message: ");
 	printf(message);
 	putChar('\n');
 	endOfProcess();

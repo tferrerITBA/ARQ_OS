@@ -18,7 +18,6 @@ void * schedule(void * rsp) {
     }
 
     if (runningPcb->state == RUNNING) {
-        putString("Hola\n");
         runningPcb->stackPointer = rsp;
         enqueueProcess(runningPcb);
     } else if (runningPcb->state == TERMINATED) {
@@ -26,7 +25,6 @@ void * schedule(void * rsp) {
     } else if(runningPcb->state == BLOCKED) {
         runningPcb->stackPointer = rsp;
         enqueue(blockedQueue,runningPcb);
-        putString("EL que estaba corriendo se bloqueo\n");
     }
 
     if (terminated != NULL) {

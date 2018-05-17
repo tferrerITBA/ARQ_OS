@@ -27,12 +27,7 @@ void send(char * msg) {
 char * receive() {
     if(isEmpty(messageQueue)) {
         runningPcb->state = BLOCKED;
-        putString("Me bloquie\n");
-        while(runningPcb->state == BLOCKED){
-            putString("Me bloquie\n");
-            putString("Me hola\n");
-        }
-        putString("Me dbloquie\n");
+        while(runningPcb->state == BLOCKED);
     }
     return dequeue(messageQueue);
 }

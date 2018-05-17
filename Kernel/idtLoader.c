@@ -125,11 +125,12 @@ char * initializeSemsAndMutexInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 char * sendInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    putString("En la send int\n");
     send((char *)rbx);
     return (char*)0x1;
 }
 
 char * receiveInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return receive();
-
+    char * deq = receive();
+    return deq;
 }
