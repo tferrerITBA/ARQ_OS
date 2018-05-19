@@ -5,8 +5,7 @@
 #include "include/naiveConsole.h"
 #include "include/messages.h"
 #include "include/process.h"
-#include "include/videoMode.h"
-#include "include/memoryManager.h"
+#include "include/pipe.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -90,6 +89,7 @@ int main()
 {	
 	load_idt();
     initializeMemoryManager();
+	initializePipeTable();
     createReadyQueue();
     createBlockedQueue();
 	createMessageQueue();
