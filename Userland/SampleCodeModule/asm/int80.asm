@@ -18,6 +18,10 @@ GLOBAL calloc
 GLOBAL initializeSemsAndMutexInt
 GLOBAL send
 GLOBAL receive
+GLOBAL readPipe
+GLOBAL writePipe
+GLOBAL createPipe
+GLOBAL openPipe
 
 section .text
 
@@ -147,3 +151,27 @@ receive:
 	int 0x80
 	ret
 
+readPipe:
+	mov rax, 21
+	mov rbx, rdi
+	int 0x80
+	ret
+
+writePipe:
+	mov rax, 22
+	mov rbx, rdi 
+	mov rcx, rsi
+	int 0x80
+	ret
+
+createPipe:
+	mov rax, 23
+	int 0x80
+	ret
+
+openPipe:
+	mov rax, 24
+	mov rbx, rdi
+	mov rcx, rsi
+	int 0x80
+	ret

@@ -133,3 +133,32 @@ char * receiveInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     char * deq = receive();
     return deq;
 }
+
+char * pipeRead(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    Pipe p = getPipe(allPipes,(int)rbx);
+    putString("Get pipe gave:");
+    printHex(p);
+    return (char *)readFromPipe(p);
+}
+
+char * pipeWrite(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    Pipe p = getPipe(allPipes,rbx);
+    putString("Get pipe gave:");
+    printHex(p);
+    put_char('\n');
+    writeOnPipe(p,(char)rcx);
+    return (char *)0x1;
+}
+
+char * createPipe(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    Pipe p = newPipe();
+    putString("New pipe id: ");
+    put_char('0' + p->pipeID);
+    put_char('\n');
+    return (char *)p->pipeID;
+}
+
+char * openExistingPipe(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    openPipe(rbx,rcx);
+    return  0x1;
+}

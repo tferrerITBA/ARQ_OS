@@ -2,18 +2,19 @@
 #include "PCBTADs.h"
 #include "queue.h"
 #include "processStates.h"
-#include "pipeBuffer.h"
 #include "videoMode.h"
-#include "process.h"
+
 
 #define READ 0
 #define WRITE 1
+#define MAX_PIPE_LENGTH 20
 
 typedef struct pipeStruct {
-    PipeBuffer buff;
     pid_t writer;
     pid_t reader;
     int pipeID;
+    char * buff;
+    int len;
 } pipeStruct;
 
 typedef pipeStruct * Pipe;
@@ -35,7 +36,10 @@ typedef pipeTable * PipeTable;
 extern PipeTable allPipes;
 extern int pipeIdCount;
 
+extern pid_t getRunningProcessPid();
+
 Pipe newPipe();
+void openPipe(int id, int mode);
 void writeOnPipe(Pipe pipe, char c);
 char readFromPipe(Pipe pipe);
 void initializePipeTable();

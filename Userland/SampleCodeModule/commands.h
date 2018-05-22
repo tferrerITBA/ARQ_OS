@@ -7,6 +7,8 @@
 #include "functionGraph.h"
 #include "producerConsumer.h"
 #define STEP 6
+#define READ 0
+#define WRITE 1
 
 typedef void (*function)(void);
 
@@ -25,6 +27,9 @@ void ps();
 void prodcons();
 void producer();
 void consumer();
+void pipeProdcons();
+void pipeProducer();
+void pipeConsumer();
 void multiDemo();
 void mallocDemo();
 void killDemo();
@@ -42,5 +47,9 @@ extern char * malloc(size_t size);
 extern char * free(void *);
 extern char * send(char *);
 extern char * receive();
+extern char * writePipe(int id, char c);
+extern char * readPipe(int id);
+extern char * createPipe();
+extern char * openPipe(int mode, int pipeId);
 
 #endif COMMANDS_H
