@@ -85,7 +85,7 @@ char * createProcess(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 char * ps(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    printAll();
+    printAll(allProcesses);
     return (char*)0x1;
 }
 
@@ -132,4 +132,31 @@ char * sendInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 char * receiveInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
     char * deq = receive();
     return deq;
+}
+
+char * pipeRead(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    Pipe p = getPipe(allPipes,rbx);
+    putString("Reading from pipe!: ");
+    put_char('0' + p->pipeID);
+    put_char('\n');
+    return (char *)readFromPipe(p);
+}
+
+char * pipeWrite(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    Pipe p = getPipe(allPipes,rbx);
+    putString("Writing on pipe: ");
+    put_char('0' + p->pipeID);
+    put_char('\n');
+    writeOnPipe(p,(char)rcx);
+    return (char *)0x1;
+}
+
+char * createPipe(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    Pipe p = newPipe();
+    return (char *)p->pipeID;
+}
+
+char * openExistingPipe(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
+    openPipe(rbx,rcx);
+    return  0x1;
 }

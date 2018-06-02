@@ -1,5 +1,6 @@
 #include "commands.h"
 
+static int prodconsPipeId;
 
 void runHelp() {
 	printf("clear: erases all visible text \n");
@@ -122,7 +123,7 @@ void prodcons() {
 	initializeProdCons();
 	newProcessInt(producer);
 	//newProcessInt(producer);
-	//newProcessInt(consumer);
+	newProcessInt(consumer);
 	endOfProcess();
 }
 
@@ -214,6 +215,45 @@ void receiver() {
 	putChar('\n');
     putChar('>');
 	endOfProcess();
+}
+
+void pipeProdcons() {
+    prodconsPipeId = (int)createPipe();
+	newProcessInt(pipeProducer);
+    newProcessInt(pipeConsumer);
+    endOfProcess();
+}
+
+void pipeProducer() {
+    int i;
+    openPipe(WRITE,prodconsPipeId);
+    for(i = 0; i < 15; i++) {
+        printf("Producing item number ");
+        if(i >= 10) {
+            putChar('0' + i / 10);
+        }
+        putChar('0' +  i % 10);
+        putChar('\n');
+
+        writePipe(prodconsPipeId,'c');
+    }
+    endOfProcess();
+}
+
+void pipeConsumer() {
+    int consumed = 0;
+    openPipe(READ, prodconsPipeId);
+    while (consumed < 5) {
+        printf("Consuming item number  ");
+        if(consumed >= 10) {
+            putChar('0' + consumed / 10);
+        }
+        putChar('0' +  consumed % 10);
+        printf(readPipe(prodconsPipeId));
+        putChar('\n');
+        consumed++;
+    }
+    endOfProcess();
 }
 
 

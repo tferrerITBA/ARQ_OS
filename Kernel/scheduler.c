@@ -1,6 +1,7 @@
 #include "include/scheduler.h"
 #include "include/memoryManager.h"
 #include "include/videoMode.h"
+#include "include/pcb.h"
 
 extern void printPcb(Pcb pcb);
 extern void freeProcessResources(Pcb pcb);
@@ -24,7 +25,7 @@ void * schedule(void * rsp) {
         terminated = runningPcb;
     } else if(runningPcb->state == BLOCKED) {
         runningPcb->stackPointer = rsp;
-        enqueue(blockedQueue,runningPcb);
+        addPcbToTable(blockedProcesses,runningPcb);
     }
 
     if (terminated != NULL) {

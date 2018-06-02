@@ -1,4 +1,6 @@
 GLOBAL cpuVendor
+GLOBAL yield
+EXTERN schedule
 
 section .text
 	
@@ -24,4 +26,16 @@ cpuVendor:
 
 	mov rsp, rbp
 	pop rbp
+	ret
+
+yield:
+	pushState
+
+	MOV RDI, RSP
+    CALL schedule
+    CMP RAX, 0
+    JE cont_switch_end
+    MOV RSP, RAX
+cont_switch_end:
+	popState
 	ret
