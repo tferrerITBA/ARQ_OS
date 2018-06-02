@@ -3,9 +3,12 @@
 #include "queue.h"
 #include "processStates.h"
 #include "videoMode.h"
+#include "sem.h"
 #define READ 0
 #define WRITE 1
 #define MAX_PIPE_LENGTH 20
+#define DENIED 0
+#define ALLOWED 1
 
 extern void yield();
 extern void enqueueProcess(Pcb pcb);
@@ -17,6 +20,7 @@ typedef struct pipeStruct {
     int pipeID;
     char * buff;
     int len;
+    int access;
 } pipeStruct;
 
 typedef pipeStruct * Pipe;

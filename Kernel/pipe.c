@@ -12,19 +12,29 @@ Pipe newPipe() {
     newPipe->pipeID = ++pipeIdCount;
     newPipe->buff = malloc(sizeof(char)*MAX_PIPE_LENGTH,5);
     newPipe->len = 0;
+    newPipe->access = ALLOWED;
     addPipeToTable(allPipes,newPipe);
 
     return newPipe;
 }
 
 void writeOnPipe(Pipe pipe, char c) {
-    //TODO: chequear que quien este escribiendo sea writer
+    while(pipe->access == DENIED);
+
+    if(getRunningProcessPid() != pipe->writer) {
+        putString("Access denied! This process is not allowed to write the pipe\n");
+        return;
+    }
+
+    pipe->access = DENIED;
+
     if(pipe->len == 0 && pipe->reader != NULL) {
         enqueueProcess(getProcess(blockedProcesses,pipe->reader));
         removeProcessFromTable(blockedProcesses,pipe->reader);
     }
     if(pipe->len == MAX_PIPE_LENGTH) {
         runningPcb->state = BLOCKED;
+        pipe->access = ALLOWED;
         yield();
     }
     memcpy(pipe->buff+pipe->len,&c,sizeof(char));
@@ -37,19 +47,37 @@ void writeOnPipe(Pipe pipe, char c) {
     }
     put_char('0' + pipe->len%10);
     putString("\n");
+    pipe->access = ALLOWED;
 }
 
 char readFromPipe(Pipe pipe) {
-    int i;
+    int i = 0;
+
+    while(pipe->access == DENIED);
+
+    if(getRunningProcessPid() != pipe->reader) {
+        putString("Access denied! This process is not allowed to read the pipe\n");
+        return NULL;
+    }
+
+    pipe->access = DENIED;
+
+    if(pipe->len == MAX_PIPE_LENGTH && pipe->writer != NULL) {
+        enqueueProcess(getProcess(blockedProcesses,pipe->writer));
+        removeProcessFromTable(blockedProcesses,pipe->writer);
+    }
+
     putString("Pipe length: ");
     if(pipe->len > 10) {
         put_char('0' + pipe->len/10);
     }
+
     put_char('0' + pipe->len%10);
     putString("\n");
     if(pipe->len < 0) {
         runningPcb->state = BLOCKED;
-        while(runningPcb->state == BLOCKED) {putString("\nLlegue a read\n");}
+        pipe->access = ALLOWED;
+        yield();
     }
     char ret = pipe->buff[0];
 
@@ -57,6 +85,7 @@ char readFromPipe(Pipe pipe) {
         pipe->buff[i] = pipe->buff[i+1];
     }
     pipe->len--;
+    pipe->access = ALLOWED;
 
     return ret;
 }
