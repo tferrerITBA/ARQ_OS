@@ -3,11 +3,13 @@
 #include "queue.h"
 #include "processStates.h"
 #include "videoMode.h"
-
-
 #define READ 0
 #define WRITE 1
 #define MAX_PIPE_LENGTH 20
+
+extern void yield();
+extern void enqueueProcess(Pcb pcb);
+extern Pcb getProcess(PcbTable table, pid_t pid);
 
 typedef struct pipeStruct {
     pid_t writer;

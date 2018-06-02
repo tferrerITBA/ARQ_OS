@@ -3,6 +3,7 @@
 #include "include/videoMode.h"
 
 PcbTable allProcesses = NULL;
+PcbTable blockedProcesses = NULL;
 pid_t pidCount = 0;
 
 Pcb newPcb(pid_t newPid) {
@@ -13,24 +14,24 @@ Pcb newPcb(pid_t newPid) {
     return ret;
 }
 
-void initializePcbTable() {
-    allProcesses = malloc(sizeof(pcbTable),(pid_t)1);
-    allProcesses->size = 0;
+void initializePcbTable(PcbTable table) {
+    table = malloc(sizeof(pcbTable),(pid_t)1);
+    table->size = 0;
 }
 
-void addPcbToTable(Pcb pcb) {
-    if(allProcesses == NULL) {
-        initializePcbTable();
+void addPcbToTable(PcbTable table, Pcb pcb) {
+    if(table == NULL) {
+        initializePcbTable(table);
     }
     TableNode new = malloc(sizeof(tableNode),(pid_t)1);
     new->block = pcb;
-    new->next = allProcesses->first;
-    allProcesses->first = new;
-    allProcesses->size++;
+    new->next = table->first;
+    table->first = new;
+    table->size++;
 }
 
-Pcb getProcess(pid_t pid) {
-    TableNode current = allProcesses->first;
+Pcb getProcess(PcbTable table, pid_t pid) {
+    TableNode current = table->first;
     while (current->block->pid != pid) {
         current = current->next;
         if(current == NULL) {
@@ -40,8 +41,8 @@ Pcb getProcess(pid_t pid) {
     return current->block;
 }
 
-void printAll() {
-    TableNode current = allProcesses-> first;
+void printAll(PcbTable table) {
+    TableNode current = table-> first;
     while(current != NULL) {
         printPcb(current->block);
         current = current->next;
@@ -80,4 +81,15 @@ void printPid(pid_t pid) {
     }
     putString("\t\t");
 
+}
+
+void removeProcessFromTable(PcbTable table, pid_t pid) {
+    TableNode current = table->first;
+    while (current->next->block->pid != pid) {
+        current = current->next;
+        if(current == NULL) {
+            return;
+        }
+    }
+    current->next = current->next->next;
 }

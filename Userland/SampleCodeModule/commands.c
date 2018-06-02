@@ -227,7 +227,7 @@ void pipeProdcons() {
 void pipeProducer() {
     int i;
     openPipe(WRITE,prodconsPipeId);
-    for(i = 0; i < 5; i++) {
+    for(i = 0; i < 15; i++) {
         printf("Producing item number ");
         if(i >= 10) {
             putChar('0' + i / 10);
@@ -249,7 +249,6 @@ void pipeConsumer() {
             putChar('0' + consumed / 10);
         }
         putChar('0' +  consumed % 10);
-        printf(": ");
         printf(readPipe(prodconsPipeId));
         putChar('\n');
         consumed++;

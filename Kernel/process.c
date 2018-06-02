@@ -7,13 +7,13 @@ Process newProcess(void * stackPointer, void * stackBase, void * heap, pid_t new
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;
     newP->pcb->heapBase = heap;
-    addPcbToTable(newP->pcb);
+    addPcbToTable(allProcesses,newP->pcb);
     enqueueProcess(newP->pcb);
     return newP;
 }
 
 void terminateProcess(pid_t pid) {
-    Pcb p = getProcess(pid);
+    Pcb p = getProcess(allProcesses,pid);
     if(p != 0) {
         p->state = TERMINATED;
     }

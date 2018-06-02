@@ -1,4 +1,5 @@
 #include "include/pipe.h"
+#include "include/pcb.h"
 
 
 int pipeIdCount = 0;
@@ -9,43 +10,46 @@ Pipe newPipe() {
     newPipe->writer = NULL;
     newPipe->reader = NULL;
     newPipe->pipeID = ++pipeIdCount;
-    newPipe->buff = malloc(sizeof(char)*MAX_PIPE_LENGTH,0);
+    newPipe->buff = malloc(sizeof(char)*MAX_PIPE_LENGTH,5);
     newPipe->len = 0;
-
-    putString("New pipe buff: ");
-    printHex(newPipe->buff);
-    putString("\n");
-
-    putString("New Pipe: ");
-    printHex(newPipe);
-    putString("\n");
-
     addPipeToTable(allPipes,newPipe);
-
 
     return newPipe;
 }
 
 void writeOnPipe(Pipe pipe, char c) {
     //TODO: chequear que quien este escribiendo sea writer
-
+    if(pipe->len == 0 && pipe->reader != NULL) {
+        enqueueProcess(getProcess(blockedProcesses,pipe->reader));
+        removeProcessFromTable(blockedProcesses,pipe->reader);
+    }
     if(pipe->len == MAX_PIPE_LENGTH) {
         runningPcb->state = BLOCKED;
-        while(runningPcb->state == BLOCKED);
+        yield();
     }
-    putString("\nIn writeChar \n");
     memcpy(pipe->buff+pipe->len,&c,sizeof(char));
     pipe->len++;
-
-
+    putString(pipe->buff);
+    putString("\n");
+    putString("Pipe length: ");
+    if(pipe->len > 10) {
+        put_char('0' + pipe->len/10);
+    }
+    put_char('0' + pipe->len%10);
+    putString("\n");
 }
 
 char readFromPipe(Pipe pipe) {
     int i;
-
-    if(pipe->len == 0) {
+    putString("Pipe length: ");
+    if(pipe->len > 10) {
+        put_char('0' + pipe->len/10);
+    }
+    put_char('0' + pipe->len%10);
+    putString("\n");
+    if(pipe->len < 0) {
         runningPcb->state = BLOCKED;
-        while(runningPcb->state == BLOCKED);
+        while(runningPcb->state == BLOCKED) {putString("\nLlegue a read\n");}
     }
     char ret = pipe->buff[0];
 
@@ -91,9 +95,6 @@ void addPipeToTable(PipeTable pt, Pipe pipe) {
     if(pt->len == 0) {
         pt->firstNode = ptn;
         pt->len++;
-        putString("First node: ");
-        printHex(ptn->pipe);
-        put_char('\n');
         return;
     }
 
@@ -111,9 +112,6 @@ void addPipeToTable(PipeTable pt, Pipe pipe) {
 Pipe getPipe(PipeTable pt, int id) {
 
     PipeTableNode current = pt->firstNode;
-    putString("First node: ");
-    printHex(pt->firstNode);
-    put_char('\n');
     while (current->pipe->pipeID != id) {
         current = current->next;
         if(current == NULL) {
