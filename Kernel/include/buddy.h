@@ -1,5 +1,6 @@
 #include <stdint.h>
-#include <unistd.h>
+#include <glob.h>
+#include <wchar.h>
 
 #define HEADER_SIZE 8
 #define MIN_ALLOC_LOG2 4
@@ -21,7 +22,7 @@ list_t *list_pop(list_t *list);
 uint8_t *ptr_for_node(size_t index, size_t bucket);
 size_t node_for_ptr(uint8_t *ptr, size_t bucket);
 int parent_is_split(size_t index);
-void flip_parent_is_split(size_t index);
+static void flip_parent_is_split(size_t index);
 size_t bucket_for_request(size_t request);
 int lower_bucket_limit(size_t bucket);
 void *malloc(size_t request);

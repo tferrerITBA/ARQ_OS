@@ -4,7 +4,6 @@
 #include "processTADs.h"
 #include "PCBTADs.h"
 #include "processStates.h"
-#include "memoryManager.h"
 #include "queue.h"
 
 #define FAIL -1

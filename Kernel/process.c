@@ -2,7 +2,7 @@
 
 Process newProcess(void * stackPointer, void * stackBase, void * heap, pid_t newPid) {
 
-    Process newP = malloc(sizeof(process),newPid);
+    Process newP = malloc(sizeof(process));
     newP->pcb = newPcb(newPid);
     newP->pcb->stackPointer = stackPointer;
     newP->pcb->stackBase = stackBase;
@@ -20,7 +20,8 @@ void terminateProcess(pid_t pid) {
 }
 
 void freeProcessResources(Pcb pcb) {
-    removeProcessMemory(pcb->pid);
+    free(pcb->stackBase - STACK_SIZE + 1);
+    free(pcb->heapBase);
     pcb->heapBase = NULL;
     pcb->stackBase = NULL;
     pcb->stackPointer = NULL;
@@ -29,8 +30,8 @@ void freeProcessResources(Pcb pcb) {
 
 void initializeProcess(functionIP ti) {
     pid_t newPid = ++pidCount;
-    void * stack = initializeProcessStack(newPid);
-    void * heap = reserveHeapSpace(newPid);
+    void * stack = malloc(STACK_SIZE) + STACK_SIZE - 1;
+    void * heap = malloc(HEAP_SIZE);
     void * stackPointer = stack;
     stackPointer = buildStackFrame(ti,stackPointer);
     newProcess(stackPointer,stack,heap, newPid);

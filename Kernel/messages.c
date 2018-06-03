@@ -1,9 +1,5 @@
 
 #include "include/messages.h"
-#include "include/queue.h"
-#include "include/pcb.h"
-#include "include/process.h"
-#include "include/videoMode.h"
 
 void createMessageQueue() {
     messageQueue = newQueue(MESSAGE_SIZE);

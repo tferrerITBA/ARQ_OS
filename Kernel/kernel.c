@@ -4,7 +4,6 @@
 #include "include/moduleLoader.h"
 #include "include/naiveConsole.h"
 #include "include/messages.h"
-#include "include/process.h"
 #include "include/pipe.h"
 
 extern uint8_t text;
@@ -88,7 +87,7 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-    initializeMemoryManager();
+
 	initializePipeTable();
     createReadyQueue();
     createBlockedQueue();

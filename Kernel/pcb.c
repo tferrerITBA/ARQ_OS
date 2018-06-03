@@ -1,5 +1,4 @@
 #include "include/pcb.h"
-#include "include/memoryManager.h"
 #include "include/videoMode.h"
 
 PcbTable allProcesses = NULL;
@@ -7,7 +6,7 @@ PcbTable blockedProcesses = NULL;
 pid_t pidCount = 0;
 
 Pcb newPcb(pid_t newPid) {
-    Pcb ret = malloc(sizeof(pcb), newPid);
+    Pcb ret = malloc(sizeof(pcb));
     ret->pid = newPid;
     ret->state = CREATED;
 
@@ -15,7 +14,7 @@ Pcb newPcb(pid_t newPid) {
 }
 
 void initializePcbTable(PcbTable table) {
-    table = malloc(sizeof(pcbTable),(pid_t)1);
+    table = malloc(sizeof(pcbTable));
     table->size = 0;
 }
 
@@ -23,7 +22,7 @@ void addPcbToTable(PcbTable table, Pcb pcb) {
     if(table == NULL) {
         initializePcbTable(table);
     }
-    TableNode new = malloc(sizeof(tableNode),(pid_t)1);
+    TableNode new = malloc(sizeof(tableNode));
     new->block = pcb;
     new->next = table->first;
     table->first = new;

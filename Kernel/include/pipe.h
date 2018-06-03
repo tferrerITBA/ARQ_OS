@@ -1,9 +1,8 @@
-#include "memoryManager.h"
+#include <sys/param.h>
 #include "PCBTADs.h"
 #include "queue.h"
 #include "processStates.h"
 #include "videoMode.h"
-#include "sem.h"
 #define READ 0
 #define WRITE 1
 #define MAX_PIPE_LENGTH 20

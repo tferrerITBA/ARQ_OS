@@ -103,7 +103,7 @@ char * kill(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 char * mallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return (char *)malloc(rbx,getRunningProcessPid());
+    return (char *)malloc(rbx);
 }
 
 char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
@@ -112,11 +112,11 @@ char * freeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
 }
 
 char * reallocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return (char *)realloc((void *)rbx,rcx,getRunningProcessPid());
+    return (char *)realloc((void *)rbx,rcx);
 }
 
 char * callocInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {
-    return (char *)calloc(rbx,getRunningProcessPid());
+    return (char *)calloc(rbx);
 }
 
 char * initializeSemsAndMutexInt(uint64_t rbx, uint64_t rcx, uint64_t rdx) {

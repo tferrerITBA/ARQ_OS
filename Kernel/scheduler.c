@@ -1,6 +1,4 @@
 #include "include/scheduler.h"
-#include "include/memoryManager.h"
-#include "include/videoMode.h"
 #include "include/pcb.h"
 
 extern void printPcb(Pcb pcb);

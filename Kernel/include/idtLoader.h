@@ -10,7 +10,6 @@
 #include "defs.h"
 #include "process.h"
 #include "sem.h"
-#include "messages.h"
 #include "pipe.h"
 
 static void setup_IDT_entry (int index, uint64_t offset);
@@ -19,7 +18,7 @@ extern void _cli();
 extern void _sti();
 extern void picMasterMask(uint8_t);
 extern void picSlaveMask(uint8_t);
-extern void printAll();
+extern void printAll(PcbTable table);
 char *read_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char *write_(uint64_t rbx, uint64_t rcx, uint64_t rdx);
 char *time(uint64_t rbx, uint64_t rcx, uint64_t rdx);

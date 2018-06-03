@@ -5,7 +5,9 @@
 #include "queue.h"
 #include "processTADs.h"
 #include "processStates.h"
-#include "memoryManager.h"
+
+#define STACK_SIZE 1024
+#define HEAP_SIZE 1024
 
 typedef struct StackFrame {
 

@@ -6,11 +6,11 @@ int pipeIdCount = 0;
 PipeTable allPipes = NULL;
 
 Pipe newPipe() {
-    Pipe newPipe = malloc(sizeof(pipeStruct),0); //Se guarda en el kernel
+    Pipe newPipe = malloc(sizeof(pipeStruct)); //Se guarda en el kernel
     newPipe->writer = NULL;
     newPipe->reader = NULL;
     newPipe->pipeID = ++pipeIdCount;
-    newPipe->buff = malloc(sizeof(char)*MAX_PIPE_LENGTH,5);
+    newPipe->buff = malloc(sizeof(char)*MAX_PIPE_LENGTH);
     newPipe->len = 0;
     newPipe->access = ALLOWED;
     addPipeToTable(allPipes,newPipe);
@@ -110,14 +110,14 @@ void openPipe(int mode, int id) {
 
 
 void initializePipeTable() {
-    allPipes = malloc(sizeof(pipeTable), 0);
+    allPipes = malloc(sizeof(pipeTable));
     allPipes->len = 0;
     allPipes->firstNode = NULL;
 }
 
 void addPipeToTable(PipeTable pt, Pipe pipe) {
 
-    PipeTableNode ptn = malloc(sizeof(pipeTableNode),0);
+    PipeTableNode ptn = malloc(sizeof(pipeTableNode));
     ptn->pipe = pipe;
     ptn->next = NULL;
 

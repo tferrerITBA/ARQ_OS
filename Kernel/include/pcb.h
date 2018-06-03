@@ -3,6 +3,7 @@
 #include "lib.h"
 #include "processStates.h"
 #include "PCBTADs.h"
+#include "buddy.h"
 
 extern PcbTable allProcesses;
 extern PcbTable blockedProcesses;

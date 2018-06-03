@@ -1,4 +1,6 @@
+
 #include "include/buddy.h"
+#include "include/lib.h"
 
 static uint8_t heapStart = 0x800000; //De aca son 2gb de memoria para el buddy.
 static list_t buckets[BUCKET_COUNT];
@@ -64,131 +66,124 @@ size_t bucket_for_request(size_t request) {
   size_t size = MIN_ALLOC;
 
   while (size < request) {
-    bucket--;
-    size *= 2;
+      bucket--;
+      size *= 2;
   }
 
   return bucket;
 }
 
 int lower_bucket_limit(size_t bucket) {
-  while (bucket < bucket_limit) {
-    size_t root = node_for_ptr(base_ptr, bucket_limit);
-    uint8_t *right_child;
+    while (bucket < bucket_limit) {
+        size_t root = node_for_ptr(base_ptr, bucket_limit);
+        uint8_t *right_child;
 
-    if (!parent_is_split(root)) {
-      list_remove((list_t *)base_ptr);
-      list_init(&buckets[--bucket_limit]);
-      list_push(&buckets[bucket_limit], (list_t *)base_ptr);
-      continue;
+        if (!parent_is_split(root)) {
+            list_remove((list_t *)base_ptr);
+            list_init(&buckets[--bucket_limit]);
+            list_push(&buckets[bucket_limit], (list_t *)base_ptr);
+            continue;
+        }
+
+        right_child = ptr_for_node(root + 1, bucket_limit);
+        if (!update_max_ptr(right_child + sizeof(list_t))) {
+            return 0;
+        }
+        list_push(&buckets[bucket_limit], (list_t *)right_child);
+        list_init(&buckets[--bucket_limit]);
+        root = (root - 1) / 2;
+        if (root != 0) {
+            flip_parent_is_split(root);
+        }
     }
 
-    right_child = ptr_for_node(root + 1, bucket_limit);
-    if (!update_max_ptr(right_child + sizeof(list_t))) {
-      return 0;
-    }
-    list_push(&buckets[bucket_limit], (list_t *)right_child);
-    list_init(&buckets[--bucket_limit]);
-    root = (root - 1) / 2;
-    if (root != 0) {
-      flip_parent_is_split(root);
-    }
-  }
-
-  return 1;
+    return 1;
 }
 
 void *malloc(size_t request) {
-  size_t original_bucket, bucket;
+    size_t original_bucket, bucket;
 
-  if (request + HEADER_SIZE > MAX_ALLOC) {
-    return NULL;
-  }
-
-  if (base_ptr == NULL) {
-    base_ptr = max_ptr = (uint8_t *)sbrk(0);
-    bucket_limit = BUCKET_COUNT - 1;
-    update_max_ptr(base_ptr + sizeof(list_t));
-    list_init(&buckets[BUCKET_COUNT - 1]);
-    list_push(&buckets[BUCKET_COUNT - 1], (list_t *)base_ptr);
-  }
-
-  bucket = bucket_for_request(request + HEADER_SIZE);
-  original_bucket = bucket;
-
-  while (bucket + 1 != 0) {
-    size_t size, bytes_needed, i;
-    uint8_t *ptr;
-
-    if (!lower_bucket_limit(bucket)) {
-      return NULL;
-    }
-
-    ptr = (uint8_t *)list_pop(&buckets[bucket]);
-    if (!ptr) {
- 
-      if (bucket != bucket_limit || bucket == 0) {
-        bucket--;
-        continue;
-      }
-
-      if (!lower_bucket_limit(bucket - 1)) {
+    if (request + HEADER_SIZE > MAX_ALLOC) {
         return NULL;
-      }
-      ptr = (uint8_t *)list_pop(&buckets[bucket]);
     }
 
-    size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
-    bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
-    if (!update_max_ptr(ptr + bytes_needed)) {
-      list_push(&buckets[bucket], (list_t *)ptr);
-      return NULL;
+    if (base_ptr == NULL) {
+        base_ptr = max_ptr = (uint8_t *)sbrk(0);
+        bucket_limit = BUCKET_COUNT - 1;
+        update_max_ptr(base_ptr + sizeof(list_t));
+        list_init(&buckets[BUCKET_COUNT - 1]);
+        list_push(&buckets[BUCKET_COUNT - 1], (list_t *)base_ptr);
     }
 
-    i = node_for_ptr(ptr, bucket);
-    if (i != 0) {
-      flip_parent_is_split(i);
+    bucket = bucket_for_request(request + HEADER_SIZE);
+    original_bucket = bucket;
+
+    while (bucket + 1 != 0) {
+        size_t size, bytes_needed, i;
+        uint8_t *ptr;
+
+        if (!lower_bucket_limit(bucket)) {
+          return NULL;
+        }
+
+        ptr = (uint8_t *)list_pop(&buckets[bucket]);
+        if (!ptr) {
+            if (bucket != bucket_limit || bucket == 0) {
+                bucket--;
+                continue;
+            }
+            if (!lower_bucket_limit(bucket - 1)) {
+                return NULL;
+            }
+            ptr = (uint8_t *)list_pop(&buckets[bucket]);
+        }
+
+        size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
+        bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
+        if (!update_max_ptr(ptr + bytes_needed)) {
+          list_push(&buckets[bucket], (list_t *)ptr);
+          return NULL;
+        }
+
+        i = node_for_ptr(ptr, bucket);
+        if (i != 0) {
+          flip_parent_is_split(i);
+        }
+
+        while (bucket < original_bucket) {
+            i = i * 2 + 1;
+            bucket++;
+            flip_parent_is_split(i);
+            list_push(&buckets[bucket], (list_t *)ptr_for_node(i + 1, bucket));
+        }
+
+        *(size_t *)ptr = request;
+        return ptr + HEADER_SIZE;
     }
 
-    while (bucket < original_bucket) {
-      i = i * 2 + 1;
-      bucket++;
-      flip_parent_is_split(i);
-      list_push(&buckets[bucket], (list_t *)ptr_for_node(i + 1, bucket));
-    }
-
-    *(size_t *)ptr = request;
-    return ptr + HEADER_SIZE;
-  }
-
-  return NULL;
+    return NULL;
 }
 
 void free(void *ptr) {
-  size_t bucket, i;
-
- 
-  if (!ptr) {
-    return;
-  }
-
-  ptr = (uint8_t *)ptr - HEADER_SIZE;
-  bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
-  i = node_for_ptr((uint8_t *)ptr, bucket);
-
-  while (i != 0) {
-
-    flip_parent_is_split(i);
-
-    if (parent_is_split(i) || bucket == bucket_limit) {
-      break;
+    size_t bucket, i;
+    if (!ptr) {
+        return;
     }
-    list_remove((list_t *)ptr_for_node(((i - 1) ^ 1) + 1, bucket));
-    i = (i - 1) / 2;
-    bucket--;
-  }
 
-  list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
+    ptr = (uint8_t *)ptr - HEADER_SIZE;
+    bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
+    i = node_for_ptr((uint8_t *)ptr, bucket);
+
+    while (i != 0) {
+        flip_parent_is_split(i);
+        if (parent_is_split(i) || bucket == bucket_limit) {
+            break;
+        }
+        list_remove((list_t *)ptr_for_node(((i - 1) ^ 1) + 1, bucket));
+        i = (i - 1) / 2;
+        bucket--;
+    }
+    list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 }
 
 uint8_t * sbrk(size_t size) {
@@ -197,16 +192,18 @@ uint8_t * sbrk(size_t size) {
 
 void * realloc(void * ptr, size_t size) {
 
-  void * newMemory = malloc(size);
-  memcpy(newMemory,ptr,size);
-  free(ptr);
+    void * newMemory = malloc(size);
+    memcpy(newMemory,ptr,size);
+    free(ptr);
+    return newMemory;
 
 }
 
 void * calloc(size_t size) {
 
-  void * ptr = malloc(size);
-  if(ptr != NULL) {
+    int i;
+    void * ptr = malloc(size);
+    if(ptr != NULL) {
     for (i = 0; i < size; i++) { 
         *((char *)ptr + i) = 0;
     }

@@ -80,7 +80,7 @@ semT initializeSem(int initCount, int semType) {
     else
         id = 5002;
 
-    semT sem = shmget(id);
+    semT sem = malloc(sizeof(semStruct));//shmget(id);
     sem->count = initCount;
     sem->id = 0;
     sem->type = semType;
