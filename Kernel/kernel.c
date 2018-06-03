@@ -92,6 +92,7 @@ int main()
     createReadyQueue();
     createBlockedQueue();
 	createMessageQueue();
+
     ((EntryPoint)sampleCodeModuleAddress)();
 
 

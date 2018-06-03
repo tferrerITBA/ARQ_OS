@@ -30,7 +30,7 @@ void freeProcessResources(Pcb pcb) {
 
 void initializeProcess(functionIP ti) {
     pid_t newPid = ++pidCount;
-    void * stack = malloc(STACK_SIZE) + STACK_SIZE -1;
+    void * stack = malloc(STACK_SIZE) + STACK_SIZE - 1;
     void * heap = malloc(HEAP_SIZE);
     void * stackPointer = stack;
     stackPointer = buildStackFrame(ti,stackPointer);
