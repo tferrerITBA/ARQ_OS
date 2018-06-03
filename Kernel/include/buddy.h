@@ -14,20 +14,20 @@ typedef struct list_t {
 } list_t;
 
 
-int update_max_ptr(uint8_t *new_value);
+int update_max_ptr(uint64_t *new_value);
 void list_init(list_t *list);
 void list_push(list_t *list, list_t *entry);
 void list_remove(list_t *entry);
 list_t *list_pop(list_t *list);
-uint8_t *ptr_for_node(size_t index, size_t bucket);
-size_t node_for_ptr(uint8_t *ptr, size_t bucket);
+uint64_t *ptr_for_node(size_t index, size_t bucket);
+size_t node_for_ptr(uint64_t *ptr, size_t bucket);
 int parent_is_split(size_t index);
 static void flip_parent_is_split(size_t index);
 size_t bucket_for_request(size_t request);
 int lower_bucket_limit(size_t bucket);
 void *malloc(size_t request);
 void free(void *ptr);
-uint8_t * sbrk(size_t size);
+uint64_t * sbrk(size_t size);
 void * realloc(void * ptr, size_t size);
 void * calloc(size_t size);
 

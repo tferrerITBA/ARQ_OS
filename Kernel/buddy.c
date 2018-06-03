@@ -2,14 +2,14 @@
 #include "include/buddy.h"
 #include "include/lib.h"
 
-static uint8_t heapStart = 0x800000; //De aca son 2gb de memoria para el buddy.
+static uint64_t heapStart = 0x800000; //De aca son 2gb de memoria para el buddy.
 static list_t buckets[BUCKET_COUNT];
 static size_t bucket_limit;
-static uint8_t node_is_split[(1 << (BUCKET_COUNT - 1)) / 8];
-static uint8_t *base_ptr;
-static uint8_t *max_ptr;
+static uint64_t node_is_split[(1 << (BUCKET_COUNT - 1)) / 8];
+static uint64_t *base_ptr;
+static uint64_t *max_ptr;
 
-int update_max_ptr(uint8_t *new_value) {
+int update_max_ptr(uint64_t *new_value) {
   if (new_value > max_ptr) {
     max_ptr = new_value;
   }
@@ -43,11 +43,11 @@ list_t *list_pop(list_t *list) {
   return back;
 }
 
-uint8_t *ptr_for_node(size_t index, size_t bucket) {
+uint64_t *ptr_for_node(size_t index, size_t bucket) {
   return base_ptr + ((index - (1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket));
 }
 
-size_t node_for_ptr(uint8_t *ptr, size_t bucket) {
+size_t node_for_ptr(uint64_t *ptr, size_t bucket) {
   return ((ptr - base_ptr) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1;
 }
 
@@ -76,7 +76,7 @@ size_t bucket_for_request(size_t request) {
 int lower_bucket_limit(size_t bucket) {
     while (bucket < bucket_limit) {
         size_t root = node_for_ptr(base_ptr, bucket_limit);
-        uint8_t *right_child;
+        uint64_t *right_child;
 
         if (!parent_is_split(root)) {
             list_remove((list_t *)base_ptr);
@@ -108,7 +108,7 @@ void *malloc(size_t request) {
     }
 
     if (base_ptr == NULL) {
-        base_ptr = max_ptr = (uint8_t *)sbrk(0);
+        base_ptr = max_ptr = (uint64_t *)sbrk(0);
         bucket_limit = BUCKET_COUNT - 1;
         update_max_ptr(base_ptr + sizeof(list_t));
         list_init(&buckets[BUCKET_COUNT - 1]);
@@ -120,13 +120,13 @@ void *malloc(size_t request) {
 
     while (bucket + 1 != 0) {
         size_t size, bytes_needed, i;
-        uint8_t *ptr;
+        uint64_t *ptr;
 
         if (!lower_bucket_limit(bucket)) {
           return NULL;
         }
 
-        ptr = (uint8_t *)list_pop(&buckets[bucket]);
+        ptr = (uint64_t *)list_pop(&buckets[bucket]);
         if (!ptr) {
             if (bucket != bucket_limit || bucket == 0) {
                 bucket--;
@@ -135,7 +135,7 @@ void *malloc(size_t request) {
             if (!lower_bucket_limit(bucket - 1)) {
                 return NULL;
             }
-            ptr = (uint8_t *)list_pop(&buckets[bucket]);
+            ptr = (uint64_t *)list_pop(&buckets[bucket]);
         }
 
         size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
@@ -170,9 +170,9 @@ void free(void *ptr) {
         return;
     }
 
-    ptr = (uint8_t *)ptr - HEADER_SIZE;
+    ptr = (uint64_t *)ptr - HEADER_SIZE;
     bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
-    i = node_for_ptr((uint8_t *)ptr, bucket);
+    i = node_for_ptr((uint64_t *)ptr, bucket);
 
     while (i != 0) {
         flip_parent_is_split(i);
@@ -186,8 +186,8 @@ void free(void *ptr) {
     list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 }
 
-uint8_t * sbrk(size_t size) {
-	return (uint8_t) heapStart + size;
+uint64_t * sbrk(size_t size) {
+	return (uint64_t*) heapStart + size;
 }
 
 void * realloc(void * ptr, size_t size) {
