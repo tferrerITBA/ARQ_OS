@@ -1,209 +1,201 @@
-
 #include "include/buddy.h"
 #include "include/lib.h"
+#include <stdint.h>
+#include <unistd.h>
 
-static uint64_t heapStart = 0x800000; //De aca son 2gb de memoria para el buddy.
-static list_t buckets[BUCKET_COUNT];
-static size_t bucket_limit;
-static uint64_t node_is_split[(1 << (BUCKET_COUNT - 1)) / 8];
-static uint64_t *base_ptr;
-static uint64_t *max_ptr;
+char * heapStart = 0x600000;
 
-int update_max_ptr(uint64_t *new_value) {
-  if (new_value > max_ptr) {
-    max_ptr = new_value;
-  }
-  return 1;
+void intializeBuddySystem() {
+	init_block();
 }
 
-void list_init(list_t *list) {
-  list->prev = list;
-  list->next = list;
+void init_block() {
+	memset(heapStart,54, 1);
 }
 
-void list_push(list_t *list, list_t *entry) {
-  list_t *prev = list->prev;
-  entry->prev = prev;
-  entry->next = list;
-  prev->next = entry;
-  list->prev = entry;
+int log2(int n) {
+	int r=0;
+	while(n >>= 1){
+		r++;
+	}
+	return r;
 }
 
-void list_remove(list_t *entry) {
-  list_t *prev = entry->prev;
-  list_t *next = entry->next;
-  prev->next = next;
-  next->prev = prev;
+int size_to_n(int reqSize) {
+	return log2(reqSize) + 1;
 }
 
-list_t *list_pop(list_t *list) {
-  list_t *back = list->prev;
-  if (back == list) return NULL;
-  list_remove(back);
-  return back;
+int jump_next(int n, int pos) {
+	int bits = pos>>(n);
+	bits+=1;
+	int ret = bits<<(n);
+
+	if (ret > (int)MAX_OFFSET) {
+		return ret;
+	} else {
+		return ret;
+	}
 }
 
-uint64_t *ptr_for_node(size_t index, size_t bucket) {
-  return base_ptr + ((index - (1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket));
+int jump_back(int n, int pos) {
+	int bits = pos>>(n);
+	bits-=1;
+	return bits<<(n);
 }
 
-size_t node_for_ptr(uint64_t *ptr, size_t bucket) {
-  return ((ptr - base_ptr) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1;
+void unpack(Meta * m, int pos) {
+	memset(m, *((char *)heapStart + pos), 1);
 }
 
-int parent_is_split(size_t index) {
-  index = (index - 1) / 2;
-  return (node_is_split[index / 8] >> (index % 8)) & 1;
+int is_left(int n, int pos) {
+
+	int k = 1;
+	k<<=(n);
+
+	unsigned int p = (unsigned int)pos;
+	p<<=(31-n);
+	p>>=(31-n);
+
+	if (k == p) {
+		return 0;	
+	} else {
+		return 1;	
+	}
 }
 
-static void flip_parent_is_split(size_t index) {
-  index = (index - 1) / 2;
-  node_is_split[index / 8] ^= 1 << (index % 8);
+void merge(int pos, int pos2, int n) {
+	
+	char newMeta = (n+1)<<2;
+
+	if (is_left(n+1, pos)) {
+		newMeta+=2;
+	}
+
+	*((char *)heapStart + pos) = newMeta;
+	*((char *)heapStart + pos2) = 0;		
 }
 
-size_t bucket_for_request(size_t request) {
-  size_t bucket = BUCKET_COUNT - 1;
-  size_t size = MIN_ALLOC;
+void * malloc(int reqSize) {
 
-  while (size < request) {
-      bucket--;
-      size *= 2;
-  }
+	if (reqSize > MAX_ALLOC) {
+		return NULL;
+	}
 
-  return bucket;
+	int n = size_to_n(reqSize);
+	int pos = 0;
+	unsigned char c = 0;
+	Meta * m = memset(&c, 0, 1);
+	
+	while (pos < MAX_OFFSET) {
+
+		unpack(m, pos);
+
+		if (m->size == 0) {
+			return NULL;
+		}
+
+		if (n <= m->size) {
+			if (m->allo == 1) {				
+				pos = jump_next(n, pos);
+				continue;
+			} else if (m->size == n) {		
+				*(heapStart + pos) += 1;
+				pos+=1;
+				return (void*)((char *)heapStart+pos);
+			} else { 						
+
+				int partner = jump_next((m->size)-1, pos);
+
+				char meta_1 = 2;
+				char meta_2 = 0;
+				
+				char s = ((m->size)-1)<<2;
+				meta_1 = (meta_1 | s);
+				meta_2 = (meta_2 | s);
+
+				*(heapStart + pos) = meta_1;
+				*(heapStart + partner) = meta_2;
+
+				continue;
+			}
+		} else {
+			pos = jump_next(n, pos);
+			continue;
+		}
+	}
+	return 0;
 }
 
-int lower_bucket_limit(size_t bucket) {
-    while (bucket < bucket_limit) {
-        size_t root = node_for_ptr(base_ptr, bucket_limit);
-        uint64_t *right_child;
+void free(void * ptr) {
+	
+	if (ptr <= (void *)heapStart || ptr > (void *)((char *)heapStart + MAX_OFFSET)) {
+		return;
+	}
 
-        if (!parent_is_split(root)) {
-            list_remove((list_t *)base_ptr);
-            list_init(&buckets[--bucket_limit]);
-            list_push(&buckets[bucket_limit], (list_t *)base_ptr);
-            continue;
-        }
+	int pos = (int)(ptr - (void *)heapStart - 1);
 
-        right_child = ptr_for_node(root + 1, bucket_limit);
-        if (!update_max_ptr(right_child + sizeof(list_t))) {
-            return 0;
-        }
-        list_push(&buckets[bucket_limit], (list_t *)right_child);
-        list_init(&buckets[--bucket_limit]);
-        root = (root - 1) / 2;
-        if (root != 0) {
-            flip_parent_is_split(root);
-        }
-    }
+	if (pos%2 == 1 || *(heapStart + pos) == 0) {
+		return;
+	}
 
-    return 1;
+	unsigned char c1 = 0;
+	unsigned char c2 = 0;
+	Meta * m1 = memset(&c1, 0, 1); 
+	Meta * m2 = memset(&c2, 0, 1);
+	unpack(m1,pos);
+
+	*((char *)heapStart + pos) = *((char *)heapStart + pos) - 1;
+
+	while (pos >= 0 && pos <= MAX_OFFSET){
+
+		unpack(m1,pos);
+
+		if (m1->left) {	
+
+			int pos2 = jump_next(m1->size, pos);
+
+			if (pos2 >= 0 && pos2 <= MAX_OFFSET - 2) {
+				unpack(m2,pos2);
+			} else {
+				break;
+			}
+
+			if (m2->allo || m2->size != m1->size) {
+				break;
+			} else {
+				merge(pos, pos2, m1->size);
+			}
+
+		} else {		
+
+			int pos2 = jump_back(m2->size,pos);
+
+			if (pos2 >= 0 && pos2 <= MAX_OFFSET - 2) {
+				unpack(m2,pos2);
+			} else {
+				break;
+			}
+
+			if (m2->allo || m2->size != m1->size) {
+				break;
+			} else {
+				merge(pos2, pos, m1->size); 
+			}	
+		}
+	}
 }
 
-void *malloc(size_t request) {
-    size_t original_bucket, bucket;
 
-    if (request + HEADER_SIZE > MAX_ALLOC) {
-        return NULL;
-    }
-
-    if (base_ptr == NULL) {
-        base_ptr = max_ptr = (uint64_t *)sbrk(0);
-        bucket_limit = BUCKET_COUNT - 1;
-        update_max_ptr(base_ptr + sizeof(list_t));
-        list_init(&buckets[BUCKET_COUNT - 1]);
-        list_push(&buckets[BUCKET_COUNT - 1], (list_t *)base_ptr);
-    }
-
-    bucket = bucket_for_request(request + HEADER_SIZE);
-    original_bucket = bucket;
-
-    while (bucket + 1 != 0) {
-        size_t size, bytes_needed, i;
-        uint64_t *ptr;
-
-        if (!lower_bucket_limit(bucket)) {
-          return NULL;
-        }
-
-        ptr = (uint64_t *)list_pop(&buckets[bucket]);
-        if (!ptr) {
-            if (bucket != bucket_limit || bucket == 0) {
-                bucket--;
-                continue;
-            }
-            if (!lower_bucket_limit(bucket - 1)) {
-                return NULL;
-            }
-            ptr = (uint64_t *)list_pop(&buckets[bucket]);
-        }
-
-        size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
-        bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
-        if (!update_max_ptr(ptr + bytes_needed)) {
-          list_push(&buckets[bucket], (list_t *)ptr);
-          return NULL;
-        }
-
-        i = node_for_ptr(ptr, bucket);
-        if (i != 0) {
-          flip_parent_is_split(i);
-        }
-
-        while (bucket < original_bucket) {
-            i = i * 2 + 1;
-            bucket++;
-            flip_parent_is_split(i);
-            list_push(&buckets[bucket], (list_t *)ptr_for_node(i + 1, bucket));
-        }
-
-        *(size_t *)ptr = request;
-        return ptr + HEADER_SIZE;
-    }
-
-    return NULL;
+void * realloc(void * ptr, int size) {
+  void * newMemory = malloc(size);
+  memcpy(newMemory,ptr,size);
+  free(ptr);
 }
 
-void free(void *ptr) {
-    size_t bucket, i;
-    if (!ptr) {
-        return;
-    }
-
-    ptr = (uint64_t *)ptr - HEADER_SIZE;
-    bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
-    i = node_for_ptr((uint64_t *)ptr, bucket);
-
-    while (i != 0) {
-        flip_parent_is_split(i);
-        if (parent_is_split(i) || bucket == bucket_limit) {
-            break;
-        }
-        list_remove((list_t *)ptr_for_node(((i - 1) ^ 1) + 1, bucket));
-        i = (i - 1) / 2;
-        bucket--;
-    }
-    list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
-}
-
-uint64_t * sbrk(size_t size) {
-	return (uint64_t*) heapStart + size;
-}
-
-void * realloc(void * ptr, size_t size) {
-
-    void * newMemory = malloc(size);
-    memcpy(newMemory,ptr,size);
-    free(ptr);
-    return newMemory;
-
-}
-
-void * calloc(size_t size) {
-
-    int i;
-    void * ptr = malloc(size);
-    if(ptr != NULL) {
+void * calloc(int size) {
+  int i;
+  void * ptr = malloc(size);
+  if(ptr != NULL) {
     for (i = 0; i < size; i++) { 
         *((char *)ptr + i) = 0;
     }
