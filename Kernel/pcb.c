@@ -41,11 +41,12 @@ Pcb getProcess(PcbTable table, pid_t pid) {
 }
 
 void printAll(PcbTable table) {
-    TableNode current = table-> first;
-    while(current != NULL) {
-        printPcb(current->block);
-        current = current->next;
-    }
+//    TableNode current = table-> first;
+//    while(current != NULL) {
+//        printPcb(current->block);
+//        current = current->next;
+//
+//    }
 }
 
 void printPcb(Pcb pcb) {

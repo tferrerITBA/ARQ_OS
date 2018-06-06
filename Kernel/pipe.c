@@ -39,14 +39,6 @@ void writeOnPipe(Pipe pipe, char c) {
     }
     memcpy(pipe->buff+pipe->len,&c,sizeof(char));
     pipe->len++;
-    putString(pipe->buff);
-    putString("\n");
-    putString("Pipe length: ");
-    if(pipe->len > 10) {
-        put_char('0' + pipe->len/10);
-    }
-    put_char('0' + pipe->len%10);
-    putString("\n");
     pipe->access = ALLOWED;
 }
 
@@ -67,14 +59,7 @@ char readFromPipe(Pipe pipe) {
         removeProcessFromTable(blockedProcesses,pipe->writer);
     }
 
-    putString("Pipe length: ");
-    if(pipe->len > 10) {
-        put_char('0' + pipe->len/10);
-    }
-
-    put_char('0' + pipe->len%10);
-    putString("\n");
-    if(pipe->len < 0) {
+    if(pipe->len <= 0) {
         runningPcb->state = BLOCKED;
         pipe->access = ALLOWED;
         yield();
@@ -148,5 +133,17 @@ Pipe getPipe(PipeTable pt, int id) {
         }
     }
     return current->pipe;
+}
+
+void closePipe(int id) {
+    PipeTableNode current = allPipes->firstNode;
+    while (current->next->pipe->pipeID != id) {
+        current = current->next;
+        if(current == NULL) {
+            return;
+        }
+    }
+    current->next = current->next->next;
+    free(current->next);
 }
 

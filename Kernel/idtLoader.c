@@ -136,17 +136,11 @@ char * receiveInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
 
 char * pipeRead(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
     Pipe p = getPipe(allPipes,rbx);
-    putString("Reading from pipe!: ");
-    put_char('0' + p->pipeID);
-    put_char('\n');
     return (char *)readFromPipe(p);
 }
 
 char * pipeWrite(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
     Pipe p = getPipe(allPipes,rbx);
-    putString("Writing on pipe: ");
-    put_char('0' + p->pipeID);
-    put_char('\n');
     writeOnPipe(p,(char)rcx);
     return (char *)0x1;
 }
@@ -159,6 +153,11 @@ char * createPipe(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
 char * openExistingPipe(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
     openPipe(rbx,rcx);
     return  0x1;
+}
+
+char * pipeClose(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
+    closePipe(rbx);
+    return 0x1;
 }
 
 char * openInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {

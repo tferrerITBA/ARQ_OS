@@ -53,6 +53,8 @@ char * mkdirInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8);
 char * touchInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8);
 char * rmInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8);
 char * fileDetInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8);
+char * pipeClose(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8);
+
 
 extern void _int80Handler();
 extern void _exception6Handler();
@@ -77,7 +79,7 @@ sysCalls sc[] = {0, 0, 0, &read_, &write_, &pixel, &colors, &getPid,
                  &callocInt, &sendInt, &receiveInt, &pipeRead, &pipeWrite,
                  &createPipe, &openExistingPipe, &openInt, &closeInt,
                   &readInt, &writeInt, &lsInt, &cdInt, &mkdirInt, &touchInt, 
-                  &rmInt, &fileDetInt};
+                  &rmInt, &fileDetInt, &pipeClose};
 
 DESCR_INT *idt = (DESCR_INT *) 0;    // IDT de 255 entradas
 

@@ -51,5 +51,6 @@ extern char * writePipe(int id, char c);
 extern char * readPipe(int id);
 extern char * createPipe();
 extern char * openPipe(int mode, int pipeId);
+extern char * closePipe(int id);
 
 #endif COMMANDS_H

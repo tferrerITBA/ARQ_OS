@@ -219,7 +219,7 @@ void receiver() {
 
 void pipeProdcons() {
     prodconsPipeId = (int)createPipe();
-	newProcessInt(pipeProducer);
+    newProcessInt(pipeProducer);
     newProcessInt(pipeConsumer);
     endOfProcess();
 }
@@ -227,14 +227,9 @@ void pipeProdcons() {
 void pipeProducer() {
     int i;
     openPipe(WRITE,prodconsPipeId);
-    for(i = 0; i < 15; i++) {
-        printf("Producing item number ");
-        if(i >= 10) {
-            putChar('0' + i / 10);
-        }
-        putChar('0' +  i % 10);
-        putChar('\n');
-
+    while(1) {
+        printf("Producing item");
+        printf("\n");
         writePipe(prodconsPipeId,'c');
     }
     endOfProcess();
@@ -243,14 +238,9 @@ void pipeProducer() {
 void pipeConsumer() {
     int consumed = 0;
     openPipe(READ, prodconsPipeId);
-    while (consumed < 5) {
-        printf("Consuming item number  ");
-        if(consumed >= 10) {
-            putChar('0' + consumed / 10);
-        }
-        putChar('0' +  consumed % 10);
+    while (1) {
+        printf("Consuming\n");
         printf(readPipe(prodconsPipeId));
-        putChar('\n');
         consumed++;
     }
     endOfProcess();

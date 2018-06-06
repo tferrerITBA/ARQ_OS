@@ -5,7 +5,7 @@
 #include "videoMode.h"
 #define READ 0
 #define WRITE 1
-#define MAX_PIPE_LENGTH 20
+#define MAX_PIPE_LENGTH 100
 #define DENIED 0
 #define ALLOWED 1
 
@@ -49,6 +49,7 @@ void writeOnPipe(Pipe pipe, char c);
 char readFromPipe(Pipe pipe);
 void initializePipeTable();
 void addPipeToTable(PipeTable pt, Pipe pipe);
+void closePipe(int id);
 Pipe getPipe(PipeTable pt, int id);
 
 

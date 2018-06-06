@@ -22,6 +22,7 @@ GLOBAL readPipe
 GLOBAL writePipe
 GLOBAL createPipe
 GLOBAL openPipe
+GLOBAL closePipe
 
 section .text
 
@@ -173,5 +174,13 @@ openPipe:
 	mov rax, 24
 	mov rbx, rdi
 	mov rcx, rsi
+	int 0x80
+	ret
+
+//Meter aca syscalls de fs en orden numerico
+
+closePipe:
+	mov rax, 35
+	mov rbx, rdi
 	int 0x80
 	ret
