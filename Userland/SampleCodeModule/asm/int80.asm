@@ -23,6 +23,16 @@ GLOBAL writePipe
 GLOBAL createPipe
 GLOBAL openPipe
 GLOBAL closePipe
+GLOBAL open
+GLOBAL close
+GLOBAL read
+GLOBAL write
+GLOBAL ls
+GLOBAL cd
+GLOBAL mkdir
+GLOBAL touch
+GLOBAL rm
+GLOBAL fileDetails
 
 section .text
 
@@ -177,7 +187,70 @@ openPipe:
 	int 0x80
 	ret
 
-;Meter aca syscalls de fs en orden numerico
+open:
+	mov rax, 25
+	mov rbx, rdi
+	int 0x80
+	ret
+
+close:
+	mov rax, 26
+	mov rbx, rdi
+	int 0x80
+	ret
+
+read:
+	mov rax, 27
+	mov rbx, rdi
+	mov rcx, rsi
+	mov rdx, rdx
+	mov r8, rcx
+	int 0x80
+	ret
+
+write:
+	mov rax, 28
+	mov rbx, rdi
+	mov rcx, rsi
+	mov rdx, rdx
+	mov r8, rcx
+	int 0x80
+	ret
+
+ls:
+	mov rax, 29
+	int 0x80
+	ret
+
+cd:
+	mov rax, 30
+	mov rbx, rdi
+	int 0x80
+	ret
+
+mkdir:
+	mov rax, 31
+	mov rbx, rdi
+	int 0x80
+	ret
+
+touch:
+	mov rax, 32
+	mov rbx, rdi
+	int 0x80
+	ret
+
+rm:
+	mov rax, 33
+	mov rbx, rdi
+	int 0x80
+	ret
+
+fileDetails:
+	mov rax, 34
+	mov rbx, rdi
+	int 0x80
+	ret
 
 closePipe:
 	mov rax, 35

@@ -5,6 +5,7 @@
 #include "include/naiveConsole.h"
 #include "include/messages.h"
 #include "include/pipe.h"
+#include "include/FAT.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -89,6 +90,7 @@ int main()
 	load_idt();
 	//buddy_init();
 	initializePipeTable();
+	initializeFileSystem();
     createReadyQueue();
     createBlockedQueue();
 	createMessageQueue();

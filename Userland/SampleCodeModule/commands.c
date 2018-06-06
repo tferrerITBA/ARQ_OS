@@ -246,4 +246,47 @@ void pipeConsumer() {
     endOfProcess();
 }
 
+int changeDir(char * path) {
+	return cd(path);
+}
 
+void l_s() {
+	ls();
+}
+
+int makeDir(char * path) {
+	return mkdir(path);
+}
+
+int createFile(char * path) {
+	return touch(path);
+}
+
+int remove(char * path, int isDir) {
+	return rm(path, isDir);
+}
+
+int getFileDetails(char * path) {
+	return fileDetails(path);
+}
+
+void fileDemo() {
+	printf("Creating file in cwd called: HelloWorld\n");
+	touch("HelloWorld");
+	printf("Opening in w mode.\n");
+	int open1 = open("HelloWord", "w");
+	char * hello = "Hello world!";
+	int status = write(hello, 14, 1, open1);
+	close(open1);
+	printf("Closing and opening same file in r mode\n");
+	open1 = open("HelloWorld", "r");
+	char buffer[50] = {0};
+	status = read(buffer, 7, 2, open1);
+	printf("Read: ");
+	printf(buffer);
+	printf("\n");
+	close(open1);
+	printf("File details:\n");
+	fileDetails("HelloWorld");
+	printf("You can now check the file is present, and see its details with the fileDetails <path> command.\n");
+}

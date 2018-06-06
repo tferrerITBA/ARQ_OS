@@ -65,7 +65,7 @@ int rm(char * path, int isDir);
 int deleteFile(char * name, FAT table);
 int deleteDir(char * name, FAT table);
 int getFileDetails(char * path);
-int open(char * name, const char * mode); // mode: "r" or "w"
+int open(char * path, const char * mode); // mode: "r" or "w"
 int close(int id);
 int read(void * dest, size_t blockSize, size_t blockNum, int fileId);
 int write(void * src, size_t blockSize, size_t blockNum, int fileId);
