@@ -94,6 +94,7 @@ int main()
 	createMessageQueue();
     ((EntryPoint)sampleCodeModuleAddress)();
 
+
 	while(1);
     return 1;
 }
