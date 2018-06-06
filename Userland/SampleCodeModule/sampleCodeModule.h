@@ -24,5 +24,7 @@ int integerPartLength(char * number);
 int isDigit(char c);
 int toInt(char c);
 int length(char word[]);
+int isNumber(char * str);
 int calculatePid(char * string);
+void validateRm(char * params);
 extern void raiseInvOp();

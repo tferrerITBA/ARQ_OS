@@ -103,6 +103,8 @@ int readCommand(char command[], int mode) {
 			sh(multiDemo,FOREGROUND);
 		} else if (strequals(command, "mallocDemo&")) {
 			sh(mallocDemo, FOREGROUND);
+		} else if (strequals(command, "ls")) {
+			sh(ls, BACKGROUND);
 		} else{
            return readCommandwithArguments(command, mode);
         }
@@ -162,11 +164,35 @@ int readCommandwithArguments(char command[], int mode) {
                 printf("Invalid pid entry\n");
             }
 		}
-	} else {
+	} else if(strequals(action,"cd")) {
+        cd(params);
+    } else if(strequals(action,"touch")) {
+        touch(params);
+    } else if(strequals(action,"mkdir")) {
+        mkdir(params);
+    } else if(strequals(action,"cd")) {
+        cd(params);
+    } else if(strequals(action,"rm")) {
+        validateRm(params);
+    }  else {
         printf("Invalid command. Try 'help' for information about avaliable options\n");
     }
 }
 
+void validateRm(char * params) {
+    char param1[SIZE] = {0};
+    char param2[SIZE] = {0};
+    int i = 0;
+    readWordFromCommand(param1,params,0,' ');
+    i += length(param1) + 1;
+    readWordFromCommand(param2,params,i,END);
+    if(length(param2) == 1 && isDigit(param2[0]) && param2[0]-'0' <= 1) {
+        rm(param1,param2[0]-'0');
+    } else {
+        printf("Invalid arguments\n");
+    }
+
+}
 
 /**
  * readWordFromCommand returns a char array with a single word to be
