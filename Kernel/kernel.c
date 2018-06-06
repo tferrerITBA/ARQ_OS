@@ -87,11 +87,11 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
+	//buddy_init();
 	initializePipeTable();
     createReadyQueue();
     createBlockedQueue();
 	createMessageQueue();
-	intializeBuddySystem();
     ((EntryPoint)sampleCodeModuleAddress)();
 
 	while(1);
