@@ -177,7 +177,7 @@ openPipe:
 	int 0x80
 	ret
 
-//Meter aca syscalls de fs en orden numerico
+;Meter aca syscalls de fs en orden numerico
 
 closePipe:
 	mov rax, 35
