@@ -2,4 +2,4 @@
 
 char * strchr(char * str, char c);
 int strlen(char * str);
-int strcmp(const char * str1, char * str2); 
+int strequals(char * str1, char * str2); 

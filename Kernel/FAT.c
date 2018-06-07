@@ -24,11 +24,12 @@ File openFiles[MAX_OPEN_FILES] = {0};
 void initializeFileSystem() {
 	root = newFileTable();
 	cwd = root;
+	return;
 }
 
 
 int validateName(char * name) {
-	return strcmp(name, "") && strchr(name, '/') == NULL && strchr(name, '.') == NULL;
+	return !strequals(name, "") && strchr(name, '/') == NULL && strchr(name, '.') == NULL;
 }
 
 char * explorePath(char * path, char buff[], bool * hasEnded) {
@@ -63,6 +64,7 @@ void ls() {
 	printTableEntriesRec(cwd->firstDir);
 	putString("Files:\n\n");
 	printTableEntriesRec(cwd->firstFile);
+	return;
 }
 
 int touch(char * path) {
@@ -84,7 +86,7 @@ int mkdir(char * path) {
 }
 
 int rm(char * path, int isDir) {
-	if(strcmp(path, "/") == 0)
+	if(strequals(path, "/"))
 		return ROOT_RMV_ERR;
 	char name[MAX_NAME_SIZE] = {0};
 	FAT aux = temporalCd(path, name);
@@ -104,6 +106,7 @@ void printTableEntriesRec(TableEntry curr) {
 	putString("   ");
 	putString(curr->name);
 	printTableEntriesRec(curr->next);
+	return;
 }
 
 int getFileDetails(char * path) {
@@ -192,7 +195,7 @@ File getFile(char * name, FAT table) {
 TableEntry getFileOrDirRec(char * name, TableEntry currEntry) {
 	if(currEntry == NULL)
 		return NULL;
-	if(strcmp(currEntry->name, name) == 0) {
+	if(strequals(currEntry->name, name)) {
 		return currEntry;
 	}
 	return getFileOrDirRec(name, currEntry->next);
@@ -306,7 +309,7 @@ int deleteDir(char * name, FAT table) {
 TableEntry deleteEntryRec(char * name, TableEntry curr, bool * effectivelyDeleted, bool isDir, FAT table) {
 	if(curr == NULL)
 		return NULL;
-	if(strcmp(curr->name, name) == 0) {
+	if(strequals(curr->name, name)) {
 		if(isDir) {
 			deleteSubContent(((Dir)(curr->entry))->table);
 			if(cwd == ((Dir)(curr->entry))->table)
@@ -334,6 +337,7 @@ TableEntry deleteEntryRec(char * name, TableEntry curr, bool * effectivelyDelete
 void deleteSubContent(FAT table) {
 	deleteAllFilesInDir(table, table->firstFile);
 	deleteAllSubDirectories(table, table->firstDir);
+	return;
 }
 
 void deleteAllFilesInDir(FAT table, TableEntry curr) {
@@ -344,6 +348,7 @@ void deleteAllFilesInDir(FAT table, TableEntry curr) {
 	free(curr);
 	table->fileCount--;
 	deleteAllFilesInDir(table, aux);
+	return;
 }
 
 void deleteAllSubDirectories(FAT table, TableEntry curr) {
@@ -355,30 +360,39 @@ void deleteAllSubDirectories(FAT table, TableEntry curr) {
 	free(curr);
 	table->subDirCount--;
 	deleteAllSubDirectories(table, aux);
+	return;
 }
 
 int open(char * path, const char * mode) {
-	if(openCount == MAX_OPEN_FILES)
+	if(openCount == MAX_OPEN_FILES) {
 		return FILE_CAP_REACHED;
+	}
 	char buff[MAX_NAME_SIZE] = {0};
-	File file = findFileOrDir(path, buff, !IS_DIR);
-	if(file == NULL)
+	File file = (File)findFileOrDir(path, buff, FALSE);
+	if(file == NULL) {
+		putString("file not found");
 		return FILE_NOT_FOUND;
-	if(file->openMode != NOT_OPEN)
+	}
+	if(file->openMode != NOT_OPEN) {
+		putString("not open!");
 		return FILE_OPEN;
+	}
 	bool validMode = FALSE;
-	if(strcmp(mode, "r") == 0) {
+	/*if(strequals(mode, "r")) {
 		file->openMode = READ;
 		validMode = TRUE;
 	}
-	else if(strcmp(mode, "w") == 0) {
+	else if(strequals(mode, "w")) {
 		file->openMode = WRITE;
 		validMode = TRUE;
 	}
-	if(!validMode)
+	if(!validMode) {
+		putString("invalid mode!");
 		return INVALID_MODE;
+	}*/
 	int i;
 	for(i = 0; i < MAX_OPEN_FILES; i++) {
+		putString("LLegue al final de OPEN!!!!!!!!!!!!!!\n");
 		if(openFiles[i] == NULL) {
 			openFiles[i] = file;
 			openCount++;
@@ -389,22 +403,32 @@ int open(char * path, const char * mode) {
 }
 
 int validateId(int id) {
-	if(openCount == 0)
+	if(openCount == 0) {
 		return NO_OPEN_FILES;
-	if(id >= MAX_OPEN_FILES || id < 0)
+	}
+	if(id >= MAX_OPEN_FILES || id < 0) {
 		return INVALID_ID;
-	if(openFiles[id] == NULL)
+	}
+	if(openFiles[id] == NULL) {
+		putString("file not open!");
 		return FILE_NOT_OPEN;
+	}
+	putString("ID valido!!!!!!!\n");
 	return TRUE;
 }
 
 int validateBlocks(size_t blockSize, size_t blockNum, bool mode) {
-	if(blockSize <= 0 || blockNum <= 0)
+	if(blockSize <= 0 || blockNum <= 0) {
+		putString("maluco negativo\n\n\n");
 		return ERR_NGTV;
-	if(mode == WRITE) {
-		if(blockSize * blockNum > MAX_FILE_SIZE)
-			return ERR_CAP_REACHED;
 	}
+	if(mode == WRITE) {
+		if(blockSize * blockNum > MAX_FILE_SIZE) {
+			putString("CAP REACHED!\n");
+			return ERR_CAP_REACHED;
+		}
+	}
+	putString("Bloque valido!!!!!!\n");
 	return TRUE;
 }
 
@@ -420,14 +444,19 @@ int close(int id) {
 
 int read(void * dest, size_t blockSize, size_t blockNum, int fileId) {
 	int idValidation = validateId(fileId);
-	if(idValidation != TRUE)
+	if(idValidation != TRUE) {
+		putString("NO DIO TRUE");
 		return idValidation;
+	}
 	int blockValidation = validateBlocks(blockSize, blockNum, READ);
+	printDecimal(blockValidation);
 	if(blockValidation != TRUE)
 		return blockValidation;
 	File file = openFiles[fileId];
-	if(file->openMode != READ)
+	/*if(file->openMode != READ)
 		return INVALID_MODE;
+	*/
+	putString("pase de INVALIDMODE\n");
 	int i, j;
 	for(i = 0; i < blockNum && (i+1) * blockSize < file->size; i++) {
 		memcpy(dest + i * blockSize,
@@ -439,19 +468,25 @@ int read(void * dest, size_t blockSize, size_t blockNum, int fileId) {
 				file->fileContent + i * blockSize + j, 1);
 		}
 	}
+	putString("Sali de read y lei bien\n");
 	return i * blockSize + j;
 }
 
 int write(void * src, size_t blockSize, size_t blockNum, int fileId) {
 	int idValidation = validateId(fileId);
-	if(idValidation != TRUE)
+	printDecimal(fileId);
+	if(idValidation != TRUE) {
+		putString("NO DIO TRUE");
 		return idValidation;
+	}
 	int blockValidation = validateBlocks(blockSize, blockNum, WRITE);
 	if(blockValidation != TRUE)
 		return blockValidation;
+	putString("Antes de acceder al FILE");
 	File file = openFiles[fileId];
-	if(file->openMode != WRITE)
+	/*if(file->openMode != WRITE)
 		return INVALID_MODE;
+	*/
 	free(file->fileContent);
 	file->fileContent = malloc(blockSize * blockNum + 1);
 	int i;

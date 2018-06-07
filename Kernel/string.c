@@ -1,16 +1,16 @@
 #include "string.h"
 
-int strcmp(const char * str1, char * str2) {
-	if(str1 == NULL && str2 == NULL)
-		return 0;
-	if(str1 == NULL || str2 == NULL)
-		return -1;
-	while(*str1 != '\0' && *str2 != '\0') {
-		int diff = *str1 - *str2;
-		if(diff != 0)
-			return diff;
+int strequals(char * s1, char * s2) {
+	int i = 0;
+	for(i = 0; s1[i] != 0 && s2[i] != 0; i++){
+		if(s1[i] != s2[i]) {
+			return 0;
+		}
 	}
-	return *str1 - *str2;
+	if(s1[i] != 0 || s2[i] != 0) {
+		return 0;
+	}
+	return 1;
 }
 
 int strlen(char * str) {

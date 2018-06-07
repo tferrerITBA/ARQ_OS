@@ -104,7 +104,9 @@ int readCommand(char command[], int mode) {
 		} else if (strequals(command, "mallocDemo&")) {
 			sh(mallocDemo, FOREGROUND);
 		} else if (strequals(command, "ls")) {
-			sh(ls, BACKGROUND);
+			sh(ls, FOREGROUND);
+		} else if (strequals(command, "fileDemo")) {
+			sh(fileDemo, BACKGROUND);
 		} else{
            return readCommandwithArguments(command, mode);
         }
@@ -177,6 +179,7 @@ int readCommandwithArguments(char command[], int mode) {
     }  else {
         printf("Invalid command. Try 'help' for information about avaliable options\n");
     }
+    return 1;
 }
 
 void validateRm(char * params) {

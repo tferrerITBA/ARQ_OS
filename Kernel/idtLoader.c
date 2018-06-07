@@ -178,7 +178,7 @@ char * writeInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
 
 char * lsInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
     ls();
-    return (char *)0x1;
+    return "OK";
 }
 
 char * cdInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {

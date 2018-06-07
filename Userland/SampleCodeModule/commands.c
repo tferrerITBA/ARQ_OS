@@ -271,13 +271,16 @@ int getFileDetails(char * path) {
 }
 
 void fileDemo() {
+	char aux[] = {'w', '0'};
 	printf("Creating file in cwd called: HelloWorld\n");
 	touch("HelloWorld");
-	printf("Opening in w mode.\n");
-	int open1 = open("HelloWord", "w");
+	int open1;
+	printf("Opening in w mode and writing 'Hello world!'.\n");
+	open1 = open("HelloWorld", "w");
 	char * hello = "Hello world!";
 	int status = write(hello, 14, 1, open1);
 	close(open1);
+	aux[0] = 'r';
 	printf("Closing and opening same file in r mode\n");
 	open1 = open("HelloWorld", "r");
 	char buffer[50] = {0};
@@ -289,4 +292,5 @@ void fileDemo() {
 	printf("File details:\n");
 	fileDetails("HelloWorld");
 	printf("You can now check the file is present, and see its details with the fileDetails <path> command.\n");
+	return;
 }
