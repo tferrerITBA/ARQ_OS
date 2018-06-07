@@ -1,18 +1,18 @@
-/*
 #include <stdint.h>
 #include <stddef.h>
 
+#define MAX_ALLOC 16384
 #define MAX_ORDER 20
 #define TRUE 1
 #define FALSE 0
 
-typedef blockData * b_data;
+typedef struct blockData * b_data;
 
-typedef struct blockData {
+struct blockData {
 	char allocated;		
 	char left_b;		
 	int order;		
-} blockData;
+};
 
 
 void initializeBuddySystem();
@@ -23,4 +23,3 @@ int leftBuddy(int n, int p);
 void mergeBlocks(int pos1, int pos2, int n);
 void * buddyMalloc(size_t size);
 void buddyFree(void * ptr);
-*/

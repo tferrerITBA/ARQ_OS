@@ -1,8 +1,7 @@
-/*
+
 #include "include/newbuddy.h"
 
-char * heapStart = (char *) 0x800000;
-
+char * heapStartt = (char *) 0x800000;
 
 int ceil_log2(unsigned long long x)	{
   
@@ -31,14 +30,14 @@ int ceil_log2(unsigned long long x)	{
 
 void initializeBuddySystem() {
 	b_data block;
-	block = (b_data)heapStart;
+	block = (b_data)heapStartt;
 	block->allocated = 0;
 	block->left_b = 0;
 	block->order = MAX_ORDER;
 }
 
-int calculateOrder(size_t reqSize) {
-	reqSize+=1;
+int calculateOrder(size_t size) {
+	size+=1;
 	return ceil_log2(size);
 }
 
@@ -72,11 +71,11 @@ int leftBuddy(int n, int p) {
 
 void mergeBlocks(int pos1, int pos2, int n) {
 
-	b_data block;
-	if (is_left(n+1, pos1)) 
-	
-	*(heapStart + pos1 ) = ;
-	*(heapStart + pos2) = 0; 		
+
+	b_data block = (b_data)(heapStartt + pos1 );
+	block->order = n+1;
+	block->left_b = FALSE;
+	*(heapStartt + pos2) = 0; 		
 }
 
 void * buddyMalloc(size_t size) {
@@ -86,23 +85,23 @@ void * buddyMalloc(size_t size) {
 	}
 
 	int n = calculateOrder(size);
-	int pos = heapStart;
+	int pos = heapStartt;
 	b_data dataBlock;
 
-	while (pos < (heapStart + (1<<MAX_ORDER))) {
+	while (pos < (heapStartt + (1<<MAX_ORDER))) {
 
-		dataBlock = (b_data)(heapStart + pos);
+		dataBlock = (b_data)(heapStartt + pos);
 		if (dataBlock->order  == 0) {
 			return NULL;
 		}
 		if (n <= dataBlock->order) {
-			if (m->allocated == TRUE) {				
+			if (dataBlock->allocated == TRUE) {				
 				pos = goRight(n, pos);
 			} 
-			else if (m->order == n) {		
-				b_data block = (b_data)(heapStart + pos);
+			else if (dataBlock->order == n) {		
+				b_data block = (b_data)(heapStartt + pos);
 				block->allocated = TRUE;
-				return (void*)((heapStart + pos + sizeof(struct blockData)));
+				return (void*)((heapStartt + pos + sizeof(struct blockData)));
 			} 
 		} 
 		else {
@@ -115,13 +114,13 @@ void * buddyMalloc(size_t size) {
 
 void buddyFree(void * ptr) {
 	
-	if (ptr <= (void *)heapStart || ptr > (void *)(heapStart + MAX_ORDER)) {
+	if (ptr <= (void *)heapStartt || ptr > (void *)(heapStartt + MAX_ORDER)) {
 		return;
 	}
 
 	int pos = (int) (ptr - sizeof(struct blockData));
 
-	if (pos%2 == 1 || *(heapStart + pos) == 0) {
+	if (pos%2 == 1 || *(heapStartt + pos) == 0) {
 		return;
 	}
 
@@ -130,7 +129,7 @@ void buddyFree(void * ptr) {
 	block->allocated = FALSE;
 	int pos2;
 
-	while (pos >= 0 && pos <= (heapStart + (1 << MAX_ORDER))){
+	while (pos >= 0 && pos <= (heapStartt + (1 << MAX_ORDER))){
 
 		b_data block = (b_data)pos;
 		if (block->left_b) {	
@@ -151,9 +150,9 @@ void buddyFree(void * ptr) {
 			if (block2->allocated || block2->order != block->order) {
 				break;
 			} else {
-				merge(pos2, pos, block->order); 
+				mergeBlocks(pos2, pos, block->order); 
 			}	
 		}
 	}
 }
-*/
+
