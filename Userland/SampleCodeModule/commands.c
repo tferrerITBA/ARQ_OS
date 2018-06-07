@@ -30,6 +30,7 @@ void runHelp() {
 	printf("mkdir [pathAndName]: creates a directory with the specified name in the specified directory.\n");
 	printf("rm [pathAndName] [type]: deletes a file (if type is isFile), or a directory recursively (if type is isDir).\n");
 	printf("fileDetails [pathAndName]: prints a file's name, size and current status.\n");
+	printf("pipeProdcons: executes a producer consumer problem using pipes .\n");
 	putChar('\n');
 }
 
