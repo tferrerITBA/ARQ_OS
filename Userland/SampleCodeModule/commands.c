@@ -21,6 +21,15 @@ void runHelp() {
 	printf("mallocDemo: a simple usage of user level malloc and free\n");
 	printf("ps: lists all processes including terminated ones\n");
 	printf("prodcons: a simple implementation of producer consumer problem\n");
+	printf("-----------------------------------------------------------\n");
+	printf("-----------------------------------------------------------\n");
+	printf("fileDemo: creates a file and writes to it. Its content is then read.\n");
+	printf("ls: shows current directorie's subfolders and files\n");
+	printf("cd [path]: changes the current working directory to a specified subdirectory.\n");
+	printf("touch [pathAndName]: creates a file with the specified name in the specified directory.\n");
+	printf("mkdir [pathAndName]: creates a directory with the specified name in the specified directory.\n");
+	printf("rm [pathAndName] [type]: deletes a file (if type is isFile), or a directory recursively (if type is isDir).\n");
+	printf("fileDetails [pathAndName]: prints a file's name, size and current status.\n");
 	putChar('\n');
 }
 
