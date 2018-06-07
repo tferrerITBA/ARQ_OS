@@ -370,11 +370,11 @@ int open(char * path, const char * mode) {
 	char buff[MAX_NAME_SIZE] = {0};
 	File file = (File)findFileOrDir(path, buff, FALSE);
 	if(file == NULL) {
-		putString("file not found");
+		putString("File not found");
 		return FILE_NOT_FOUND;
 	}
 	if(file->openMode != NOT_OPEN) {
-		putString("not open!");
+		putString("Not open!");
 		return FILE_OPEN;
 	}
 	bool validMode = FALSE;
@@ -392,7 +392,6 @@ int open(char * path, const char * mode) {
 	}*/
 	int i;
 	for(i = 0; i < MAX_OPEN_FILES; i++) {
-		putString("LLegue al final de OPEN!!!!!!!!!!!!!!\n");
 		if(openFiles[i] == NULL) {
 			openFiles[i] = file;
 			openCount++;
@@ -410,25 +409,21 @@ int validateId(int id) {
 		return INVALID_ID;
 	}
 	if(openFiles[id] == NULL) {
-		putString("file not open!");
+		putString("File not open!");
 		return FILE_NOT_OPEN;
 	}
-	putString("ID valido!!!!!!!\n");
 	return TRUE;
 }
 
 int validateBlocks(size_t blockSize, size_t blockNum, bool mode) {
 	if(blockSize <= 0 || blockNum <= 0) {
-		putString("maluco negativo\n\n\n");
 		return ERR_NGTV;
 	}
 	if(mode == WRITE) {
 		if(blockSize * blockNum > MAX_FILE_SIZE) {
-			putString("CAP REACHED!\n");
 			return ERR_CAP_REACHED;
 		}
 	}
-	putString("Bloque valido!!!!!!\n");
 	return TRUE;
 }
 
@@ -445,18 +440,15 @@ int close(int id) {
 int read(void * dest, size_t blockSize, size_t blockNum, int fileId) {
 	int idValidation = validateId(fileId);
 	if(idValidation != TRUE) {
-		putString("NO DIO TRUE");
 		return idValidation;
 	}
 	int blockValidation = validateBlocks(blockSize, blockNum, READ);
-	printDecimal(blockValidation);
 	if(blockValidation != TRUE)
 		return blockValidation;
 	File file = openFiles[fileId];
 	/*if(file->openMode != READ)
 		return INVALID_MODE;
 	*/
-	putString("pase de INVALIDMODE\n");
 	int i, j;
 	for(i = 0; i < blockNum && (i+1) * blockSize < file->size; i++) {
 		memcpy(dest + i * blockSize,
@@ -468,21 +460,17 @@ int read(void * dest, size_t blockSize, size_t blockNum, int fileId) {
 				file->fileContent + i * blockSize + j, 1);
 		}
 	}
-	putString("Sali de read y lei bien\n");
 	return i * blockSize + j;
 }
 
 int write(void * src, size_t blockSize, size_t blockNum, int fileId) {
 	int idValidation = validateId(fileId);
-	printDecimal(fileId);
 	if(idValidation != TRUE) {
-		putString("NO DIO TRUE");
 		return idValidation;
 	}
 	int blockValidation = validateBlocks(blockSize, blockNum, WRITE);
 	if(blockValidation != TRUE)
 		return blockValidation;
-	putString("Antes de acceder al FILE");
 	File file = openFiles[fileId];
 	/*if(file->openMode != WRITE)
 		return INVALID_MODE;

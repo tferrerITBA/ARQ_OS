@@ -202,18 +202,18 @@ close:
 read:
 	mov rax, 27
 	mov rbx, rdi
+	mov r8, rcx
 	mov rcx, rsi
 	mov rdx, rdx
-	mov r8, rcx
 	int 0x80
 	ret
 
 write:
 	mov rax, 28
 	mov rbx, rdi
+	mov r8, rcx
 	mov rcx, rsi
 	mov rdx, rdx
-	mov r8, rcx
 	int 0x80
 	ret
 

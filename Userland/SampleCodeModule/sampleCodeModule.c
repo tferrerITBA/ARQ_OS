@@ -106,7 +106,7 @@ int readCommand(char command[], int mode) {
 		} else if (strequals(command, "ls")) {
 			sh(ls, FOREGROUND);
 		} else if (strequals(command, "fileDemo")) {
-			sh(fileDemo, BACKGROUND);
+			sh(fileDemo, FOREGROUND);
 		} else{
            return readCommandwithArguments(command, mode);
         }
@@ -176,7 +176,9 @@ int readCommandwithArguments(char command[], int mode) {
         cd(params);
     } else if(strequals(action,"rm")) {
         validateRm(params);
-    }  else {
+    } else if(strequals(action, "fileDetails")) {
+    	getFileDetails(params);
+    } else {
         printf("Invalid command. Try 'help' for information about avaliable options\n");
     }
     return 1;
