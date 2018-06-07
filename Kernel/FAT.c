@@ -56,6 +56,7 @@ int cd(char * path) {
 	if(aux == NULL)
 		return -1;
 	cwd = aux;
+	putString(buff);
 	return 1;
 }
 
