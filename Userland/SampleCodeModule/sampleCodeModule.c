@@ -176,6 +176,7 @@ int readCommandwithArguments(char command[], int mode) {
         cd(params);
     } else if(strequals(action,"rm")) {
         validateRm(params);
+        ls();
     } else if(strequals(action, "fileDetails")) {
     	getFileDetails(params);
     } else {
@@ -192,7 +193,7 @@ void validateRm(char * params) {
     i += length(param1) + 1;
     readWordFromCommand(param2,params,i,END);
     if(length(param2) == 1 && isDigit(param2[0]) && param2[0]-'0' <= 1) {
-        rm(param1,param2[0]-'0');
+        remove(param1,param2[0]-'0');
     } else {
         printf("Invalid arguments\n");
     }

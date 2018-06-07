@@ -243,6 +243,7 @@ touch:
 rm:
 	mov rax, 33
 	mov rbx, rdi
+	mov rcx, rsi
 	int 0x80
 	ret
 

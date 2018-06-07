@@ -194,7 +194,8 @@ char * touchInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
 }
 
 char * rmInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {
-    return (char *)rm(rbx, rcx);
+    char * aux = (char *)rm(rbx, rcx);
+    return aux;
 }
 
 char * fileDetInt(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t r8) {

@@ -272,7 +272,8 @@ int createFile(char * path) {
 }
 
 int remove(char * path, int isDir) {
-	return rm(path, isDir);
+	int a = rm(path, isDir);
+	return a;
 }
 
 int getFileDetails(char * path) {
